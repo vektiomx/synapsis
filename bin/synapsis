@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+"""synapsis install [claude|codex|antigravity] [--dry-run]
+
+Sin argumento de herramienta, instala en todo lo que detecte en esta máquina. Con uno,
+instala solo ahí. Es seguro de correr de nuevo cuando instales una herramienta nueva.
+"""
+import argparse
+import subprocess
+import sys
+from pathlib import Path
+
+BASE = Path(__file__).resolve().parent.parent
+INSTALADORES = {
+    'claude': ('Claude Code', BASE / 'claude-code' / 'install_claude_code.py', lambda: (Path.home() / '.claude').is_dir()),
+    'codex': ('Codex', BASE / 'codex' / 'install_codex.py', lambda: (Path.home() / '.codex').is_dir()),
+    'antigravity': ('Antigravity', BASE / 'antigravity' / 'install_antigravity.py',
+                    lambda: (Path.home() / '.gemini' / 'config').is_dir()),
+}
+
+
+def diagnosticar(clave):
+    """Devuelve (se_puede, motivo) corriendo el instalador real en --dry-run: así el
+    estado que mostramos es el mismo chequeo que se va a usar al instalar, no una
+    suposición aparte que se pueda desincronizar."""
+    nombre, script, detectada = INSTALADORES[clave]
+    if not detectada():
+        return False, 'no está instalado en esta máquina'
+    resultado = subprocess.run([sys.executable, str(script), '--dry-run'], capture_output=True, text=True)
+    if resultado.returncode == 0:
+        return True, None
+    ultima = next((l for l in reversed(resultado.stderr.splitlines()) if l.strip()), 'error desconocido')
+    return False, ultima.strip()
+
+
+def elegir_interactivo():
+    estados = {clave: diagnosticar(clave) for clave in INSTALADORES}
+    print('¿Dónde instalo Synapsis?')
+    numerados = []
+    for clave, (nombre, _, _) in INSTALADORES.items():
+        se_puede, motivo = estados[clave]
+        numerados.append(clave)
+        marca = 'OK' if se_puede else f'NO ({motivo})'
+        print(f'  {len(numerados)}) {nombre:12} [{marca}]')
+
+    disponibles = [c for c in numerados if estados[c][0]]
+    if not disponibles:
+        print('Ninguna se puede instalar ahora mismo. Revisá los motivos de arriba.')
+        return []
+
+    opcion_todas = len(numerados) + 1
+    print(f'  {opcion_todas}) Todas las que digan OK')
+    try:
+        eleccion = input('Elegí un número: ').strip()
+    except EOFError:
+        return disponibles
+    if eleccion == str(opcion_todas) or not eleccion:
+        return disponibles
+    try:
+        clave = numerados[int(eleccion) - 1]
+    except (ValueError, IndexError):
+        print('No entendí esa opción.')
+        return []
+    if clave not in disponibles:
+        print(f'{INSTALADORES[clave][0]} no se puede instalar ahora: {estados[clave][1]}')
+        return []
+    return [clave]
+
+
+def main():
+    parser = argparse.ArgumentParser(prog='synapsis')
+    sub = parser.add_subparsers(dest='accion')
+    instalar = sub.add_parser('install', help='Instala los hooks de Synapsis')
+    instalar.add_argument('herramienta', nargs='?', choices=list(INSTALADORES))
+    instalar.add_argument('--dry-run', action='store_true')
+    args = parser.parse_args()
+
+    if args.accion != 'install':
+        parser.print_help()
+        return 1
+
+    if args.herramienta:
+        objetivo = [args.herramienta]
+    else:
+        objetivo = elegir_interactivo()
+        if not objetivo:
+            return 1
+
+    extra = ['--dry-run'] if args.dry_run else []
+    fallo = False
+    for clave in objetivo:
+        nombre, script, _ = INSTALADORES[clave]
+        print(f'--- {nombre} ---')
+        resultado = subprocess.run([sys.executable, str(script)] + extra)
+        if resultado.returncode != 0:
+            fallo = True
+    return 1 if fallo else 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
