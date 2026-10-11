@@ -124,6 +124,7 @@ def main():
         print('Desactivé el plugin del marketplace para evitar eventos duplicados: ' + ', '.join(desactivados))
         print('Perdés /neuromapa:abrir, /neuromapa:salud y /neuromapa:sobre (son del plugin); '
               'usá los scripts de engine/ directo si los necesitás.')
+    comun.anotar_ubicacion()
     print('Reiniciá Claude Code para que cargue los hooks nuevos.')
 
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Neuromapa</title>
+<title>Synapsis</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23E64980'/%3E%3C/svg%3E">
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="Mapa en grafo de todas las notas .md de Claude y de cómo se conectan entre sí.">
@@ -1095,7 +1095,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     <div class="marca">
       <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><g style="fill:none;stroke:var(--linea);stroke-width:1.3;stroke-linecap:round"><path d="M8 12 L16 6.5 L24.5 11.5 L22 22 L11.5 23.5 Z M16 6.5 L16 15.5 L22 22 M8 12 L16 15.5 L11.5 23.5 M24.5 11.5 L16 15.5"/></g><circle cx="16" cy="15.5" r="3.4" style="fill:var(--acento)"/><circle cx="8" cy="12" r="2.3" style="fill:#2bb0a6"/><circle cx="16" cy="6.5" r="2.3" style="fill:#e0803a"/><circle cx="24.5" cy="11.5" r="2.3" style="fill:#d2508a"/><circle cx="22" cy="22" r="2.3" style="fill:#4a90e2"/><circle cx="11.5" cy="23.5" r="2.3" style="fill:#8bbd3c"/></svg>
       <div>
-        <h1>Neuromapa</h1>
+        <h1>Synapsis</h1>
         <p class="generado" id="generado"></p>
       </div>
     </div>
@@ -1243,7 +1243,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
           <div class="en-vivo-uso" id="en-vivo-uso" hidden></div>
         </div>
       </div>
-      <div class="pie-cine" id="pie-cine" aria-hidden="true"><b>Neuromapa</b> · <span id="pie-cine-notas"></span><span class="pie-vivo"> · en vivo</span></div>
+      <div class="pie-cine" id="pie-cine" aria-hidden="true"><b>Synapsis</b> · <span id="pie-cine-notas"></span><span class="pie-vivo"> · en vivo</span></div>
       <div class="zocalo" id="zocalo" aria-live="off"><span class="zocalo-quien" id="zocalo-quien"></span><span class="zocalo-texto" id="zocalo-texto"></span></div>
       <div class="repite" id="repite" hidden>
         <div class="repite-fecha" id="repite-fecha"></div>
@@ -1560,7 +1560,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
   const tapada = l => !!l._sobre && l._sobre.some(o => o._visible);
   const usoDe = l => !estado.clasesOn.has('aprendida') ? 0 : l.clase === 'aprendida' ? (l.datos && l.datos.peso) || 0 : l._mielina || 0;
   fundirAprendidas(aristas);
-  if (descartadas) console.warn('Neuromapa: ' + descartadas + ' aristas descartadas porque apuntan a notas que no existen o tienen una clase desconocida.');
+  if (descartadas) console.warn('Synapsis: ' + descartadas + ' aristas descartadas porque apuntan a notas que no existen o tienen una clase desconocida.');
 
   const unirRespuesta = (quien, a) => {
     if (!quien || !a || quien === a || quien.respondeA.includes(a)) return;
@@ -3421,7 +3421,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       if (typeof M.parse === 'function') return M.parse(md, { gfm: true, breaks: false, async: false });
       if (typeof M === 'function') return M(md);
     } catch (e) {
-      console.warn('Neuromapa: marked no pudo con esta nota', e);
+      console.warn('Synapsis: marked no pudo con esta nota', e);
     }
     return null;
   }
@@ -5205,7 +5205,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     return texto.slice(0, n).trimEnd() + '…';
   }
 
-  const textoPie = () => 'Neuromapa · ' + nodos.length.toLocaleString('es') + (nodos.length === 1 ? ' nota' : ' notas') + ' · ' + new Date().toLocaleDateString('es');
+  const textoPie = () => 'Synapsis · ' + nodos.length.toLocaleString('es') + (nodos.length === 1 ? ' nota' : ' notas') + ' · ' + new Date().toLocaleDateString('es');
 
   function pintarPie(c, W, H) {
     const tam = Math.max(12, Math.round(Math.min(W, H) * 0.02));
@@ -7062,12 +7062,12 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       e.preventDefault();
       if (!neuronasGL) return;
       neuronasGL.perdido = true;
-      console.warn('Neuromapa: el navegador se llevó el contexto WebGL, espero a que lo devuelva');
+      console.warn('Synapsis: el navegador se llevó el contexto WebGL, espero a que lo devuelva');
     });
     lienzoNeuronas.addEventListener('webglcontextrestored', () => {
       const G = terminarGL(prepararGL());
       if (!G) {
-        console.warn('Neuromapa: el WebGL volvió pero no se pudo rearmar; sigo con el dibujo 2D');
+        console.warn('Synapsis: el WebGL volvió pero no se pudo rearmar; sigo con el dibujo 2D');
         neuronasGL = null;
         if (cerebro && cerebro.px && !cerebro.baldes) cerebro.baldes = baldesDe(cerebro.px);
         pedirDibujo();
@@ -7087,14 +7087,14 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     try {
       [G.puntos, G.lineas, G.fondo].forEach(G.listo);
     } catch (e) {
-      console.warn('Neuromapa: sin WebGL para las neuronas', e);
+      console.warn('Synapsis: sin WebGL para las neuronas', e);
       return null;
     }
     if (G.motas) {
       try {
         G.listo(G.motas);
       } catch (e) {
-        console.warn('Neuromapa: sin motas de primer plano', e);
+        console.warn('Synapsis: sin motas de primer plano', e);
         G.motas = null;
       }
     }
@@ -7102,7 +7102,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       try {
         [G.brillo.desenfoque, G.brillo.mezcla].forEach(G.listo);
       } catch (e) {
-        console.warn('Neuromapa: sin resplandor', e);
+        console.warn('Synapsis: sin resplandor', e);
         G.brillo = null;
       }
     }
@@ -7351,7 +7351,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
           '  gl_FragColor = vec4(uColMota * a, a);\n' +
           '}\n', UNIF.concat(['uDpr', 'uMotas', 'uColMota']));
       } catch (e) {
-        console.warn('Neuromapa: sin motas de primer plano', e);
+        console.warn('Synapsis: sin motas de primer plano', e);
         motas = null;
       }
       const fondo = programa(
@@ -7399,7 +7399,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       return { gl, cv, puntos, lineas, fondo, motas, listo, brillo: prepararResplandor(gl, programa), focos: focosGL,
                vFoco: bufFoco.subarray(0, focosGL * 4), vFocoCol: bufFocoCol.subarray(0, focosGL * 4) };
     } catch (e) {
-      console.warn('Neuromapa: sin WebGL para las neuronas', e);
+      console.warn('Synapsis: sin WebGL para las neuronas', e);
       return null;
     }
   }
@@ -7441,7 +7441,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       gl.getExtension('EXT_color_buffer_half_float');
       return { desenfoque, mezcla, hf, escena: null, a1: null, t1: null, a2: null, t2: null, esc: 1, w: 0, h: 0, falla: false, fuerza: 0, tF: 0 };
     } catch (e) {
-      console.warn('Neuromapa: sin resplandor', e);
+      console.warn('Synapsis: sin resplandor', e);
       return null;
     }
   }
@@ -7486,7 +7486,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       R.h = h;
       if (!R.a1.ok || !R.t1.ok || !R.a2.ok || !R.t2.ok) {
         R.falla = true;
-        console.warn('Neuromapa: sin resplandor (el framebuffer no quedó completo)');
+        console.warn('Synapsis: sin resplandor (el framebuffer no quedó completo)');
         return null;
       }
     }
@@ -7498,7 +7498,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       if (!R.hf) R.escena = objetivoGL(gl, R.escena, w, h, gl.UNSIGNED_BYTE, gl.NEAREST);
       if (!R.escena.ok) {
         R.falla = true;
-        console.warn('Neuromapa: sin resplandor (la escena no entra en un framebuffer)');
+        console.warn('Synapsis: sin resplandor (la escena no entra en un framebuffer)');
         return null;
       }
       R.esc = R.escena.tipo === gl.UNSIGNED_BYTE ? 2 : 1;
@@ -10534,9 +10534,9 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       cierre: ['cierra', '#94a3b8', 'chat cerrado'],
       'sub-fin': ['agente', '#a78bfa', 'un agente terminó'],
       falla: ['falló', '#ef4444', 'una herramienta falló'],
-      aviso: ['pista', '#38bdf8', 'Neuromapa le pasó qué leer primero'],
-      recuerda: ['recuerda', '#38bdf8', 'al editar un archivo, Neuromapa le recordó la nota que suele ir con él'],
-      guarda: ['guardar', '#38bdf8', 'Neuromapa le recordó anotar en la memoria lo decidido'],
+      aviso: ['pista', '#38bdf8', 'Synapsis le pasó qué leer primero'],
+      recuerda: ['recuerda', '#38bdf8', 'al editar un archivo, Synapsis le recordó la nota que suele ir con él'],
+      guarda: ['guardar', '#38bdf8', 'Synapsis le recordó anotar en la memoria lo decidido'],
       choque: ['choque', '#ef4444', 'dos chats o agentes editaron el mismo archivo con menos de ' + MINUTOS_CHOQUE + ' min entre uno y otro']
     };
     const ESTADO_TXT = { trabajando: 'trabajando', esperando: 'espera tu OK', compactando: 'comprimiendo su memoria', listo: 'listo', cerrado: 'cerrado' };
@@ -10548,7 +10548,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       const v = verboDe(ev);
       return v ? v[0] : NOMBRE[ev.k] || ev.k || 'usa';
     };
-    const QUE_HACE = { leer: 'lee una nota o un archivo', buscar: 'busca texto en archivos', editar: 'edita un archivo', crear: 'crea un archivo', ejecutar: 'corre un comando', agente: 'lanza un agente', web: 'abre una página web', consulta: 'le pregunta a Neuromapa (--sobre, --parecidas…); los rayos salen del lóbulo de la memoria hacia las notas que le recomendó', otro: 'usa otra herramienta (mira, anota, completa…)' };
+    const QUE_HACE = { leer: 'lee una nota o un archivo', buscar: 'busca texto en archivos', editar: 'edita un archivo', crear: 'crea un archivo', ejecutar: 'corre un comando', agente: 'lanza un agente', web: 'abre una página web', consulta: 'le pregunta a Synapsis (--sobre, --parecidas…); los rayos salen del lóbulo de la memoria hacia las notas que le recomendó', otro: 'usa otra herramienta (mira, anota, completa…)' };
     const QUE_COMANDO = { commit: 'hace un commit', compila: 'compila', prueba: 'corre una prueba', git: 'usa git', base: 'consulta una base de datos', cerebro: 'regenera el cerebro', lee: 'lee archivos por consola', busca: 'busca texto o archivos por consola', lista: 'lista carpetas', python: 'corre Python', node: 'corre Node o npm', red: 'se conecta a la red', archivos: 'copia, mueve o borra archivos', sistema: 'mira o cambia algo del sistema', script: 'corre un script' };
     const MOTIVO_PISTA = {
       p: ['por tus palabras', COLOR.consulta, 'rayo de la pista: eligió la nota porque el pedido coincide con un tramo de ella', 'por palabras'],
@@ -10643,7 +10643,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     const opcionConsulta = ev => OPCIONES_CEREBRO.has(ev.p) ? '--' + ev.p : '';
     const textoConsulta = ev => {
       const cuantas = recomendadas(ev).length;
-      return ['a Neuromapa', opcionConsulta(ev)].filter(Boolean).join(' · ') + (cuantas ? ' → ' + cuantas + (cuantas === 1 ? ' nota' : ' notas') : '');
+      return ['a Synapsis', opcionConsulta(ev)].filter(Boolean).join(' · ') + (cuantas ? ' → ' + cuantas + (cuantas === 1 ? ' nota' : ' notas') : '');
     };
     function notasDe(ev) {
       if (ev._notas) return ev._notas;
@@ -10704,7 +10704,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     };
     const frase = ev => {
       if (ev.e === 'falla') return 'falló ' + recortar(nombreFalla(ev), 24);
-      if (ev.k === 'consulta') return ['consulta a Neuromapa', opcionConsulta(ev)].filter(Boolean).join(' ');
+      if (ev.k === 'consulta') return ['consulta a Synapsis', opcionConsulta(ev)].filter(Boolean).join(' ');
       if (ev.f) return nombreEvento(ev) + ' ' + recortar(nombreCorto(ev), 24);
       const fs = rutasLeidas(ev);
       if (fs.length) return nombreEvento(ev) + ' ' + recortar(archivoCorto(fs[0]), 24) + yMas(fs.length - 1);
@@ -11122,7 +11122,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     let repintando = false;
     const ZOCALO_MIN = 1800;
     const ZOCALO_VIDA = 9000;
-    const QUE_EVENTO = { usuario: 'le llega un mensaje', aviso: 'recibe la pista de Neuromapa', recuerda: 'Neuromapa le recuerda una nota al editar', guarda: 'Neuromapa le recuerda guardar lo decidido', fin: 'terminó de responder', espera: 'espera tu OK', compacta: 'comprime su memoria', inicio: 'abre el chat', cierre: 'cierra el chat', 'sub-fin': 'un agente terminó' };
+    const QUE_EVENTO = { usuario: 'le llega un mensaje', aviso: 'recibe la pista de Synapsis', recuerda: 'Synapsis le recuerda una nota al editar', guarda: 'Synapsis le recuerda guardar lo decidido', fin: 'terminó de responder', espera: 'espera tu OK', compacta: 'comprime su memoria', inicio: 'abre el chat', cierre: 'cierra el chat', 'sub-fin': 'un agente terminó' };
     const zocalo = { el: $('#zocalo'), quien: $('#zocalo-quien'), texto: $('#zocalo-texto'), ev: null, t: -Infinity, pendiente: null, espera: 0, apagar: 0 };
     const mayuscula = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 
@@ -11137,7 +11137,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       if (ev.k === 'consulta') {
         const cuantas = recomendadas(ev).length;
         const op = opcionConsulta(ev);
-        return 'le pregunta a Neuromapa' + (op ? ' (' + op + ')' : '') + (cuantas ? ' y le recomienda ' + cuantas + (cuantas === 1 ? ' nota' : ' notas') : '');
+        return 'le pregunta a Synapsis' + (op ? ' (' + op + ')' : '') + (cuantas ? ' y le recomienda ' + cuantas + (cuantas === 1 ? ' nota' : ' notas') : '');
       }
       if (ev.k === 'ejecutar') {
         const s = segundosDe(ev);
@@ -11285,10 +11285,10 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     function textoConsultas(cq) {
       const n = v => Number.isFinite(v) && v > 0 ? v : 0;
       const total = n(cq.total);
-      if (!total) return 'Consultas a Neuromapa: ninguna todavía.';
+      if (!total) return 'Consultas a Synapsis: ninguna todavía.';
       const opciones = Object.entries(cq.porOpcion || {}).filter(([o, v]) => OPCIONES_CEREBRO.has(o) && n(v))
         .sort((a, b) => b[1] - a[1]).map(([o, v]) => '-' + UNIR + '-' + UNIR + o + ESPACIO_FIJO + v).join(', ');
-      const partes = ['Consultas a Neuromapa: ' + total + (opciones ? ' (' + opciones + ')' : '')];
+      const partes = ['Consultas a Synapsis: ' + total + (opciones ? ' (' + opciones + ')' : '')];
       if (n(cq.pedidos)) partes.push('el chat consultó en ' + n(cq.conConsulta) + ' de ' + n(cq.pedidos) + ' pedidos');
       if (n(cq.recomendadas)) partes.push('de ' + n(cq.recomendadas) + ' notas recomendadas leyó después ' + n(cq.leidas) + ' (' + Math.round(100 * n(cq.leidas) / n(cq.recomendadas)) + ' %)');
       return partes.join(' · ') + '.';
@@ -13082,7 +13082,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
         recibir(sano);
       } catch (error) {
         vivo.fallas = (vivo.fallas || 0) + 1;
-        console.error('Neuromapa: no pude mostrar un evento en vivo (' + vivo.fallas + ' en esta pestaña):', error);
+        console.error('Synapsis: no pude mostrar un evento en vivo (' + vivo.fallas + ' en esta pestaña):', error);
       }
     }
 
@@ -13672,7 +13672,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
         asegurarChats();
         pedirDibujo();
       } catch (error) {
-        console.error('Neuromapa: no pude volver al vivo después de repetir:', error);
+        console.error('Synapsis: no pude volver al vivo después de repetir:', error);
       } finally {
         probar.disabled = false;
         caja.classList.remove('repitiendo');

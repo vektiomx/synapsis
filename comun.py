@@ -10,11 +10,14 @@ sin migrar nada, y el mapa en vivo muestra la actividad de los tres por igual. A
 rutas se pueden fijar a mano con las variables de entorno NEUROMAPA_ROOT y
 NEUROMAPA_DATA.
 """
+import json
 import os
 from pathlib import Path
 
-ENGINE_PREDETERMINADO = Path(__file__).resolve().parent / 'engine'
+REPO = Path(__file__).resolve().parent
+ENGINE_PREDETERMINADO = REPO / 'engine'
 CARPETA_DATOS_PREDETERMINADA = Path.home() / '.claude' / 'plugins' / 'data' / 'neuromapa-neuromapa'
+PUNTERO = Path.home() / '.synapsis.json'
 
 
 def raiz_motor():
@@ -29,3 +32,13 @@ def carpeta_datos():
     base = Path.home() / '.claude' / 'plugins' / 'data'
     candidatos = sorted(base.glob('neuromapa*')) if base.is_dir() else []
     return candidatos[0] if candidatos else CARPETA_DATOS_PREDETERMINADA
+
+
+def anotar_ubicacion():
+    """Deja un puntero en ~/.synapsis.json con la ruta real del repo, para que otros
+    proyectos (ej. el dev:all de otra app) lo encuentren sin tener que adivinar la
+    carpeta ni leer la configuración interna de Claude Code/Codex/Antigravity."""
+    try:
+        PUNTERO.write_text(json.dumps({'repo': str(REPO)}, indent=2) + '\n', encoding='utf-8')
+    except OSError:
+        pass

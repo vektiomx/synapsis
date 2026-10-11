@@ -66,6 +66,7 @@ def main():
             ruta_hooks.unlink()
         raise
     print('Synapsis instalado para Antigravity. Copia de seguridad en: ' + str(backup))
+    comun.anotar_ubicacion()
     print('Reiniciá Antigravity para que cargue los hooks nuevos.')
 
 

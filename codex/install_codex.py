@@ -100,6 +100,7 @@ def main():
                 ruta.unlink()
         raise
     print('Synapsis instalado para Codex. Copia de seguridad en: ' + str(backup))
+    comun.anotar_ubicacion()
     print('Reiniciá Codex y confiá los hooks nuevos con /hooks en la CLI.')
 
 
