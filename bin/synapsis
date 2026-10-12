@@ -5,6 +5,7 @@ Sin argumento de herramienta, instala en todo lo que detecte en esta máquina. C
 instala solo ahí. Es seguro de correr de nuevo cuando instales una herramienta nueva.
 """
 import argparse
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -93,6 +94,19 @@ def main():
         resultado = subprocess.run([sys.executable, str(script)] + extra)
         if resultado.returncode != 0:
             fallo = True
+    if not fallo and sys.platform.startswith('linux'):
+        if shutil.which('systemctl'):
+            print('--- Servicio del mapa ---')
+            resultado = subprocess.run([
+                sys.executable, str(BASE / 'linux' / 'instalar_servicio_mapa.py'),
+                *extra,
+            ])
+            if resultado.returncode != 0:
+                print('Las integraciones quedaron instaladas, pero falló el servicio del mapa.',
+                      file=sys.stderr)
+                fallo = True
+        else:
+            print('No hay systemctl: abrí el mapa manualmente con neuromapa abrir.')
     return 1 if fallo else 0
 
 

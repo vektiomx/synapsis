@@ -164,9 +164,12 @@ install a new tool later). To only check without changing anything, add `--dry-r
 
 ### The live map as a service (Linux)
 
-By default, the map (the 3D page) only runs while you have it open by hand with
-`neuromapa abrir`. On Linux it can be left running on its own, without having to
-remember to open it:
+On Linux with systemd, `python3 bin/synapsis install` also installs and starts the
+map service after the selected integrations finish successfully.
+With `--dry-run`, it only shows the plan without writing files or starting services.
+If the service fails, the command reports the error and exits with a nonzero status;
+the installed integrations are preserved. Without systemd, open the map manually
+with `neuromapa abrir`. You can also manage the service separately:
 
 ```sh
 python3 linux/instalar_servicio_mapa.py              # turns it on and sets it to autostart

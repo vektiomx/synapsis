@@ -165,8 +165,12 @@ agregá `--dry-run`.
 
 ### El mapa en vivo como servicio (Linux)
 
-Por defecto, el mapa (la página 3D) solo corre mientras lo tengas abierto a mano con
-`neuromapa abrir`. En Linux se puede dejar prendido solo, sin acordarse de abrirlo:
+En Linux con systemd, `python3 bin/synapsis install` también instala y levanta el
+servicio del mapa al terminar correctamente las integraciones seleccionadas.
+Con `--dry-run` solo muestra lo que haría, sin escribir ni iniciar servicios.
+Si el servicio falla, el comando informa el error y termina con código distinto de cero;
+las integraciones ya instaladas se conservan. Sin systemd, el mapa se abre manualmente
+con `neuromapa abrir`. También podés administrar el servicio por separado:
 
 ```sh
 python3 linux/instalar_servicio_mapa.py              # lo prende y lo deja arrancando solo
