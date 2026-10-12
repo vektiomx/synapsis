@@ -91,10 +91,16 @@ def main():
             hook_evento.escribir_evento(ev)
 
         elif event_type == 'PostToolUse':
+            tool_call = data.get('toolCall') or {}
+            tool_name_raw = tool_call.get('name') or ''
+            args_raw = tool_call.get('args') or {}
+            mapped_name, mapped_input = map_tool(tool_name_raw, args_raw)
             error = data.get('error')
             payload = {
                 'hook_event_name': 'PostToolUse' if not error else 'PostToolUseFailure',
                 'session_id': conversation_id,
+                'tool_name': mapped_name,
+                'tool_input': mapped_input,
                 'cwd': cwd,
                 'error': error,
             }
