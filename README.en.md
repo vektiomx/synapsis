@@ -27,6 +27,45 @@ What `synapsis` adds on top of that: the three tools (Claude Code, Codex, Antigr
 feed and read **the same** brain, with real hooks in all three — not only in the one
 that has the official plugin.
 
+## How the engine actually searches and learns (real mechanism, read from the code)
+
+This is not semantic indexing and there are no embeddings — it's simpler and more
+auditable than that. Two separate pieces that get multiplied together:
+
+**1. Lexical search (BM25).** `buscador.py` indexes note text by word, with stemming
+(`cantidad`/`cantidades` count the same) and typo tolerance via edit distance. A note's
+score for a query is standard BM25 (term frequency, discounted by document length),
+with fixed weights on top: `instrucciones`-type notes weigh 1.6×, a term matching the
+title weighs 2×, a partial stem match 0.8×, etc. None of this understands meaning —
+it's rule-weighted word counting, not vector similarity.
+
+**2. A co-occurrence graph, learned and actually pruned.** Separately,
+`aprender_memoria.py` records which files/notes get used together within a window of 8
+consecutive actions (tolerating gaps of up to 30 minutes), and raises their connection
+weight. That graph decays on its own: half of each weight is lost every 14 days if not
+reinforced, and each node gets trimmed to its 30 strongest neighbors — any connection
+that falls below 0.1 gets dropped outright (`podar_lazos()` in `aprender_comun.py`).
+That pruning is literal, not a metaphor.
+
+**How they combine:** each note's lexical BM25 score gets **multiplied** by a factor
+from that learned graph (stronger if that note usually accompanies the topic you
+asked about), and **halved** if the note belongs to a different project than the one
+you're currently working in (`OTRO_PROYECTO = 0.5` in `buscador.py`).
+
+**Real numbers from this machine right now** (`python3 cerebro.py --aprendido`):
+
+```
+Últimos 7 días: 141 pedidos, 352 archivos abiertos o editados, 28 pistas con 6 notas leídas después.
+Se usan juntos (más fuerte primero):
+  0.57  Components/CreateEditServiceModal.tsx ↔ ServiceCatalog/UpdateServiceCatalogRequest.php
+  0.57  Controllers/ServiceCatalogController.php ↔ ServiceCatalog/Index.tsx
+  0.57  ServiceCatalog/StoreServiceCatalogRequest.php ↔ ServiceCatalog/Index.tsx
+```
+
+Those three pairs at weight 0.57 are exactly the files that got touched together while
+adding service-catalog categorization in a recent session — the engine connected them
+on its own, with nobody telling it they belonged together.
+
 ## How it does it
 
 Each tool has its own "hook" format (a lifecycle event: a session started, it's about to
