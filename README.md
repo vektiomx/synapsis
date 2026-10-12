@@ -66,6 +66,15 @@ misma pregunta, antes y después de agregar un puntaje mínimo para entrar al cu
 Se corrió además la prueba de humo oficial del motor (753 casos): 750 pasaron, 3 son
 específicos de Windows/PowerShell y no aplican en esta máquina — ninguna falla real.
 
+**Segundo hallazgo, verificando el arreglo por el camino real (no la consola):**
+probando desde el servidor MCP tal como lo usa Claude Code de verdad, el arreglo no
+se aplicaba — el servidor del mapa en vivo tenía el código viejo cargado en memoria
+desde antes de parchar `buscador.py`. **Si cambias algo en `engine/`, hay que
+reiniciar ese servidor** (`neuromapa abrir --reiniciar`) para que lo tome; si no,
+sigue corriendo el código anterior indefinidamente, sin avisar que está desactualizado.
+Después de reiniciarlo, el camino real (servidor MCP → `sobre`) da el mismo resultado
+que la prueba directa: 1 nota, no 3.
+
 ## Qué beneficio real tiene esto para un proyecto
 
 - **Menos "esto ya lo decidimos" repetido.** Una decisión de arquitectura, una regla de

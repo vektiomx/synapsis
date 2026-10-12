@@ -66,6 +66,15 @@ to qualify for that quota:
 The engine's own official smoke test (753 cases) was also run: 750 passed, 3 are
 Windows/PowerShell-specific and don't apply on this machine — no real failures.
 
+**Second finding, verifying the fix through the real path (not the console):**
+testing it through the MCP server the way Claude Code actually uses it, the fix
+wasn't applied — the live map server had the old code loaded in memory from before
+`buscador.py` got patched. **If you change anything in `engine/`, you have to
+restart that server** (`neuromapa abrir --reiniciar`) for it to take effect;
+otherwise it keeps running the old code indefinitely, with no warning that it's
+stale. After restarting it, the real path (MCP server → `sobre`) gives the same
+result as the direct test: 1 note, not 3.
+
 ## What real benefit this has for a project
 
 - **Less "we already decided this," repeated.** An architecture decision, a non-obvious
