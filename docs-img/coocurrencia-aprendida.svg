@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="286" viewBox="0 0 640 286" font-family="system-ui, sans-serif">
+  <rect width="640" height="286" fill="#ffffff"/>
+  <text x="20" y="28" font-size="15" font-weight="600" fill="#1f2430">Peso aprendido de coocurrencia</text>
+  <text x="250" y="77.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">synapsis/README.en.md ↔ README.md</text>
+<rect x="260" y="60" width="270.1" height="26" rx="4" fill="#4c6ef5"/>
+<text x="538.1428571428571" y="77.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0.61</text>
+<text x="250" y="113.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">CreateEditServiceModal.tsx ↔ UpdateServiceCatalogRequest.php</text>
+<rect x="260" y="96" width="252.4" height="26" rx="4" fill="#4c6ef5"/>
+<text x="520.4285714285714" y="113.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0.57</text>
+<text x="250" y="149.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">ServiceCatalogController.php ↔ ServiceCatalog/Index.tsx</text>
+<rect x="260" y="132" width="252.4" height="26" rx="4" fill="#4c6ef5"/>
+<text x="520.4285714285714" y="149.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0.57</text>
+<text x="250" y="185.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">StoreServiceCatalogRequest.php ↔ ServiceCatalog/Index.tsx</text>
+<rect x="260" y="168" width="252.4" height="26" rx="4" fill="#4c6ef5"/>
+<text x="520.4285714285714" y="185.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0.57</text>
+<text x="250" y="221.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">UpdateServiceCatalogRequest.php ↔ ServiceCatalog/Index.tsx</text>
+<rect x="260" y="204" width="252.4" height="26" rx="4" fill="#4c6ef5"/>
+<text x="520.4285714285714" y="221.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0.57</text>
+<text x="250" y="257.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">ServiceCatalogService.php ↔ ServiceCatalog/Index.tsx</text>
+<rect x="260" y="240" width="252.4" height="26" rx="4" fill="#4c6ef5"/>
+<text x="520.4285714285714" y="257.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0.57</text>
+</svg>

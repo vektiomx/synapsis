@@ -34,19 +34,36 @@ BM25, con corrección de errores de tipeo), combinada con un grafo de qué notas
 archivos se usan juntos. Ese grafo se poda de verdad — las conexiones débiles se
 olvidan solas con el tiempo, no quedan acumuladas para siempre.
 
-**Números reales de esta máquina ahora mismo** (`python3 cerebro.py --aprendido`):
+**Lo que aprendió solo**, sin que nadie le dijera qué archivos iban juntos (salida real
+de `cerebro.py --aprendido`, sacada después de la sesión donde agregamos una categoría
+nueva al catálogo de servicios — los archivos que tocamos juntos son justo los que
+conectó):
 
-```
-Últimos 7 días: 141 pedidos, 352 archivos abiertos o editados, 28 pistas con 6 notas leídas después.
-Se usan juntos (más fuerte primero):
-  0.57  Components/CreateEditServiceModal.tsx ↔ ServiceCatalog/UpdateServiceCatalogRequest.php
-  0.57  Controllers/ServiceCatalogController.php ↔ ServiceCatalog/Index.tsx
-  0.57  ServiceCatalog/StoreServiceCatalogRequest.php ↔ ServiceCatalog/Index.tsx
-```
+![Peso aprendido de coocurrencia entre archivos](docs-img/coocurrencia-aprendida.svg)
 
-Esos tres pares con peso 0.57 son justamente los archivos que tocamos juntos al agregar
-la categorización del catálogo de servicios en una sesión reciente — el motor conectó
-esos archivos solo, sin que nadie le dijera que iban juntos.
+**Qué tan bien funciona en la práctica, sin maquillar el número:** de las notas que
+recomendó, esto es cuántas veces se terminaron leyendo después (de cada 10 veces que
+las recomendó):
+
+![Efectividad de las recomendaciones](docs-img/efectividad-pistas.svg)
+
+Esto es honesto a propósito: unas notas se usan después casi siempre, otras casi nunca.
+No es una cifra de marketing — es la métrica real que el propio motor guarda
+(`aprendido.json`) para calibrarse.
+
+## Qué beneficio real tiene esto para un proyecto
+
+- **Menos "esto ya lo decidimos" repetido.** Una decisión de arquitectura, una regla de
+  negocio no obvia, un gotcha de testing — quedan como nota ligada al código que tocan.
+  La próxima vez que alguien (o cualquiera de las 3 IAs) toque ese código, la nota
+  aparece sola, antes de que se vuelva a preguntar o se repita el mismo error.
+- **No depende de qué IA usaste ese día.** Si la decisión quedó en una nota mientras
+  trabajabas con Claude Code, y al día siguiente abres Codex, la nota sigue
+  apareciendo — hoy, sin `synapsis`, eso no pasaba: cada herramienta tenía su propio
+  silo.
+- **El historial de mala memoria se auto-limpia.** Si algo se anotó y nunca se volvió
+  a usar, su peso decae; si una nota queda vieja o apunta a código que ya no existe, el
+  "médico" lo marca para revisión en vez de dejarlo como verdad silenciosa.
 
 ## Cómo lo hace
 

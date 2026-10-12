@@ -34,19 +34,35 @@ It's not semantic indexing and there are no embeddings: it's lexical word search
 used together. That graph is actually pruned — weak connections fade away on their
 own over time, they don't pile up forever.
 
-**Real numbers from this machine right now** (`python3 cerebro.py --aprendido`):
+**What it learned on its own**, with nobody telling it which files belonged together
+(real output from `cerebro.py --aprendido`, taken after the session where a new
+category was added to a service catalog — the files touched together are exactly the
+ones it connected):
 
-```
-Últimos 7 días: 141 pedidos, 352 archivos abiertos o editados, 28 pistas con 6 notas leídas después.
-Se usan juntos (más fuerte primero):
-  0.57  Components/CreateEditServiceModal.tsx ↔ ServiceCatalog/UpdateServiceCatalogRequest.php
-  0.57  Controllers/ServiceCatalogController.php ↔ ServiceCatalog/Index.tsx
-  0.57  ServiceCatalog/StoreServiceCatalogRequest.php ↔ ServiceCatalog/Index.tsx
-```
+![Learned co-occurrence weight between files](docs-img/coocurrencia-aprendida.svg)
 
-Those three pairs at weight 0.57 are exactly the files that got touched together while
-adding service-catalog categorization in a recent session — the engine connected them
-on its own, with nobody telling it they belonged together.
+**How well it actually works in practice, unvarnished:** of the notes it recommended,
+this is how many times they actually got read afterward (out of every 10 times it
+recommended them):
+
+![Effectiveness of the recommendations](docs-img/efectividad-pistas.svg)
+
+This is honest on purpose: some notes get used afterward almost every time, others
+almost never. It's not a marketing number — it's the real metric the engine itself
+keeps (`aprendido.json`) to calibrate itself.
+
+## What real benefit this has for a project
+
+- **Less "we already decided this," repeated.** An architecture decision, a non-obvious
+  business rule, a testing gotcha — they become a note tied to the code they touch. The
+  next time anyone (or any of the 3 AIs) touches that code, the note surfaces on its
+  own, before the question gets asked again or the same mistake repeats.
+- **It doesn't depend on which AI you used that day.** If the decision got written down
+  while working with Claude Code, and you open Codex the next day, the note still
+  shows up — before `synapsis`, each tool had its own silo.
+- **Stale memory cleans itself up.** If something got noted and never got used again,
+  its weight decays; if a note goes stale or points at code that no longer exists, the
+  health checker flags it for review instead of leaving it as silent truth.
 
 ## How it does it
 

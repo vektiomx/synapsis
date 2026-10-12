@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="286" viewBox="0 0 640 286" font-family="system-ui, sans-serif">
+  <rect width="640" height="286" fill="#ffffff"/>
+  <text x="20" y="28" font-size="15" font-weight="600" fill="#1f2430">Veces leída después de recomendada, de cada 10</text>
+  <text x="250" y="77.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">migrations-edit-create-files.md</text>
+<rect x="260" y="60" width="155.0" height="26" rx="4" fill="#f08c00"/>
+<text x="423.0" y="77.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">5/10</text>
+<text x="250" y="113.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">fcsj-backend-branch-switcher.md (1)</text>
+<rect x="260" y="96" width="124.0" height="26" rx="4" fill="#f08c00"/>
+<text x="392.0" y="113.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">4/10</text>
+<text x="250" y="149.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">fcsj-backend-branch-switcher.md (2)</text>
+<rect x="260" y="132" width="2.0" height="26" rx="4" fill="#f08c00"/>
+<text x="270" y="149.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0/10</text>
+<text x="250" y="185.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">payroll-business-rules.md</text>
+<rect x="260" y="168" width="2.0" height="26" rx="4" fill="#f08c00"/>
+<text x="270" y="185.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0/10</text>
+<text x="250" y="221.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">landing-design-direction.md</text>
+<rect x="260" y="204" width="2.0" height="26" rx="4" fill="#f08c00"/>
+<text x="270" y="221.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0/10</text>
+<text x="250" y="257.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">testing-gotchas.md</text>
+<rect x="260" y="240" width="2.0" height="26" rx="4" fill="#f08c00"/>
+<text x="270" y="257.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0/10</text>
+</svg>
