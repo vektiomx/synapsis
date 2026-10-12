@@ -208,10 +208,12 @@ it doesn't arrive on its own. To update it: clone the upstream project again (se
 overwriting anything of `synapsis/`'s own, which lives outside that folder), and run
 `bin/synapsis install` again on each machine.
 
-**Watch out for a local patch:** `engine/buscador.py` carries a change of ours (a
-`PUNTAJE_MINIMO_LEER` constant and its use in `sobre()`, see above) that doesn't exist
-in the original project. If you update `engine/` by copying in a newer `buscador.py`,
-that patch gets lost — you'll need to reapply it by hand after updating.
+**Watch out for 2 local patches**, which don't exist in the original project — if you
+update `engine/` by copying in files from a newer version, they get lost and need to
+be reapplied by hand:
+- `engine/buscador.py`: the `PUNTAJE_MINIMO_LEER` constant and its use in `sobre()`.
+- `engine/servidor.py`: the code-fingerprint comparison on reopen, so the map
+  restarts itself if the code changed (see above).
 
 ## Verified live
 

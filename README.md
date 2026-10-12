@@ -208,10 +208,12 @@ llega sola. Para actualizarla: clonar de nuevo el proyecto de origen (ver
 propio de `synapsis/`, que vive afuera de esa carpeta), y volver a correr
 `bin/synapsis install` en cada máquina.
 
-**Ojo con un parche local:** `engine/buscador.py` tiene un cambio nuestro (una
-constante `PUNTAJE_MINIMO_LEER` y su uso en `sobre()`, ver más arriba) que no existe en
-el proyecto original. Si actualizan `engine/` copiando el `buscador.py` de una versión
-nueva, ese parche se pierde — hay que volver a aplicarlo a mano después de actualizar.
+**Ojo con 2 parches locales**, que no existen en el proyecto original — si actualizan
+`engine/` copiando archivos de una versión nueva, se pierden y hay que reaplicarlos a
+mano:
+- `engine/buscador.py`: la constante `PUNTAJE_MINIMO_LEER` y su uso en `sobre()`.
+- `engine/servidor.py`: la comparación de huella de código al reabrir el mapa, para
+  que se reinicie solo si el código cambió (ver más arriba).
 
 ## Verificado en vivo
 
