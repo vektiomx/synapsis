@@ -161,9 +161,8 @@ Measured with `time` on this installation, on 2026-10-11:
 
 Functional verification (not just shape): each one was really installed in a separate
 test folder, sent a real event with the exact payload each tool actually sends, and
-confirmed it showed up in `eventos.jsonl` — for all 3. The full detail of what was
-tested and what's still untested live (inside the real app, not simulated) is under
-"Still to verify" below.
+confirmed it showed up in `eventos.jsonl` — for all 3. Since then it's also been
+confirmed with all 3 real apps in normal use — see "Verified live" below.
 
 ## What each installer does
 
@@ -202,15 +201,16 @@ overwriting anything of `synapsis/`'s own, which lives outside that folder), and
 in the original project. If you update `engine/` by copying in a newer `buscador.py`,
 that patch gets lost — you'll need to reapply it by hand after updating.
 
-## Still to verify
+## Verified live
 
-The Codex bridge passed logic tests for all 12 events, but only 2 (`SessionStart`,
-`Interrupt`) were ever confirmed with real events from the real app (not hand-simulated,
-like the tests above). The Antigravity one and the Claude Code one (writing directly
-into `settings.json` instead of using the plugin) weren't tested with the real app
-running either — only with hand-simulated payloads, identical in shape to the real
-ones. If something doesn't show up on the map, check whether the hook ran before
-assuming something is broken.
+Confirmed with all 3 real apps running (not simulated): using Codex and Antigravity
+normally, their actions show up on the live map. One real detail to reproduce it: in
+**Codex you have to go through the CLI** (the desktop app isn't enough) and **trust
+the hooks by hand** with `/hooks` — otherwise Codex silently ignores them and it
+looks like nothing works.
+
+If something doesn't show up on the map, check that first (did you use the CLI? did
+you trust the hooks?) before assuming something is broken.
 
 ## Real limitation
 

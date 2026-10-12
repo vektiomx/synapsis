@@ -162,9 +162,8 @@ Medido con `time` sobre esta instalación, el 2026-10-11:
 
 Verificación funcional (no solo de forma): instalé de verdad cada una en una carpeta de
 prueba aparte, le mandé un evento real con el payload exacto que cada herramienta envía,
-y confirmé que apareció en `eventos.jsonl` — para las 3. El detalle completo de qué se
-probó y qué falta probar en vivo (dentro de la app real, no simulado) está en
-"Qué falta verificar" más abajo.
+y confirmé que apareció en `eventos.jsonl` — para las 3. Desde entonces se confirmó
+también con las 3 apps reales en uso normal — ver "Verificado en vivo" más abajo.
 
 ## Qué hace cada instalador
 
@@ -202,15 +201,16 @@ constante `PUNTAJE_MINIMO_LEER` y su uso en `sobre()`, ver más arriba) que no e
 el proyecto original. Si actualizan `engine/` copiando el `buscador.py` de una versión
 nueva, ese parche se pierde — hay que volver a aplicarlo a mano después de actualizar.
 
-## Qué falta verificar
+## Verificado en vivo
 
-El bridge de Codex pasó pruebas de lógica para los 12 eventos, pero solo 2
-(`SessionStart`, `Interrupt`) se confirmaron con eventos reales de la app real en algún
-momento (no simulados a mano, como hice yo en las pruebas de arriba). El de Antigravity
-y el de Claude Code (escribir directo en `settings.json` en vez de usar el plugin)
-tampoco se probaron con la app real corriendo — solo con payloads simulados a mano,
-idénticos en forma a los reales. Si algo no anota en el mapa, revisá primero si el hook
-corrió antes de asumir que algo está roto.
+Confirmado con las 3 apps reales corriendo (no simulado): usando Codex y Antigravity
+normalmente, sus acciones aparecen en el mapa en vivo. Un detalle real para
+reproducirlo: en **Codex hay que entrar por la CLI** (no alcanza con la app de
+escritorio) y **confiar los hooks a mano** con `/hooks` — si no, Codex los ignora en
+silencio y parece que no funciona.
+
+Si algo no anota en el mapa, revisá primero eso (¿entraste por la CLI? ¿confiaste los
+hooks?) antes de asumir que algo está roto.
 
 ## Límite real
 
