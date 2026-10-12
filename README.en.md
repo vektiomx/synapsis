@@ -188,6 +188,16 @@ printed *"El código de Neuromapa cambió desde que este mapa se prendió: lo re
 para usar el nuevo"* and started clean. The official smoke test (753 cases) stayed at
 750/753 after this change.
 
+## Synapsis's own tests (not the engine's)
+
+`tests/test_installers.py` (no dependencies, `python3 -m unittest discover -s tests`)
+covers our own code: installing twice doesn't duplicate hooks, an old install under
+the previous name ("Neuromapa") gets recognized and replaced instead of stacking,
+disabling the marketplace plugin doesn't touch other hooks (e.g. Orca's), and
+reinstalling Antigravity doesn't overwrite unrelated keys in `hooks.json`. 10/10 pass,
+including one that encodes the real Codex duplication bug found and fixed today — if
+it ever comes back, this test catches it before a user does.
+
 ## Myths worth clearing up
 
 - **"If I never installed Claude Code, I have no memory."** False: the notes folder

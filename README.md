@@ -188,6 +188,16 @@ mapa, se tocó `buscador.py`, y al volver a abrir avisó *"El código de Neuroma
 desde que este mapa se prendió: lo reinicio para usar el nuevo"* y arrancó limpio. La
 prueba de humo oficial (753 casos) sigue en 750/753 después de este cambio.
 
+## Pruebas propias de synapsis (no del motor)
+
+`tests/test_installers.py` (sin dependencias, `python3 -m unittest discover -s tests`)
+cubre lo nuestro: que instalar dos veces no duplique hooks, que una instalación vieja
+con el nombre anterior ("Neuromapa") se reconozca y reemplace en vez de sumarse, que
+desactivar el plugin del marketplace no toque hooks de otros (ej. Orca), y que
+reinstalar Antigravity no pise claves ajenas en `hooks.json`. 10/10 pasan, incluida una
+que codifica el bug real de duplicación de Codex que encontramos y arreglamos hoy — si
+vuelve a pasar, esta prueba lo atrapa antes que un usuario.
+
 ## Mitos que vale la pena aclarar
 
 - **"Si nunca instalé Claude Code, no tengo memoria."** Falso: la carpeta de notas
