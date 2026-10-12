@@ -66,6 +66,20 @@ misma pregunta, antes y después de agregar un puntaje mínimo para entrar al cu
 Se corrió además la prueba de humo oficial del motor (753 casos): 750 pasaron, 3 son
 específicos de Windows/PowerShell y no aplican en esta máquina — ninguna falla real.
 
+**Segunda vuelta: el piso fijo no alcanzaba.** Probando con más preguntas reales
+encontramos un caso que el piso de 1.0 no atrapaba: preguntar por nómina también traía
+"Landing design direction" (puntaje 2.1, por encima del piso, pero solo el 18% del
+puntaje de la nota que sí correspondía, 11.38). Se agregó una segunda regla: además del
+piso fijo, descartar lo que no llegue al 30 % del mejor puntaje de esa consulta.
+
+| Pregunta real | Antes (solo piso fijo) | Después (+ piso relativo) |
+|---|---|---|
+| "cómo va la nómina de esta semana" | Nómina + Branch switcher | Solo Nómina |
+| "landing en remotion" | Landing + Nómina | Solo Landing |
+
+Confirmado otra vez contra la prueba de humo oficial (750/753, sin cambios) y la propia
+de `synapsis` (10/10).
+
 **Segundo hallazgo, verificando el arreglo por el camino real (no la consola):**
 probando desde el servidor MCP tal como lo usa Claude Code de verdad, el arreglo no
 se aplicaba — el servidor del mapa en vivo tenía el código viejo cargado en memoria

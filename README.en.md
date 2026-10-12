@@ -66,6 +66,20 @@ to qualify for that quota:
 The engine's own official smoke test (753 cases) was also run: 750 passed, 3 are
 Windows/PowerShell-specific and don't apply on this machine — no real failures.
 
+**Round two: the fixed floor wasn't enough.** Testing with more real questions turned
+up a case the 1.0 floor didn't catch: asking about payroll also pulled in "Landing
+design direction" (score 2.1, above the floor, but only 18% of the score of the note
+that actually matched, 11.38). A second rule got added: besides the fixed floor, also
+drop anything that doesn't reach 30% of that query's best score.
+
+| Real question | Before (fixed floor only) | After (+ relative floor) |
+|---|---|---|
+| "how's payroll going this week" | Payroll + Landing design | Payroll only |
+| "landing page in remotion" | Landing + Payroll | Landing only |
+
+Confirmed again against the official smoke test (750/753, unchanged) and synapsis's
+own suite (10/10).
+
 **Second finding, verifying the fix through the real path (not the console):**
 testing it through the MCP server the way Claude Code actually uses it, the fix
 wasn't applied — the live map server had the old code loaded in memory from before
