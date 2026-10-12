@@ -176,6 +176,18 @@ también con las 3 apps reales en uso normal — ver "Verificado en vivo" más a
 - **Antigravity** (`antigravity/`): traduce sus eventos (`PreInvocation`, `PreToolUse`,
   `PostToolUse`, `PostInvocation`, `Stop`) al mismo formato.
 
+## El servidor ahora se autodetecta desactualizado
+
+El mapa en vivo guardaba una huella del código al prender, pero nunca la volvía a
+comparar al abrirlo de nuevo — así que si alguien parchaba `engine/` sin usar
+`--reiniciar`, el mapa seguía respondiendo con el código viejo, en silencio, para
+siempre. Se agregó la comparación: ahora `neuromapa abrir` revisa si el código en disco
+cambió desde que ese mapa prendió, y si cambió, se reinicia solo (igual que
+`--reiniciar`, sin tener que acordarse de pasarlo). Probado de verdad: se prendió un
+mapa, se tocó `buscador.py`, y al volver a abrir avisó *"El código de Neuromapa cambió
+desde que este mapa se prendió: lo reinicio para usar el nuevo"* y arrancó limpio. La
+prueba de humo oficial (753 casos) sigue en 750/753 después de este cambio.
+
 ## Mitos que vale la pena aclarar
 
 - **"Si nunca instalé Claude Code, no tengo memoria."** Falso: la carpeta de notas

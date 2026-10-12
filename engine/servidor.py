@@ -1441,6 +1441,14 @@ def main():
 
 def arrancar(anterior, candados, ruta_candado, puertos, abrir, solo):
     reiniciar = "--reiniciar" in sys.argv
+    if anterior and not reiniciar:
+        # synapsis: si el código en disco cambió desde que arrancó el que está prendido,
+        # no lo reusamos con código viejo en silencio — lo tratamos como --reiniciar.
+        codigo_anotado = leer_objeto_json(EN_VIVO / "servidor.json").get("codigo")
+        if codigo_anotado is not None and codigo_anotado != [list(h) for h in huella_del_programa()]:
+            reiniciar = True
+            print("El código de Neuromapa cambió desde que este mapa se prendió: lo reinicio para usar el nuevo.",
+                  flush=True)
     if solo and anterior and not reiniciar:
         print(f"Neuromapa ya estaba prendido: {a_la_vista(anterior)}")
         print(aviso_navegador(abrir_navegador(direccion_para_abrir(anterior)) if abrir else None, solo))
@@ -1489,7 +1497,8 @@ def arrancar(anterior, candados, ruta_candado, puertos, abrir, solo):
     threading.Thread(target=regenerador, args=(huella,), daemon=True).start()
     threading.Thread(target=aprendiz, daemon=True).start()
     try:
-        escribir_atomico(EN_VIVO / "servidor.json", json.dumps({"puerto": servidor.server_address[1], "pid": os.getpid()}))
+        escribir_atomico(EN_VIVO / "servidor.json", json.dumps({"puerto": servidor.server_address[1], "pid": os.getpid(),
+                                                                 "codigo": [list(h) for h in huella_del_programa()]}))
     except OSError:
         pass
     direccion = direccion_para_abrir(servidor.server_address[1], propia=True)
