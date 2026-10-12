@@ -78,7 +78,7 @@ piso fijo, descartar lo que no llegue al 30 % del mejor puntaje de esa consulta.
 | "landing en remotion" | Landing + Nómina | Solo Landing |
 
 Confirmado otra vez contra la prueba de humo oficial (750/753, sin cambios) y la propia
-de `synapsis` (10/10).
+de `synapsis` (11/11).
 
 **Tercera vuelta: el corrector de errores seguía inventando relaciones.** El caso
 "readme"→"read" (seis letras, dos de distancia) pasaba porque el corrector permitía
@@ -244,8 +244,9 @@ prueba de humo oficial (753 casos) sigue en 750/753 después de este cambio.
 `tests/test_installers.py` (sin dependencias, `python3 -m unittest discover -s tests`)
 cubre lo nuestro: que instalar dos veces no duplique hooks, que una instalación vieja
 con el nombre anterior ("Neuromapa") se reconozca y reemplace en vez de sumarse, que
-desactivar el plugin del marketplace no toque hooks de otros (ej. Orca), y que
-reinstalar Antigravity no pise claves ajenas en `hooks.json`. 10/10 pasan, incluida una
+desactivar el plugin del marketplace no toque hooks de otros (ej. Orca), que
+reinstalar Antigravity no pise claves ajenas en `hooks.json`, y que el skill de memoria
+compartido se copie bien. 11/11 pasan, incluida una
 que codifica el bug real de duplicación de Codex que encontramos y arreglamos hoy — si
 vuelve a pasar, esta prueba lo atrapa antes que un usuario.
 

@@ -78,7 +78,7 @@ drop anything that doesn't reach 30% of that query's best score.
 | "landing page in remotion" | Landing + Payroll | Landing only |
 
 Confirmed again against the official smoke test (750/753, unchanged) and synapsis's
-own suite (10/10).
+own suite (11/11).
 
 **Round three: the typo corrector kept inventing relationships.** The "readme"→"read"
 case (six letters, two apart) got through because the corrector allowed correcting to
@@ -245,9 +245,10 @@ para usar el nuevo"* and started clean. The official smoke test (753 cases) stay
 `tests/test_installers.py` (no dependencies, `python3 -m unittest discover -s tests`)
 covers our own code: installing twice doesn't duplicate hooks, an old install under
 the previous name ("Neuromapa") gets recognized and replaced instead of stacking,
-disabling the marketplace plugin doesn't touch other hooks (e.g. Orca's), and
-reinstalling Antigravity doesn't overwrite unrelated keys in `hooks.json`. 10/10 pass,
-including one that encodes the real Codex duplication bug found and fixed today — if
+disabling the marketplace plugin doesn't touch other hooks (e.g. Orca's),
+reinstalling Antigravity doesn't overwrite unrelated keys in `hooks.json`, and the
+shared memory skill copies correctly. 11/11 pass, including one that encodes the real
+Codex duplication bug found and fixed today — if
 it ever comes back, this test catches it before a user does.
 
 ## Codex and Antigravity now know when to save memory (with a real limit)

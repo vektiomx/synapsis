@@ -2,8 +2,8 @@
   <rect width="640" height="286" fill="#ffffff"/>
   <text x="20" y="28" font-size="15" font-weight="600" fill="#1f2430">Peso aprendido de coocurrencia</text>
   <text x="250" y="77.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">README.en.md ↔ README.md</text>
-<rect x="260" y="60" width="267.4" height="26" rx="4" fill="#4c6ef5"/>
-<text x="535.375" y="77.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0.69</text>
+<rect x="260" y="60" width="325.5" height="26" rx="4" fill="#4c6ef5"/>
+<text x="593.475" y="77.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0.84</text>
 <text x="250" y="113.68" text-anchor="end" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">CreateEditServiceModal.tsx ↔ UpdateServiceCatalogRequest.php</text>
 <rect x="260" y="96" width="220.9" height="26" rx="4" fill="#4c6ef5"/>
 <text x="488.875" y="113.68" font-size="12.5" fill="#1f2430" font-family="Menlo, monospace">0.57</text>
