@@ -250,6 +250,21 @@ reinstalling Antigravity doesn't overwrite unrelated keys in `hooks.json`. 10/10
 including one that encodes the real Codex duplication bug found and fixed today — if
 it ever comes back, this test catches it before a user does.
 
+## Codex and Antigravity now know when to save memory (with a real limit)
+
+Until now, only Claude Code had the "save this without being asked" push — it comes
+from its own product, not the engine. A shared skill got added
+(`skill_memoria/SKILL.md`) that `bin/synapsis install` copies on its own, for Codex
+and Antigravity, explaining when to save a note and the exact format — no special MCP
+tool needed, because saving memory is just writing a `.md` file (any tool with file
+editing can already do that).
+
+**The real, honest limit:** these tools' "Skills" load **on demand** (when the
+request resembles the skill's description), not always, the way Claude Code's own
+prompt does. Couldn't confirm this live (would need to see Codex/Antigravity decide
+to save something on their own in a real conversation) — still pending for you to
+confirm by using it, same as we did with the hooks.
+
 ## Myths worth clearing up
 
 - **"If I never installed Claude Code, I have no memory."** False: the notes folder

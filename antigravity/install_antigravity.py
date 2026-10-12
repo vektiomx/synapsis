@@ -45,7 +45,8 @@ def main():
     ruta_hooks = args.config_dir / 'hooks.json'
     contenido = preparar(ruta_hooks)
     if args.dry_run:
-        print(f'Configuración válida: {len(EVENTOS)} hooks en "neuromapa". No se cambió ningún archivo.')
+        print(f'Configuración válida: {len(EVENTOS)} hooks en "neuromapa" y el skill de memoria. '
+              'No se cambió ningún archivo.')
         return
     args.config_dir.mkdir(parents=True, exist_ok=True)
     backup = args.config_dir / 'neuromapa-backups' / datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')
@@ -65,7 +66,9 @@ def main():
         elif ruta_hooks.exists():
             ruta_hooks.unlink()
         raise
+    ruta_skill = comun.instalar_skill_memoria(args.config_dir / 'skills')
     print('Synapsis instalado para Antigravity. Copia de seguridad en: ' + str(backup))
+    print('Skill de memoria instalado en: ' + str(ruta_skill))
     comun.anotar_ubicacion()
     print('Reiniciá Antigravity para que cargue los hooks nuevos.')
 

@@ -42,3 +42,15 @@ def anotar_ubicacion():
         PUNTERO.write_text(json.dumps({'repo': str(REPO)}, indent=2) + '\n', encoding='utf-8')
     except OSError:
         pass
+
+
+def instalar_skill_memoria(carpeta_skills):
+    """Copia el skill que le enseña a la herramienta a guardar y consultar memoria por
+    su cuenta (ver skill_memoria/SKILL.md) a su carpeta global de skills. No requiere
+    el conector MCP: guardar una nota es solo escribir un .md, cualquier herramienta
+    con edición de archivos ya puede hacerlo."""
+    origen = REPO / 'skill_memoria' / 'SKILL.md'
+    destino = Path(carpeta_skills) / 'memoria-synapsis' / 'SKILL.md'
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_text(origen.read_text(encoding='utf-8'), encoding='utf-8')
+    return destino

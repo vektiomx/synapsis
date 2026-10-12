@@ -249,6 +249,21 @@ reinstalar Antigravity no pise claves ajenas en `hooks.json`. 10/10 pasan, inclu
 que codifica el bug real de duplicación de Codex que encontramos y arreglamos hoy — si
 vuelve a pasar, esta prueba lo atrapa antes que un usuario.
 
+## Codex y Antigravity ya saben cuándo guardar memoria (con un límite real)
+
+Hasta ahora, solo Claude Code tenía el empujón de "guardá esto sin que te lo pidan" —
+viene de su propio producto, no del motor. Se agregó un skill compartido
+(`skill_memoria/SKILL.md`) que `bin/synapsis install` copia solo, para Codex y
+Antigravity, explicándoles cuándo guardar una nota y el formato exacto — sin necesitar
+ninguna herramienta MCP especial, porque guardar memoria es solo escribir un archivo
+`.md` (cualquier herramienta con edición de archivos ya puede hacerlo).
+
+**El límite real, honesto:** las "Skills" de estas herramientas se cargan **a demanda**
+(cuando el pedido se parece a la descripción del skill), no siempre, como el prompt
+propio de Claude Code. No pude confirmarlo en vivo (necesitaría ver a Codex/Antigravity
+decidir guardar algo por su cuenta en una conversación real) — queda pendiente que lo
+confirmes usándolo, igual que hicimos con los hooks.
+
 ## Mitos que vale la pena aclarar
 
 - **"Si nunca instalé Claude Code, no tengo memoria."** Falso: la carpeta de notas

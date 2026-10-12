@@ -17,6 +17,17 @@ sys.path.insert(0, str(RAIZ / "claude-code"))
 sys.path.insert(0, str(RAIZ / "antigravity"))
 
 
+class SkillMemoriaTest(unittest.TestCase):
+    def test_instalar_skill_memoria_copia_el_archivo(self):
+        import comun
+        with tempfile.TemporaryDirectory() as tmp:
+            destino = comun.instalar_skill_memoria(Path(tmp))
+            self.assertTrue(destino.is_file())
+            contenido = destino.read_text(encoding="utf-8")
+            self.assertIn("name: memoria-synapsis", contenido)
+            self.assertIn("guardar", contenido.lower())
+
+
 class ComunTest(unittest.TestCase):
     def test_raiz_motor_por_defecto_es_engine(self):
         import comun

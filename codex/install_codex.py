@@ -75,7 +75,8 @@ def main():
                          'NEUROMAPA_ROOT a su ruta.')
     hp, cp, hooks, config = prepare(args.config_dir)
     if args.dry_run:
-        print(f'Configuración válida: {len(EVENTS)} hooks y el servidor MCP. No se cambió ningún archivo.')
+        print(f'Configuración válida: {len(EVENTS)} hooks, el servidor MCP y el skill de memoria. '
+              'No se cambió ningún archivo.')
         return
     args.config_dir.mkdir(parents=True, exist_ok=True)
     backup = args.config_dir / 'neuromapa-backups' / datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')
@@ -99,7 +100,9 @@ def main():
             elif ruta.exists():
                 ruta.unlink()
         raise
+    ruta_skill = comun.instalar_skill_memoria(args.config_dir / 'skills')
     print('Synapsis instalado para Codex. Copia de seguridad en: ' + str(backup))
+    print('Skill de memoria instalado en: ' + str(ruta_skill))
     comun.anotar_ubicacion()
     print('Reiniciá Codex y confiá los hooks nuevos con /hooks en la CLI.')
 
