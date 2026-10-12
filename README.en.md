@@ -240,10 +240,20 @@ it ever comes back, this test catches it before a user does.
 ## Maintaining the vendored engine
 
 `engine/` is a fixed copy, not a link to the original: if a new version ships upstream,
-it doesn't arrive on its own. To update it: clone the upstream project again (see
-`engine/LICENSE` for attribution), copy the `.py` files over `engine/` (without
-overwriting anything of `synapsis/`'s own, which lives outside that folder), and run
-`bin/synapsis install` again on each machine.
+it doesn't arrive on its own. Instead of copying files by hand (easy to overwrite a
+patch without noticing), use `actualizar_motor.py`:
+
+```sh
+python3 actualizar_motor.py /path/to/a/fresh/clone/of/neuromapa            # just shows what would change
+python3 actualizar_motor.py /path/to/a/fresh/clone/of/neuromapa --aplicar  # actually copies what's safe
+```
+
+It auto-copies what changed in files with no patch of ours; for the ones that do have
+a patch (`buscador.py`, `servidor.py`) it never overwrites them on its own — it shows
+the full diff between what's running here and the new version, so the patch can be
+reapplied by hand on top of that. Tested with a real simulated change: it correctly
+copied the one unpatched file and left the two patched ones untouched, showing exactly
+the expected diff. After updating, run `bin/synapsis install` again on each machine.
 
 **Watch out for 2 local patches**, which don't exist in the original project — if you
 update `engine/` by copying in files from a newer version, they get lost and need to

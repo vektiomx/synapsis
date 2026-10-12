@@ -240,10 +240,20 @@ vuelve a pasar, esta prueba lo atrapa antes que un usuario.
 ## Mantenimiento del motor vendorizado
 
 `engine/` es una copia fija, no un enlace al original: si sale una versión nueva, no
-llega sola. Para actualizarla: clonar de nuevo el proyecto de origen (ver
-`engine/LICENSE` para la atribución), copiar los `.py` sobre `engine/` (sin pisar nada
-propio de `synapsis/`, que vive afuera de esa carpeta), y volver a correr
-`bin/synapsis install` en cada máquina.
+llega sola. En vez de copiar archivos a mano (fácil de pisar un parche sin darse
+cuenta), usar `actualizar_motor.py`:
+
+```sh
+python3 actualizar_motor.py /ruta/a/un/clon/nuevo/de/neuromapa          # solo muestra qué cambiaría
+python3 actualizar_motor.py /ruta/a/un/clon/nuevo/de/neuromapa --aplicar # copia lo seguro de verdad
+```
+
+Copia automático lo que cambió en archivos sin parche propio; para los que sí tienen
+parche (`buscador.py`, `servidor.py`) nunca los pisa solo — muestra el diff completo
+entre lo que corre acá y la versión nueva, para aplicar el parche a mano sobre eso.
+Probado con un cambio simulado real: detectó y copió solo un archivo sin parche, y dejó
+intactos los dos con parche, mostrando exactamente el diff esperado. Después de
+actualizar, volver a correr `bin/synapsis install` en cada máquina.
 
 **Ojo con 2 parches locales**, que no existen en el proyecto original — si actualizan
 `engine/` copiando archivos de una versión nueva, se pierden y hay que reaplicarlos a
