@@ -162,6 +162,31 @@ to `~/.claude/neuromapa-backups`, `~/.codex/neuromapa-backups`, or
 `~/.gemini/config/neuromapa-backups` before writing, and it's safe to run again if you
 install a new tool later). To only check without changing anything, add `--dry-run`.
 
+### The live map as a service (Linux)
+
+By default, the map (the 3D page) only runs while you have it open by hand with
+`neuromapa abrir`. On Linux it can be left running on its own, without having to
+remember to open it:
+
+```sh
+python3 linux/instalar_servicio_mapa.py              # turns it on and sets it to autostart
+python3 linux/instalar_servicio_mapa.py --dry-run     # just shows what it would do
+python3 linux/instalar_servicio_mapa.py --quitar      # uninstalls it
+```
+
+Uses `systemd --user`: starts every time you log in, and if the process dies, it
+restarts on its own (`Restart=on-failure`). Actually tested: installed, confirmed
+`active (running)` via `systemctl --user status`, killed with `kill -9` and it
+recovered on its own within seconds with a new PID; uninstalled and confirmed nothing
+was left running and the service file was gone.
+
+To make it start even before logging in (not just at login): `loginctl enable-linger
+<your user>`.
+
+**Mac and Windows: not implemented.** They'd need `launchd` and Task Scheduler
+respectively — couldn't test either (no access to those machines), so nothing's built
+for them yet. Keep using `neuromapa abrir` by hand there.
+
 ### After installing
 
 - **Claude Code**: restart the app. If you had the "neuromapa" plugin active, it got

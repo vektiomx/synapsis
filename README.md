@@ -163,6 +163,30 @@ seguridad en `~/.claude/neuromapa-backups`, `~/.codex/neuromapa-backups` o
 si instalás una herramienta nueva más adelante). Para solo revisar sin cambiar nada,
 agregá `--dry-run`.
 
+### El mapa en vivo como servicio (Linux)
+
+Por defecto, el mapa (la página 3D) solo corre mientras lo tengas abierto a mano con
+`neuromapa abrir`. En Linux se puede dejar prendido solo, sin acordarse de abrirlo:
+
+```sh
+python3 linux/instalar_servicio_mapa.py              # lo prende y lo deja arrancando solo
+python3 linux/instalar_servicio_mapa.py --dry-run     # solo muestra qué haría
+python3 linux/instalar_servicio_mapa.py --quitar      # lo desinstala
+```
+
+Usa `systemd --user`: arranca cada vez que inicias sesión, y si el proceso se cae, se
+reinicia solo (`Restart=on-failure`). Probado de verdad: instalado, confirmado
+`active (running)` con `systemctl --user status`, matado con `kill -9` y se recuperó
+solo en unos segundos con un PID nuevo; desinstalado y confirmado que no queda nada
+corriendo ni el archivo del servicio.
+
+Para que arranque incluso antes de iniciar sesión (no solo al loguearte):
+`loginctl enable-linger <tu usuario>`.
+
+**Mac y Windows: no implementado.** Necesitarían `launchd` y el Programador de tareas
+respectivamente — no los pude probar (no tengo esas máquinas a mano), así que no hay
+nada armado para ellos todavía. Seguir usando `neuromapa abrir` a mano ahí.
+
 ### Después de instalar
 
 - **Claude Code**: reiniciá la app. Si tenías el plugin "neuromapa" activo, quedó
