@@ -54,3 +54,23 @@ def instalar_skill_memoria(carpeta_skills):
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(origen.read_text(encoding='utf-8'), encoding='utf-8')
     return destino
+
+
+def instalar_comando(dry_run=False):
+    """Expose the CLI without replacing unrelated user commands."""
+    destino = Path.home() / '.local' / 'bin' / 'synapsis'
+    origen = REPO / 'bin' / 'synapsis'
+    if destino.exists() or destino.is_symlink():
+        if not destino.is_symlink() or destino.resolve() != origen:
+            raise RuntimeError(f'Ya existe otro comando en {destino}; no lo reemplacé.')
+    if dry_run:
+        print(f'Crearía el comando {destino} → {origen}')
+        return destino
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    origen.chmod(origen.stat().st_mode | 0o111)
+    if not destino.is_symlink():
+        destino.symlink_to(origen)
+    print('Para abrir el mapa: synapsis abrir')
+    if str(destino.parent) not in os.environ.get('PATH', '').split(os.pathsep):
+        print(f'Agregá {destino.parent} al PATH de tu terminal para usar el comando.')
+    return destino

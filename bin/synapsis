@@ -5,12 +5,15 @@ Sin argumento de herramienta, instala en todo lo que detecte en esta máquina. C
 instala solo ahí. Es seguro de correr de nuevo cuando instales una herramienta nueva.
 """
 import argparse
+import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE))
+import comun
 INSTALADORES = {
     'claude': ('Claude Code', BASE / 'claude-code' / 'install_claude_code.py', lambda: (Path.home() / '.claude').is_dir()),
     'codex': ('Codex', BASE / 'codex' / 'install_codex.py', lambda: (Path.home() / '.codex').is_dir()),
@@ -70,10 +73,16 @@ def elegir_interactivo():
 def main():
     parser = argparse.ArgumentParser(prog='synapsis')
     sub = parser.add_subparsers(dest='accion')
+    sub.add_parser('abrir', help='Abre el mapa autenticado en el navegador')
     instalar = sub.add_parser('install', help='Instala los hooks de Synapsis')
     instalar.add_argument('herramienta', nargs='?', choices=list(INSTALADORES))
     instalar.add_argument('--dry-run', action='store_true')
     args = parser.parse_args()
+
+    if args.accion == 'abrir':
+        return subprocess.run([
+            '/bin/sh', str(comun.raiz_motor() / 'bin' / 'neuromapa'), 'abrir',
+        ], env={**os.environ, 'CLAUDE_PLUGIN_DATA': str(comun.carpeta_datos())}).returncode
 
     if args.accion != 'install':
         parser.print_help()
@@ -93,6 +102,12 @@ def main():
         print(f'--- {nombre} ---')
         resultado = subprocess.run([sys.executable, str(script)] + extra)
         if resultado.returncode != 0:
+            fallo = True
+    if not fallo and sys.platform != 'win32':
+        try:
+            comun.instalar_comando(dry_run=args.dry_run)
+        except (OSError, RuntimeError) as error:
+            print(f'No pude instalar el comando: {error}', file=sys.stderr)
             fallo = True
     if not fallo and sys.platform.startswith('linux'):
         if shutil.which('systemctl'):

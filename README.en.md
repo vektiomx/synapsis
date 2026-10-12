@@ -190,6 +190,20 @@ To make it start even before logging in (not just at login): `loginctl enable-li
 respectively — couldn't test either (no access to those machines), so nothing's built
 for them yet. Keep using `neuromapa abrir` by hand there.
 
+### Open the map easily
+
+Installation on Linux and macOS adds `synapsis` to `~/.local/bin`.
+With that directory on PATH, run this from any project:
+
+```sh
+synapsis abrir
+```
+
+It opens the browser with authenticated access and reuses a running map.
+You can also reinstall with `synapsis install codex`.
+If the installer reports a missing PATH entry, add `export PATH="$HOME/.local/bin:$PATH"`
+to your shell configuration and open a new terminal.
+
 ### After installing
 
 - **Claude Code**: restart the app. If you had the "neuromapa" plugin active, it got

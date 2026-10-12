@@ -191,6 +191,20 @@ Para que arranque incluso antes de iniciar sesión (no solo al loguearte):
 respectivamente — no los pude probar (no tengo esas máquinas a mano), así que no hay
 nada armado para ellos todavía. Seguir usando `neuromapa abrir` a mano ahí.
 
+### Abrir el mapa fácilmente
+
+La instalación en Linux y macOS agrega `synapsis` a `~/.local/bin`.
+Con esa carpeta en el PATH, desde cualquier proyecto podés ejecutar:
+
+```sh
+synapsis abrir
+```
+
+Abre el navegador con el acceso autenticado; si el mapa ya corre, lo reutiliza.
+También podés volver a instalar con `synapsis install codex`.
+Si el instalador avisa que falta el PATH, agregá `export PATH="$HOME/.local/bin:$PATH"`
+a la configuración de tu shell y abrí una terminal nueva.
+
 ### Después de instalar
 
 - **Claude Code**: reiniciá la app. Si tenías el plugin "neuromapa" activo, quedó

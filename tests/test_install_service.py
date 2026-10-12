@@ -16,6 +16,7 @@ class InstallServiceTest(unittest.TestCase):
         with patch.object(sys, 'argv', ['synapsis', 'install', 'codex', *args]), \
                 patch.object(sys, 'platform', platform), \
                 patch('shutil.which', return_value=systemctl), \
+                patch('comun.instalar_comando'), \
                 patch('subprocess.run', side_effect=[
                     subprocess.CompletedProcess([], code) for code in codes
                 ]) as run:
