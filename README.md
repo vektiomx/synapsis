@@ -27,31 +27,12 @@ Lo que agrega `synapsis` sobre eso: que las tres herramientas (Claude Code, Code
 Antigravity) alimenten y lean **el mismo** cerebro, con hooks reales en las 3 — no solo
 en la que tiene el plugin oficial.
 
-## Cómo busca y aprende el motor (mecanismo real, leído del código)
+## Cómo busca y aprende el motor, en corto
 
-Esto no es indexación semántica ni usa embeddings — es más simple y más auditable que
-eso. Dos piezas separadas que se multiplican entre sí:
-
-**1. Búsqueda léxica (BM25).** `buscador.py` indexa el texto de las notas por palabra,
-con raíz (`cantidad`/`cantidades`/`cantidad's` cuentan igual) y tolerancia a errores de
-tipeo por distancia de edición. El puntaje de una nota para una consulta es BM25
-estándar (frecuencia del término, con descuento por largo del documento), con pesos fijos
-encima: las notas de tipo `instrucciones` pesan 1.6×, un término que aparece en el
-título pesa 2×, una coincidencia parcial de raíz 0.8×, etc. Nada de esto entiende
-significado — es conteo de palabras con reglas, no similitud vectorial.
-
-**2. Un grafo de coocurrencia, aprendido y podado de verdad.** Por separado,
-`aprender_memoria.py` registra qué archivos/notas se usan juntos en una ventana de 8
-acciones seguidas (tolerando huecos de hasta 30 minutos), y les sube el peso de su
-conexión. Ese grafo decae solo: la mitad de cada peso se pierde cada 14 días si no se
-refuerza, y cada nodo se recorta a sus 30 vecinos más fuertes — cualquier conexión que
-caiga debajo de 0.1 se descarta directamente (`podar_lazos()` en `aprender_comun.py`).
-Esa poda es literal, no una metáfora.
-
-**Cómo se combinan:** el puntaje léxico de BM25 de cada nota se **multiplica** por un
-factor que viene de ese grafo aprendido (más fuerte si esa nota suele acompañar al
-tema que preguntaste), y se **divide a la mitad** si la nota es de un proyecto distinto
-al que estás trabajando ahora (`OTRO_PROYECTO = 0.5` en `buscador.py`).
+No es indexación semántica ni usa embeddings: es búsqueda léxica por palabras (estilo
+BM25, con corrección de errores de tipeo), combinada con un grafo de qué notas y
+archivos se usan juntos. Ese grafo se poda de verdad — las conexiones débiles se
+olvidan solas con el tiempo, no quedan acumuladas para siempre.
 
 **Números reales de esta máquina ahora mismo** (`python3 cerebro.py --aprendido`):
 
