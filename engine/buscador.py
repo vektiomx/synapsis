@@ -70,6 +70,7 @@ NOTAS_A_REVISAR = 40
 PASAJES_POR_NOTA = 3
 RENGLON_POR_RAREZA = True
 LEER_PRIMERO = 4
+PUNTAJE_MINIMO_LEER = 1.0  # synapsis: no forzar "para leer primero" con coincidencias débiles (ver README)
 ARCHIVO_PRIMERO = 1
 ARCHIVO_ARRIBA = 2
 TOPE_SOBRE = 40
@@ -1154,7 +1155,8 @@ class Indice:
                 "pasajes": pasajes[n][:PASAJES_POR_NOTA],
                 "masPasajes": max(0, len(pasajes[n]) - PASAJES_POR_NOTA),
             })
-        primero, porque = self.primeras_para_leer(orden, pasajes, permitidas)
+        orden_relevante = [n for n in orden if self.notas[n]["tipo"] == "indice" or final[n] >= PUNTAJE_MINIMO_LEER]
+        primero, porque = self.primeras_para_leer(orden_relevante, pasajes, permitidas)
         leer = [self.para_leer(n, self.tramo_de_lectura(n, secciones_de, pasajes, mapa, cantidad), *porque.get(n, ("", "")))
                 for n in primero]
         leer = [p for p in leer if not p.get("viejo")] + [p for p in leer if p.get("viejo")]

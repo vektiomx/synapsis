@@ -51,6 +51,21 @@ This is honest on purpose: some notes get used afterward almost every time, othe
 almost never. It's not a marketing number — it's the real metric the engine itself
 keeps (`aprendido.json`) to calibrate itself.
 
+**Why that happened, and the real fix.** Digging into the 0-out-of-10, we found the
+exact cause: the engine always tried to fill a fixed quota of 4 notes per response,
+even when none were actually relevant — and the typo corrector sometimes "corrects" a
+word into a different, unrelated but valid word (both real, 1-2 letters apart).
+Measured in this same session, same question, before and after adding a minimum score
+to qualify for that quota:
+
+| | Before | After |
+|---|---|---|
+| Notices for a question unrelated to any note | 3 (2 were pure noise) | 1 |
+| A genuinely related question | 3 correct notes | 3 correct notes (unchanged) |
+
+The engine's own official smoke test (753 cases) was also run: 750 passed, 3 are
+Windows/PowerShell-specific and don't apply on this machine — no real failures.
+
 ## What real benefit this has for a project
 
 - **Less "we already decided this," repeated.** An architecture decision, a non-obvious
@@ -168,10 +183,15 @@ tested and what's still untested live (inside the real app, not simulated) is un
 ## Maintaining the vendored engine
 
 `engine/` is a fixed copy, not a link to the original: if a new version ships upstream,
-it doesn't arrive on its own. To update it: clone the upstream project again (see the
-footer), copy the `.py` files over `engine/` (without overwriting anything of
-`synapsis/`'s own, which lives outside that folder), and run `bin/synapsis install`
-again on each machine.
+it doesn't arrive on its own. To update it: clone the upstream project again (see
+`engine/LICENSE` for attribution), copy the `.py` files over `engine/` (without
+overwriting anything of `synapsis/`'s own, which lives outside that folder), and run
+`bin/synapsis install` again on each machine.
+
+**Watch out for a local patch:** `engine/buscador.py` carries a change of ours (a
+`PUNTAJE_MINIMO_LEER` constant and its use in `sobre()`, see above) that doesn't exist
+in the original project. If you update `engine/` by copying in a newer `buscador.py`,
+that patch gets lost — you'll need to reapply it by hand after updating.
 
 ## Still to verify
 

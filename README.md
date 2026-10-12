@@ -51,6 +51,21 @@ Esto es honesto a propósito: unas notas se usan después casi siempre, otras ca
 No es una cifra de marketing — es la métrica real que el propio motor guarda
 (`aprendido.json`) para calibrarse.
 
+**Por qué pasaba eso, y el arreglo real.** Investigando el 0 de 10 encontramos la
+causa exacta: el motor siempre intentaba rellenar un cupo fijo de 4 notas por
+respuesta, aunque ninguna fuera realmente relevante — y el corrector de errores de
+tipeo a veces "corrige" una palabra a otra palabra real pero sin relación (ambas
+válidas, a 1-2 letras de distancia). Resultado medido en esta misma sesión, con la
+misma pregunta, antes y después de agregar un puntaje mínimo para entrar al cupo:
+
+| | Antes | Después |
+|---|---|---|
+| Avisos para una pregunta sin relación con ninguna nota | 3 (2 eran ruido puro) | 1 |
+| Una pregunta genuinamente relacionada | 3 notas correctas | 3 notas correctas (sin cambio) |
+
+Se corrió además la prueba de humo oficial del motor (753 casos): 750 pasaron, 3 son
+específicos de Windows/PowerShell y no aplican en esta máquina — ninguna falla real.
+
 ## Qué beneficio real tiene esto para un proyecto
 
 - **Menos "esto ya lo decidimos" repetido.** Una decisión de arquitectura, una regla de
@@ -172,6 +187,11 @@ llega sola. Para actualizarla: clonar de nuevo el proyecto de origen (ver
 `engine/LICENSE` para la atribución), copiar los `.py` sobre `engine/` (sin pisar nada
 propio de `synapsis/`, que vive afuera de esa carpeta), y volver a correr
 `bin/synapsis install` en cada máquina.
+
+**Ojo con un parche local:** `engine/buscador.py` tiene un cambio nuestro (una
+constante `PUNTAJE_MINIMO_LEER` y su uso en `sobre()`, ver más arriba) que no existe en
+el proyecto original. Si actualizan `engine/` copiando el `buscador.py` de una versión
+nueva, ese parche se pierde — hay que volver a aplicarlo a mano después de actualizar.
 
 ## Qué falta verificar
 
