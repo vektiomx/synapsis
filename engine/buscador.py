@@ -88,6 +88,7 @@ CODIGO_DEL_PROYECTO = True
 PARECIDO_MINIMO = 0.75
 PESO_ERRATA_DUDOSA = 0.6
 DISTANCIA_ERRATA = 2
+LARGO_DISTANCIA_2 = 8  # synapsis: palabras de 7 letras o menos solo se corrigen a distancia 1
 SUGERENCIAS = 3
 LARGO_CORREGIBLE = 4
 NOTAS_RARA = 2
@@ -1013,8 +1014,12 @@ class Indice:
                         if parecidas:
                             raras[palabra] = cuantas
                 elif not any(p in self.post or p in self.fichas or p in self.tarjetas for p in self.expandir(palabra)):
+                    # synapsis: a distancia 2 cualquier palabra de 6-7 letras tiene demasiados
+                    # vecinos reales sin relación ("readme"→"read"); solo se permite esa
+                    # distancia a partir de LARGO_DISTANCIA_2 letras (ver README).
+                    tope = DISTANCIA_ERRATA if len(palabra) >= LARGO_DISTANCIA_2 else 1
                     parecidas = [p for p in difflib.get_close_matches(palabra, candidatas, SUGERENCIAS, PARECIDO_MINIMO)
-                                 if distancia(palabra, p) <= DISTANCIA_ERRATA]
+                                 if distancia(palabra, p) <= tope]
             if parecidas:
                 sugerencias[palabra] = parecidas[:SUGERENCIAS]
             nuevas.append(parecidas[0] if parecidas else palabra)

@@ -80,6 +80,19 @@ piso fijo, descartar lo que no llegue al 30 % del mejor puntaje de esa consulta.
 Confirmado otra vez contra la prueba de humo oficial (750/753, sin cambios) y la propia
 de `synapsis` (10/10).
 
+**Tercera vuelta: el corrector de errores seguía inventando relaciones.** El caso
+"readme"→"read" (seis letras, dos de distancia) pasaba porque el corrector permitía
+corregir a 2 letras de distancia para cualquier palabra, sin importar qué tan corta
+fuera. Se restringió: a 2 letras de distancia solo se corrigen palabras de 8+ letras;
+las más cortas, solo a 1 letra. Confirmado: "readme" ya no se "corrige" a "read".
+
+**Lo que queda, honesto:** "nuevo"→"nueve" y "trae"→"true" siguen pasando — son dos
+palabras reales del idioma a 1 letra de distancia, la distancia mínima que existe. Sin
+un diccionario completo (que no tiene este proyecto, a propósito, para seguir siendo
+simple y sin dependencias pesadas) no hay forma genérica de saber que la palabra
+original ya era válida. El piso relativo de la vuelta anterior sigue siendo la defensa
+real contra el daño que esto causa, no el corrector en sí.
+
 **Segundo hallazgo, verificando el arreglo por el camino real (no la consola):**
 probando desde el servidor MCP tal como lo usa Claude Code de verdad, el arreglo no
 se aplicaba — el servidor del mapa en vivo tenía el código viejo cargado en memoria
@@ -235,7 +248,8 @@ propio de `synapsis/`, que vive afuera de esa carpeta), y volver a correr
 **Ojo con 2 parches locales**, que no existen en el proyecto original — si actualizan
 `engine/` copiando archivos de una versión nueva, se pierden y hay que reaplicarlos a
 mano:
-- `engine/buscador.py`: la constante `PUNTAJE_MINIMO_LEER` y su uso en `sobre()`.
+- `engine/buscador.py`: `PUNTAJE_MINIMO_LEER`, `FRACCION_DEL_MEJOR` y `LARGO_DISTANCIA_2`
+  (los tres pisos/límites de relevancia y corrección, ver más arriba).
 - `engine/servidor.py`: la comparación de huella de código al reabrir el mapa, para
   que se reinicie solo si el código cambió (ver más arriba).
 

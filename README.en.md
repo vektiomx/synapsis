@@ -80,6 +80,19 @@ drop anything that doesn't reach 30% of that query's best score.
 Confirmed again against the official smoke test (750/753, unchanged) and synapsis's
 own suite (10/10).
 
+**Round three: the typo corrector kept inventing relationships.** The "readme"→"read"
+case (six letters, two apart) got through because the corrector allowed correcting to
+2 letters apart for any word, no matter how short. That got restricted: 2-letter-apart
+corrections now only apply to words of 8+ letters; shorter ones only get 1-letter-apart
+corrections. Confirmed: "readme" no longer gets "corrected" to "read".
+
+**What's left, honestly:** "nuevo"→"nueve" and "trae"→"true" still get through — both
+are real words, 1 letter apart, the smallest distance that exists. Without a full
+dictionary (which this project deliberately doesn't have, to stay simple and dependency-
+free) there's no generic way to know the original word was already valid. The relative
+floor from the previous round is still the real defense against the damage this
+causes, not the corrector itself.
+
 **Second finding, verifying the fix through the real path (not the console):**
 testing it through the MCP server the way Claude Code actually uses it, the fix
 wasn't applied — the live map server had the old code loaded in memory from before
@@ -235,7 +248,8 @@ overwriting anything of `synapsis/`'s own, which lives outside that folder), and
 **Watch out for 2 local patches**, which don't exist in the original project — if you
 update `engine/` by copying in files from a newer version, they get lost and need to
 be reapplied by hand:
-- `engine/buscador.py`: the `PUNTAJE_MINIMO_LEER` constant and its use in `sobre()`.
+- `engine/buscador.py`: `PUNTAJE_MINIMO_LEER`, `FRACCION_DEL_MEJOR`, and
+  `LARGO_DISTANCIA_2` (the relevance floors and correction limit, see above).
 - `engine/servidor.py`: the code-fingerprint comparison on reopen, so the map
   restarts itself if the code changed (see above).
 
