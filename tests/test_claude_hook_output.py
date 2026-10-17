@@ -55,6 +55,32 @@ class ClaudeHookOutputTest(unittest.TestCase):
             output = bridge['handle'](dict(hook_event_name='PreToolUse'))
         self.assertEqual(output, dict(hookSpecificOutput=decision))
 
+    def test_private_memory_write_durably_publishes_identity_note_and_generation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp); project = base / 'project'; project.mkdir()
+            config = base / 'config.json'; config.write_text(json.dumps(dict(fuentes=[], proyectos=[])))
+            env = dict(os.environ, HOME=tmp, USERPROFILE=tmp, SYNOPSIS_DATA=str(base / 'state'),
+                       CEREBRO_CONFIG=str(config), SYNOPSIS_AUTO_REVIEW='0', SYNOPSIS_SEMANTIC_SETUP='off')
+            script = """import json,sys
+from pathlib import Path
+sys.path.insert(0,sys.argv[1])
+from project_identity import resolve_memory,owner,canonical_project
+from memory_store import MemoryStore
+folder=resolve_memory(sys.argv[2])
+assert owner(folder)==canonical_project(sys.argv[2])
+result=MemoryStore(folder).save(filename='policy',name='policy',description='Synthetic policy',
+ kind='project',content='Keep test data for 7 days.',index_line='- [Policy](policy.md)',source='user:test')
+assert result['revision']==1
+assert (folder/'policy.md').is_file()
+assert (folder/'.synopsis/generation').is_file()
+assert len(MemoryStore(folder).history('policy'))==1
+print(json.dumps({'revision':result['revision']}))
+"""
+            result = subprocess.run([sys.executable, '-I', '-S', '-c', script, str(ROOT / 'engine'), str(project)],
+                                    env=env, capture_output=True, text=True, timeout=15)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(json.loads(result.stdout), dict(revision=1))
+
     def test_real_precompact_entry_points_preserve_pending_memory(self):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp); project = base / 'project'; project.mkdir()

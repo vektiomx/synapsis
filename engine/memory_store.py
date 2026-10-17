@@ -93,7 +93,7 @@ class MemoryStore:
             path = self.folder / filename
             escribir_atomico(path, target)
             path.chmod(0o600)
-            with path.open('rb') as stream:
+            with path.open('r+b') as stream:
                 os.fsync(stream.fileno())
         if pending and os.name != 'nt':
             directory = os.open(self.folder, os.O_RDONLY)
@@ -104,7 +104,7 @@ class MemoryStore:
         if pending:
             generation = self.folder / '.synopsis/generation'
             escribir_atomico(generation, uuid.uuid4().hex)
-            with generation.open('rb') as stream:
+            with generation.open('r+b') as stream:
                 os.fsync(stream.fileno())
             if os.name != 'nt':
                 directory = os.open(generation.parent, os.O_RDONLY)

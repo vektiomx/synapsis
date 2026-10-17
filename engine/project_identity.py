@@ -189,7 +189,7 @@ def _publish(path, data):
         raise ProjectIdentityConflict('No se reemplazan manifiestos simbólicos.')
     escribir_atomico(path, json.dumps(data, ensure_ascii=False, sort_keys=True) + '\n')
     path.chmod(0o600)
-    with path.open('rb') as stream:
+    with path.open('r+b') as stream:
         os.fsync(stream.fileno())
     if os.name != 'nt':
         directory = os.open(path.parent, os.O_RDONLY)

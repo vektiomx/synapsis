@@ -335,3 +335,12 @@ La descripción 0.5 anterior es histórica: en 0.6 los cierres previos también 
 por una revisión independiente enlazada; agotar intentos conserva la entrada hasta
 su vencimiento. El mapa activo revisa colas cada 30 s. El inventario prioriza relevancia.
 El ciclo completo de experiencias y sus límites están en [experiences.md](experiences.md).
+
+## Persistencia en Windows
+
+La sincronización de manifiestos, notas y marcadores de generación abre el archivo
+en lectura/escritura sin truncarlo. Windows requiere un descriptor con permiso de
+escritura para vaciar los buffers; abrirlo solo para lectura puede fallar durante la
+vinculación del proyecto o al publicar una revisión. La prueba nativa comprueba
+vinculación, escritura versionada y marcador de generación con datos privados.
+[Requisito de Windows](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers).
