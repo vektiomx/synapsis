@@ -1,41 +1,37 @@
-"""Resolución compartida de rutas para los bridges: dónde está el motor de Synapsis
-y dónde guarda sus datos (el registro en vivo, el caché del mapa, etc).
+"""Rutas compartidas de Synopsis: motor local y estado privado del usuario.
 
-Por defecto usa el motor vendorizado en engine/ (así synapsis no depende de tener
-Claude Code instalado). La carpeta de datos (registro en vivo, caché del mapa) es
-siempre la misma, exista o no Claude Code todavía: ~/.claude/plugins/data/neuromapa-…
-Es solo una carpeta en disco, no requiere la app — así que si alguien instala Claude
-Code después y le suma el plugin "neuromapa", lo encuentra con el historial ya puesto,
-sin migrar nada, y el mapa en vivo muestra la actividad de los tres por igual. Ambas
-rutas se pueden fijar a mano con las variables de entorno NEUROMAPA_ROOT y
-NEUROMAPA_DATA.
+El motor predeterminado vive en engine/; el estado, en ~/.local/share/synopsis.
+SYNOPSIS_ROOT y SYNOPSIS_DATA permiten definir ubicaciones independientes.
 """
 import json
 import os
+import sys
 from pathlib import Path
+
+if sys.platform=='win32':
+    for stream in (sys.stdin,sys.stdout,sys.stderr):
+        if hasattr(stream,'reconfigure'):stream.reconfigure(encoding='utf-8')
 
 REPO = Path(__file__).resolve().parent
 ENGINE_PREDETERMINADO = REPO / 'engine'
-CARPETA_DATOS_PREDETERMINADA = Path.home() / '.claude' / 'plugins' / 'data' / 'neuromapa-neuromapa'
-PUNTERO = Path.home() / '.synapsis.json'
+CARPETA_DATOS_PREDETERMINADA = Path.home() / '.local' / 'share' / 'synopsis'
+PUNTERO = Path.home() / '.synopsis.json'
 
 
 def raiz_motor():
-    personalizada = os.environ.get('NEUROMAPA_ROOT')
+    personalizada = os.environ.get('SYNOPSIS_ROOT')
     return Path(personalizada) if personalizada else ENGINE_PREDETERMINADO
 
 
 def carpeta_datos():
-    personalizada = os.environ.get('NEUROMAPA_DATA')
+    personalizada = os.environ.get('SYNOPSIS_DATA')
     if personalizada:
         return Path(personalizada)
-    base = Path.home() / '.claude' / 'plugins' / 'data'
-    candidatos = sorted(base.glob('neuromapa*')) if base.is_dir() else []
-    return candidatos[0] if candidatos else CARPETA_DATOS_PREDETERMINADA
+    return CARPETA_DATOS_PREDETERMINADA
 
 
 def anotar_ubicacion():
-    """Deja un puntero en ~/.synapsis.json con la ruta real del repo, para que otros
+    """Deja un puntero en ~/.synopsis.json con la ruta real del repo, para que otros
     proyectos (ej. el dev:all de otra app) lo encuentren sin tener que adivinar la
     carpeta ni leer la configuración interna de Claude Code/Codex/Antigravity."""
     try:
@@ -50,27 +46,69 @@ def instalar_skill_memoria(carpeta_skills):
     el conector MCP: guardar una nota es solo escribir un .md, cualquier herramienta
     con edición de archivos ya puede hacerlo."""
     origen = REPO / 'skill_memoria' / 'SKILL.md'
-    destino = Path(carpeta_skills) / 'memoria-synapsis' / 'SKILL.md'
+    destino = Path(carpeta_skills) / 'memoria-synopsis' / 'SKILL.md'
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(origen.read_text(encoding='utf-8'), encoding='utf-8')
     return destino
 
 
+def configurar_path(dry_run=False):
+    """Persist the user command directory for login and interactive shells."""
+    casa = Path.home()
+    shell = Path(os.environ.get('SHELL', '/bin/bash')).name
+    archivos = {casa / '.profile'}
+    for nombre in ('.bashrc', '.bash_profile', '.zshrc', '.zprofile'):
+        if (casa / nombre).exists():
+            archivos.add(casa / nombre)
+    if shell == 'bash':
+        archivos.add(casa / '.bashrc')
+    elif shell == 'zsh':
+        zdir = Path(os.environ.get('ZDOTDIR') or casa)
+        archivos.update((zdir / '.zprofile', zdir / '.zshrc'))
+    bloque = ('\n# Synopsis: comandos del usuario\n'
+              'case ":$PATH:" in\n'
+              '    *":$HOME/.local/bin:"*) ;;\n'
+              '    *) export PATH="$HOME/.local/bin:$PATH" ;;\n'
+              'esac\n')
+    for archivo in sorted(archivos):
+        contenido = archivo.read_text(encoding='utf-8') if archivo.exists() else ''
+        if bloque.strip() in contenido:
+            continue
+        if dry_run:
+            print(f'Agregaría ~/.local/bin al PATH en {archivo}')
+        else:
+            archivo.parent.mkdir(parents=True, exist_ok=True)
+            with archivo.open('a', encoding='utf-8') as stream:
+                stream.write(bloque)
+    if shell == 'fish':
+        archivo = Path(os.environ.get('XDG_CONFIG_HOME') or casa / '.config') / 'fish/conf.d/synopsis.fish'
+        contenido = 'fish_add_path --path "$HOME/.local/bin"\n'
+        if archivo.exists() and archivo.read_text(encoding='utf-8') != contenido:
+            raise RuntimeError(f'Ya existe otra configuración en {archivo}; no la reemplacé.')
+        if dry_run:
+            print(f'Configuraría el PATH en {archivo}')
+        else:
+            archivo.parent.mkdir(parents=True, exist_ok=True)
+            archivo.write_text(contenido, encoding='utf-8')
+
+
 def instalar_comando(dry_run=False):
-    """Expose the CLI without replacing unrelated user commands."""
-    destino = Path.home() / '.local' / 'bin' / 'synapsis'
-    origen = REPO / 'bin' / 'synapsis'
-    if destino.exists() or destino.is_symlink():
-        if not destino.is_symlink() or destino.resolve() != origen:
-            raise RuntimeError(f'Ya existe otro comando en {destino}; no lo reemplacé.')
+    """Expose a single CLI without replacing unrelated commands."""
+    if sys.platform=='win32':
+        from windows_install import install
+        return install(dry_run)
+    folder = Path.home() / '.local' / 'bin'
+    destination = folder / 'synopsis'
+    origin = REPO / 'bin' / 'synopsis'
+    if destination.exists() or destination.is_symlink():
+        if not destination.is_symlink() or destination.resolve() != origin:
+            raise RuntimeError(f'Ya existe otro comando en {destination}; no lo reemplacé.')
     if dry_run:
-        print(f'Crearía el comando {destino} → {origen}')
-        return destino
-    destino.parent.mkdir(parents=True, exist_ok=True)
-    origen.chmod(origen.stat().st_mode | 0o111)
-    if not destino.is_symlink():
-        destino.symlink_to(origen)
-    print('Para abrir el mapa: synapsis abrir')
-    if str(destino.parent) not in os.environ.get('PATH', '').split(os.pathsep):
-        print(f'Agregá {destino.parent} al PATH de tu terminal para usar el comando.')
-    return destino
+        print(f'Crearía el comando {destination} → {origin}')
+    else:
+        folder.mkdir(parents=True, exist_ok=True)
+        origin.chmod(origin.stat().st_mode | 0o111)
+        if not destination.is_symlink():
+            destination.symlink_to(origin)
+    configurar_path(dry_run=dry_run)
+    return destination

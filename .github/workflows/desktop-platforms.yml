@@ -1,0 +1,25 @@
+name: Desktop platform contracts
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      SYNOPSIS_AUTO_REVIEW: '0'
+      SYNOPSIS_SEMANTIC_SETUP: 'off'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Platform contracts and five-client stdio integration
+        run: python -m unittest discover -s tests -p test_desktop_platforms.py -v

@@ -71,14 +71,14 @@ DURACION_GALLETA = 30 * 86400
 VIDA_ENTRADA = 60
 CABECERA_CLAVE = "X-Cerebro-Clave"
 CABECERA_FIRMA = "X-Cerebro-Firma"
-SIN_CLAVE = ("<!doctype html><meta charset=\"utf-8\"><title>Neuromapa</title>"
+SIN_CLAVE = ("<!doctype html><meta charset=\"utf-8\"><title>Synopsis</title>"
              "<p style=\"font:16px system-ui;margin:40px\">Falta la clave. "
-             "Abrí el mapa con <b>/neuromapa:abrir</b> en Claude Code (sin el plugin, <code>sh bin/neuromapa abrir</code>, "
-             "o <code>bin\\neuromapa.cmd abrir</code> en Windows): abre el navegador con la clave puesta. Para entrar a "
+             "Abrí el mapa con <b>/synopsis:abrir</b> en Claude Code (sin el plugin, <code>sh bin/synopsis abrir</code>, "
+             "o <code>bin\\synopsis.cmd abrir</code> en Windows): abre el navegador con la clave puesta. Para entrar a "
              "mano, agregale a la dirección <code>?clave=</code> y la clave que está en <code>en-vivo/clave.txt</code>, "
-             "en la carpeta de datos de Neuromapa.</p>").encode("utf-8")
+             "en la carpeta de datos de Synopsis.</p>").encode("utf-8")
 ERRORES = {400: "El pedido vino mal armado.", 403: "Desde ahí no se puede entrar al mapa.",
-           404: "No hay nada en esa dirección.", 501: "El mapa solo atiende pedidos para ver la página."}
+           404: "No hay nada en esa dirección.", 501: "Esta dirección solo atiende pedidos para ver la página."}
 REINTENTOS = 3
 ESPERA_GENERAR = 10 * 60
 POLITICA = ("default-src 'self'; script-src {scripts}; style-src 'self' 'unsafe-inline'; "
@@ -129,6 +129,10 @@ def clave_de_nota(ruta):
 
 def armar_indice():
     try:
+        refreshed = configuracion.cargar()
+        cerebro.FUENTES[:] = refreshed['fuentes']
+        cerebro.CONFIG['fuentes'] = cerebro.FUENTES
+        buscador.ALCANCE = tuple(source['id'] for source in cerebro.FUENTES if source.get('foco'))
         nuevo = buscador.desde_disco()
     except Exception as error:
         print(f"No se pudo armar el índice de búsqueda ({detalle(error)}).")
@@ -152,7 +156,13 @@ def generar():
 
 def calcular_huella():
     try:
-        return cerebro.huella(EXTRAS)
+        from project_identity import data_root, registered_memories
+        records = registered_memories(configuracion.archivo())
+        registry = [(str(path),) + cerebro.firma(path)
+                    for path in sorted((data_root() / 'projects').glob('*/location.json'))]
+        registry += [(record['memory'],) + cerebro.firma(Path(record['memory']) / '.synopsis/generation')
+                     for record in records]
+        return cerebro.huella(EXTRAS) + tuple(registry)
     except Exception:
         return None
 
@@ -202,7 +212,7 @@ def regenerador(ultima):
             if programa is not None and huella_del_programa() != programa:
                 programa = None
                 programa_cambiado.set()
-                print("Se actualizó el programa de Neuromapa: este mapa sigue con el de antes. Para usar el nuevo, abrilo "
+                print("Se actualizó el programa de Synopsis: este mapa sigue con el de antes. Para usar el nuevo, abrilo "
                       "de nuevo (el mapa nuevo apaga a este solo).", flush=True)
         if toca:
             with regenerar_lock:
@@ -217,7 +227,7 @@ def regenerador(ultima):
             else:
                 fallas += 1
                 if fallas >= REINTENTOS:
-                    print(f"Neuromapa no pudo rearmar la página {fallas} veces seguidas; vuelvo a intentar cuando "
+                    print(f"Synopsis no pudo rearmar la página {fallas} veces seguidas; vuelvo a intentar cuando "
                           "cambie otra nota.")
                     fallas = 0
                     if h is not None:
@@ -913,7 +923,7 @@ def usar_entrada(numero):
 
 
 class Manejador(http.server.SimpleHTTPRequestHandler):
-    error_message_format = ('<!doctype html><meta charset="utf-8"><title>Neuromapa</title>'
+    error_message_format = ('<!doctype html><meta charset="utf-8"><title>Synopsis</title>'
                             '<p style="font:16px system-ui;margin:40px">%(explain)s</p>')
     error_content_type = "text/html; charset=utf-8"
 
@@ -1064,6 +1074,14 @@ class Manejador(http.server.SimpleHTTPRequestHandler):
         if not self.autorizado():
             self.sin_clave()
             return
+        if camino == '/experience-status':
+            from experience_status import overview
+            self.enviar_json(json.dumps(overview(),ensure_ascii=False).encode('utf-8'))
+            return
+        if camino == '/project-bindings':
+            from workspace_registry import pending
+            self.enviar_json(json.dumps({'requests': pending()}, ensure_ascii=False).encode('utf-8'))
+            return
         if camino == "/":
             self.send_response(302)
             self.send_header("Location", self.pagina_con_opciones())
@@ -1086,6 +1104,49 @@ class Manejador(http.server.SimpleHTTPRequestHandler):
             return
         self.send_error(404)
 
+    def do_POST(self):
+        if not self.host_valido():
+            self.send_error(403)
+            return
+        if self.camino() == '/experience-status':
+            origin='http://'+(self.headers.get('Host') or '')
+            if not self.autorizado() or self.headers.get('Origin')!=origin or self.headers.get('X-Synopsis-Action')!='review-memory':
+                self.send_error(403)
+                return
+            try:
+                size=int(self.headers.get('Content-Length','0'))
+                if not 1<=size<=1024 or self.headers.get('Content-Type')!='application/json':raise ValueError('invalid_request')
+                self.connection.settimeout(3)
+                data=json.loads(self.rfile.read(size))
+                from experience_status import retry_project
+                result=retry_project(data)
+                self.enviar_json(json.dumps(result).encode())
+            except (ValueError,OSError,TimeoutError):self.enviar_json(b'{"error":"No se pudo reintentar la memoria vinculada."}',409)
+            return
+        if self.camino() != '/project-bindings':
+            self.send_error(501)
+            return
+        origin = 'http://' + (self.headers.get('Host') or '')
+        if (not self.host_valido() or not self.autorizado()
+                or self.headers.get('Origin') != origin
+                or self.headers.get('X-Synopsis-Action') != 'bind-project'):
+            self.send_error(403)
+            return
+        try:
+            size = int(self.headers.get('Content-Length', '0'))
+            if not 1 <= size <= 1024 or self.headers.get('Content-Type') != 'application/json':
+                raise ValueError('Invalid request')
+            self.connection.settimeout(3)
+            data = json.loads(self.rfile.read(size))
+            if not isinstance(data, dict) or set(data) != {'id', 'choice'}:
+                raise ValueError('Invalid request')
+            from workspace_registry import choose
+            result = choose(data['id'], data['choice'])
+            pedir_regeneracion()
+            self.enviar_json(json.dumps(result, ensure_ascii=False).encode('utf-8'))
+        except (ValueError, OSError, TimeoutError):
+            self.enviar_json(json.dumps({'error': 'La solicitud cambió o no se pudo vincular. Actualiza el panel y revisa la memoria.'}).encode('utf-8'), 409)
+
     def hola(self):
         parametros = urllib.parse.parse_qs(self.path.split("?", 1)[1] if "?" in self.path else "")
         desafio = (parametros.get("n") or [""])[0]
@@ -1100,7 +1161,7 @@ class Manejador(http.server.SimpleHTTPRequestHandler):
             self.sin_clave()
             return
         self.enviar_json(b'{"apagando": true}')
-        print("Otro Neuromapa sobre estos mismos datos pidió el lugar: me apago para que arranque él.", flush=True)
+        print("Otro Synopsis sobre estos mismos datos pidió el lugar: me apago para que arranque él.", flush=True)
         threading.Thread(target=self.server.shutdown, daemon=True).start()
 
     def buscar(self, camino):
@@ -1215,12 +1276,12 @@ class Servidor(http.server.ThreadingHTTPServer):
     def handle_error(self, request, client_address):
         if isinstance(sys.exc_info()[1], (ConnectionError, TimeoutError)):
             return
-        print(f"Neuromapa: falló un pedido de {client_address[0]} (sigue andando). El detalle, en inglés:", file=sys.stderr)
+        print(f"Synopsis: falló un pedido de {client_address[0]} (sigue andando). El detalle, en inglés:", file=sys.stderr)
         traceback.print_exc()
 
 
 def texto_uso():
-    nombre = "neuromapa abrir" if sys.argv[0] == "neuromapa abrir" else "servidor.py"
+    nombre = "synopsis abrir" if sys.argv[0] == "synopsis abrir" else "servidor.py"
     return f"Uso: {nombre} [--sin-navegador] [--puerto N] [--demo] [--reiniciar]"
 
 
@@ -1398,7 +1459,7 @@ def apagar_sin_pestanas(servidor, espera=APAGAR_SIN_PESTANAS, cada=15):
         elif vacio_desde is None:
             vacio_desde = time.monotonic()
         elif time.monotonic() - vacio_desde >= espera:
-            print("Neuromapa se apagó: no había ninguna pestaña abierta.")
+            print("Synopsis se apagó: no había ninguna pestaña abierta.")
             servidor.shutdown()
             return
 
@@ -1426,7 +1487,7 @@ def main():
     if ocupado:
         anterior, candado = esperar_al_otro(ruta_candado)
         if anterior is None and candado is None:
-            print("Otro Neuromapa está arrancando sobre estos mismos datos y no terminó de arrancar: esperá unos segundos "
+            print("Otro Synopsis está arrancando sobre estos mismos datos y no terminó de arrancar: esperá unos segundos "
                   "y volvé a abrirlo.")
             return 1
     else:
@@ -1442,37 +1503,37 @@ def main():
 def arrancar(anterior, candados, ruta_candado, puertos, abrir, solo):
     reiniciar = "--reiniciar" in sys.argv
     if anterior and not reiniciar:
-        # synapsis: si el código en disco cambió desde que arrancó el que está prendido,
+        # synopsis: si el código en disco cambió desde que arrancó el que está prendido,
         # no lo reusamos con código viejo en silencio — lo tratamos como --reiniciar.
         codigo_anotado = leer_objeto_json(EN_VIVO / "servidor.json").get("codigo")
         if codigo_anotado is not None and codigo_anotado != [list(h) for h in huella_del_programa()]:
             reiniciar = True
-            print("El código de Neuromapa cambió desde que este mapa se prendió: lo reinicio para usar el nuevo.",
+            print("El código de Synopsis cambió desde que este mapa se prendió: lo reinicio para usar el nuevo.",
                   flush=True)
     if solo and anterior and not reiniciar:
-        print(f"Neuromapa ya estaba prendido: {a_la_vista(anterior)}")
+        print(f"Synopsis ya estaba prendido: {a_la_vista(anterior)}")
         print(aviso_navegador(abrir_navegador(direccion_para_abrir(anterior)) if abrir else None, solo))
         return 0
     if anterior:
         if not pedir_apagado(anterior):
-            print(f"Hay otro Neuromapa prendido sobre estos mismos datos (puerto {anterior}) y no se apagó: cerrá su ventana "
+            print(f"Hay otro Synopsis prendido sobre estos mismos datos (puerto {anterior}) y no se apagó: cerrá su ventana "
                   "y volvé a abrir este. Dos a la vez se pisan lo aprendido.")
             return 1
         if candados[0] is None and hay_candados() and EN_VIVO.is_dir():
             candados[0] = tomar_candado(ruta_candado, ESPERA_APAGADO)
             if candados[0] is None:
-                print("El otro Neuromapa no terminó de apagarse: cerrá su ventana y volvé a abrir este.")
+                print("El otro Synopsis no terminó de apagarse: cerrá su ventana y volvé a abrir este.")
                 return 1
         if reiniciar:
             print("Apagué el mapa que estaba prendido y arranco uno nuevo, con la versión y la configuración de ahora.",
                   flush=True)
         else:
-            print("Había otro Neuromapa prendido sobre estos datos: lo apagué y arranco en su lugar.", flush=True)
+            print("Había otro Synopsis prendido sobre estos datos: lo apagué y arranco en su lugar.", flush=True)
         if len(puertos) > 1:
             puertos = [anterior] + [p for p in puertos if p != anterior]
     elif configuracion.donde.proceso_vivo(leer_objeto_json(EN_VIVO / "servidor.json").get("pid")):
-        print("Aviso: hay otro proceso anotado como Neuromapa sobre estos datos que no respondió (puede ser una versión "
-              "vieja). Si es otra ventana de Neuromapa, cerrala: dos a la vez se pisan lo aprendido.", flush=True)
+        print("Aviso: hay otro proceso anotado como Synopsis sobre estos datos que no respondió (puede ser una versión "
+              "vieja). Si es otra ventana de Synopsis, cerrala: dos a la vez se pisan lo aprendido.", flush=True)
     huella = calcular_huella()
     if not generar():
         if sys.stdin and sys.stdin.isatty():
@@ -1496,6 +1557,8 @@ def arrancar(anterior, candados, ruta_candado, puertos, abrir, solo):
     threading.Thread(target=seguir_registro, args=(lector,), daemon=True).start()
     threading.Thread(target=regenerador, args=(huella,), daemon=True).start()
     threading.Thread(target=aprendiz, daemon=True).start()
+    from memory_maintenance import serve as maintain_memory
+    threading.Thread(target=maintain_memory, daemon=True).start()
     try:
         escribir_atomico(EN_VIVO / "servidor.json", json.dumps({"puerto": servidor.server_address[1], "pid": os.getpid(),
                                                                  "codigo": [list(h) for h in huella_del_programa()]}))
@@ -1503,7 +1566,7 @@ def arrancar(anterior, candados, ruta_candado, puertos, abrir, solo):
         pass
     direccion = direccion_para_abrir(servidor.server_address[1], propia=True)
     demo = " (demo)" if configuracion.archivo() == configuracion.DEMO else ""
-    print(f"Neuromapa en vivo{demo}: {a_la_vista(servidor.server_address[1])}", flush=True)
+    print(f"Synopsis en vivo{demo}: {a_la_vista(servidor.server_address[1])}", flush=True)
     if solo:
         threading.Thread(target=apagar_sin_pestanas, args=(servidor,), daemon=True).start()
     print(aviso_navegador(abrir_navegador(direccion) if abrir else None, solo))

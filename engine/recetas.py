@@ -10,7 +10,7 @@ from textos import cantidad, detalle
 
 CARPETA = (".claude", "skills")
 ARCHIVO = "SKILL.md"
-MARCA = "neuromapa"
+MARCA = "synopsis"
 PASOS = 3
 COMANDOS = 2
 SEGUIDO = 3.0
@@ -26,7 +26,7 @@ RE_PROPIA = re.compile(r"^[ \t]+" + MARCA + r":[ \t]*(.*?)[ \t]*$", re.M)
 RE_NUMERADA = re.compile(r"^(.*?):(\d{1,3})$")
 ESTADOS = {"nueva": "no existe todavía", "igual": "ya está escrita y al día",
            "propia": "ya está escrita, pero la memoria cambió: se puede volver a escribir",
-           "ajena": "ya hay una skill con ese nombre que no escribió Neuromapa: no se toca"}
+           "ajena": "ya hay una skill con ese nombre que no escribió Synopsis: no se toca"}
 
 
 def recortar(texto, largo):
@@ -148,7 +148,7 @@ def escribir(receta, datos, ahora=None):
     destino = destino_de(receta)
     estado = estado_de(receta)
     if estado == "ajena":
-        return None, None, f"{destino} ya existe y no la escribió Neuromapa: no la toco."
+        return None, None, f"{destino} ya existe y no la escribió Synopsis: no la toco."
     if estado == "igual":
         return destino, None, None
     if not dentro(destino, receta["donde"] or configuracion.carpeta_de_claude()):

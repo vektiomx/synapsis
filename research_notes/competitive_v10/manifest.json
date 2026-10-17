@@ -1,0 +1,18 @@
+{
+  "protocol": "synopsis.competitive-execution.v1",
+  "hashes": {
+    "competitive_protocol.json": "b45ef7d6cca28665d3226994687e10ff97f7c92ab9d6544bd81fd127a4fafb63",
+    "competitive_corpus.json": "5732263daf32b563237eefb873eb6ebb0bba8d7bb31909a276695b2293c88ec7"
+  },
+  "model": "gpt-6.1-sol",
+  "profiles": [
+    "synopsis-behavior-memory",
+    "mem0-inferred",
+    "mem0-raw",
+    "graphiti",
+    "shadowfrog-file-symbol",
+    "full-history",
+    "no-memory"
+  ],
+  "note": "Synthetic tasks, same common source-fetch and behavior controller for all profiles; SDK acquisition measured separately. Corpus and gold frozen before SDK acquisition."
+}

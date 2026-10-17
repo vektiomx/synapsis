@@ -1,0 +1,50 @@
+{
+  "numeric_mode_policy-1701-applicable_history": {
+    "memory": "No actionable discoveries (bug,security) for policy.py.\n",
+    "source_ids": [],
+    "metrics": {
+      "acquisition_seconds": 9.268911453997134,
+      "retrieval_seconds": 0.059162745004869066,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9409,
+      "wall_seconds": 9.32819077000022
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits."
+  },
+  "stable_sequence_processing-1702-applicable_history": {
+    "memory": "No actionable discoveries (bug,security) for policy.py.\n",
+    "source_ids": [],
+    "metrics": {
+      "acquisition_seconds": 10.790216504014097,
+      "retrieval_seconds": 0.053624588006641716,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9533,
+      "wall_seconds": 10.843952521012397
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits."
+  },
+  "text_identity_boundaries-1703-applicable_history": {
+    "memory": "No actionable discoveries (bug,security) for policy.py.\n",
+    "source_ids": [],
+    "metrics": {
+      "acquisition_seconds": 8.194628606011975,
+      "retrieval_seconds": 0.05166655300126877,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9445,
+      "wall_seconds": 8.246411888001603
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits."
+  },
+  "sparse_payload_merge-1704-applicable_history": {
+    "memory": "No actionable discoveries (bug,security) for policy.py.\n",
+    "source_ids": [],
+    "metrics": {
+      "acquisition_seconds": 11.29629863500304,
+      "retrieval_seconds": 0.06528342800447717,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9647,
+      "wall_seconds": 11.36173161699844
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits."
+  }
+}

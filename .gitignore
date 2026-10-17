@@ -1,4 +1,13 @@
 __pycache__/
 *.pyc
 *.pyo
-neuromapa-backups/
+synopsis-backups/
+.env
+.env.*
+.venv/
+.synopsis/
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.log

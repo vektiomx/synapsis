@@ -1,6 +1,6 @@
 # Bibliotecas de terceros
 
-Neuromapa trae adentro estas dos bibliotecas, sin cambios, para que el mapa ande sin internet. La página comprueba
+Synopsis trae adentro estas dos bibliotecas, sin cambios, para que el mapa ande sin internet. La página comprueba
 la huella de cada una (`sha384` en `plantilla.html`); `herramientas/bajar_librerias.py` las vuelve a bajar y
 verificar si hace falta.
 
@@ -37,3 +37,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+## Runtime semántico opcional (descargado, no incluido)
+
+FastEmbed 0.9.0: Apache-2.0, https://github.com/qdrant/fastembed/blob/main/LICENSE .
+Modelo paraphrase-multilingual-MiniLM-L12-v2: Apache-2.0,
+https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 .
+Los paquetes descargados conservan sus licencias en el venv y los archivos del modelo.

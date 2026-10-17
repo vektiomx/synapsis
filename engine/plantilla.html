@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Synapsis</title>
+<title>Synopsis</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23E64980'/%3E%3C/svg%3E">
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="Mapa en grafo de todas las notas .md de Claude y de cómo se conectan entre sí.">
@@ -1075,15 +1075,44 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
   .repite-franja { width: 200px; }
   .ausencia-cifras dd { font-size: 18px; }
 }
+#project-bindings { position: fixed; left: 16px; bottom: 16px; z-index: 200; max-width: min(560px, calc(100vw - 32px)); max-height: 60vh; overflow: auto; padding: 18px; background: #16202d; color: #fff; border: 1px solid #8797ac; border-radius: 12px; box-shadow: 0 8px 30px #0006; font: 14px/1.5 system-ui; }
+#project-bindings[hidden] { display: none; }
+#project-bindings p { overflow-wrap: anywhere; }
+#project-bindings button { margin: 6px 8px 0 0; padding: 9px 12px; border-radius: 7px; cursor: pointer; }
+
+.experience-panel{margin:12px;padding:16px;border:1px solid var(--borde,#384254);border-radius:14px;max-height:70vh;overflow:auto;background:var(--superficie,#151b26);color:var(--texto,#e5e7eb)}
+.experience-panel summary{cursor:pointer;font-weight:700;list-style-position:inside;font-size:1rem}
+.experience-panel summary span{font-size:.75rem;font-weight:400;opacity:.65;margin-left:12px}
+.experience-intro{font-size:.85rem;opacity:.75;max-width:80ch;line-height:1.5}
+.experience-project{margin-top:20px;border-top:1px solid var(--borde);padding-top:12px}
+.experience-project h3{font-size:.9rem;overflow-wrap:anywhere;margin:0 0 10px}
+.experience-stats{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.experience-stats span{padding:6px 10px;border-radius:8px;background:var(--superficie-3);font-size:.78rem}
+.experience-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px}
+.experience-card{border:1px solid var(--borde);border-radius:10px;padding:12px;background:var(--superficie-2)}
+.experience-card h4{font-size:.85rem;margin:0 0 8px;overflow-wrap:anywhere}
+.experience-card p{font-size:.8rem;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.experience-badge{display:inline-block;font-size:.7rem;border-radius:6px;padding:3px 6px;background:#73839f25;color:inherit;margin-bottom:8px}
+.experience-badge[data-tone="good"]{background:#25b98022;color:var(--texto);border-left:3px solid #25b980}
+.experience-badge[data-tone="bad"]{background:#e3656522;color:var(--peligro)}
+.experience-badge[data-tone="pending"]{background:#e7af4822;color:var(--aviso)}
+.experience-section{font-size:.85rem;margin:18px 0 10px}
+.experience-evidence{font-family:monospace;font-size:.73rem;opacity:.7;overflow-wrap:anywhere}
+.experience-timeline{border-left:2px solid #8a9dbe55;padding-left:14px;font-size:.78rem;line-height:1.5;margin:12px 0}
+.experience-timeline p{white-space:pre-wrap}
+.experience-panel button{padding:5px 10px;border:1px solid #ffffff25;border-radius:6px;background:var(--superficie-3);color:inherit;cursor:pointer}
+
 </style>
 </head>
 <body>
+<details id="experience-status" class="experience-panel" hidden><summary>Memoria viva <span>Vigencia · evidencia · experimentos</span></summary><p class="experience-intro">Qué sigue aplicando, por qué y qué se comprobó en una copia aislada. Las interpretaciones siguen siendo inferencias.</p><div id="experience-status-content"></div></details>
+<aside id="project-bindings" hidden aria-label="Vinculación de proyectos" aria-live="polite"></aside>
 <a class="saltar" href="#centro">Saltar al mapa</a>
 <div id="sin-datos" class="sin-datos" hidden>
   <div class="sin-datos-caja">
     <svg width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><g style="fill:none;stroke:var(--texto-3);stroke-width:1.3;stroke-linecap:round"><path d="M8 12 L16 6.5 L24.5 11.5 L22 22 L11.5 23.5 Z M16 6.5 L16 15.5 L22 22 M8 12 L16 15.5 L11.5 23.5 M24.5 11.5 L16 15.5"/></g><circle cx="16" cy="15.5" r="3.2" style="fill:var(--acento)"/><circle cx="8" cy="12" r="2.2" style="fill:var(--texto-3)"/><circle cx="16" cy="6.5" r="2.2" style="fill:var(--texto-3)"/><circle cx="24.5" cy="11.5" r="2.2" style="fill:var(--texto-3)"/><circle cx="22" cy="22" r="2.2" style="fill:var(--texto-3)"/><circle cx="11.5" cy="23.5" r="2.2" style="fill:var(--texto-3)"/></svg>
     <h1>Todavía no hay datos</h1>
-    <p>Abrilo con <code>/neuromapa:abrir</code> (sin el plugin, <code>sh bin/neuromapa abrir</code> o <code>bin\neuromapa.cmd abrir</code>) para generar los datos.</p>
+    <p>Abrilo con <code>/synopsis:abrir</code> (sin el plugin, <code>sh bin/synopsis abrir</code> o <code>bin\synopsis.cmd abrir</code>) para generar los datos.</p>
     <p>Esta página es la plantilla: el generador lee tus notas, la llena y crea <code>cerebro.html</code>.</p>
   </div>
 </div>
@@ -1095,7 +1124,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     <div class="marca">
       <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><g style="fill:none;stroke:var(--linea);stroke-width:1.3;stroke-linecap:round"><path d="M8 12 L16 6.5 L24.5 11.5 L22 22 L11.5 23.5 Z M16 6.5 L16 15.5 L22 22 M8 12 L16 15.5 L11.5 23.5 M24.5 11.5 L16 15.5"/></g><circle cx="16" cy="15.5" r="3.4" style="fill:var(--acento)"/><circle cx="8" cy="12" r="2.3" style="fill:#2bb0a6"/><circle cx="16" cy="6.5" r="2.3" style="fill:#e0803a"/><circle cx="24.5" cy="11.5" r="2.3" style="fill:#d2508a"/><circle cx="22" cy="22" r="2.3" style="fill:#4a90e2"/><circle cx="11.5" cy="23.5" r="2.3" style="fill:#8bbd3c"/></svg>
       <div>
-        <h1>Synapsis</h1>
+        <h1>Synopsis</h1>
         <p class="generado" id="generado"></p>
       </div>
     </div>
@@ -1243,7 +1272,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
           <div class="en-vivo-uso" id="en-vivo-uso" hidden></div>
         </div>
       </div>
-      <div class="pie-cine" id="pie-cine" aria-hidden="true"><b>Synapsis</b> · <span id="pie-cine-notas"></span><span class="pie-vivo"> · en vivo</span></div>
+      <div class="pie-cine" id="pie-cine" aria-hidden="true"><b>Synopsis</b> · <span id="pie-cine-notas"></span><span class="pie-vivo"> · en vivo</span></div>
       <div class="zocalo" id="zocalo" aria-live="off"><span class="zocalo-quien" id="zocalo-quien"></span><span class="zocalo-texto" id="zocalo-texto"></span></div>
       <div class="repite" id="repite" hidden>
         <div class="repite-fecha" id="repite-fecha"></div>
@@ -1560,7 +1589,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
   const tapada = l => !!l._sobre && l._sobre.some(o => o._visible);
   const usoDe = l => !estado.clasesOn.has('aprendida') ? 0 : l.clase === 'aprendida' ? (l.datos && l.datos.peso) || 0 : l._mielina || 0;
   fundirAprendidas(aristas);
-  if (descartadas) console.warn('Synapsis: ' + descartadas + ' aristas descartadas porque apuntan a notas que no existen o tienen una clase desconocida.');
+  if (descartadas) console.warn('Synopsis: ' + descartadas + ' aristas descartadas porque apuntan a notas que no existen o tienen una clase desconocida.');
 
   const unirRespuesta = (quien, a) => {
     if (!quien || !a || quien === a || quien.respondeA.includes(a)) return;
@@ -3421,7 +3450,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       if (typeof M.parse === 'function') return M.parse(md, { gfm: true, breaks: false, async: false });
       if (typeof M === 'function') return M(md);
     } catch (e) {
-      console.warn('Synapsis: marked no pudo con esta nota', e);
+      console.warn('Synopsis: marked no pudo con esta nota', e);
     }
     return null;
   }
@@ -5205,7 +5234,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     return texto.slice(0, n).trimEnd() + '…';
   }
 
-  const textoPie = () => 'Synapsis · ' + nodos.length.toLocaleString('es') + (nodos.length === 1 ? ' nota' : ' notas') + ' · ' + new Date().toLocaleDateString('es');
+  const textoPie = () => 'Synopsis · ' + nodos.length.toLocaleString('es') + (nodos.length === 1 ? ' nota' : ' notas') + ' · ' + new Date().toLocaleDateString('es');
 
   function pintarPie(c, W, H) {
     const tam = Math.max(12, Math.round(Math.min(W, H) * 0.02));
@@ -5425,7 +5454,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
   }
 
   async function bajarSinNotas() {
-    if (!/^https?:$/.test(location.protocol)) { aviso('Para bajar la copia sin notas, abrí el mapa con /neuromapa:abrir.'); return; }
+    if (!/^https?:$/.test(location.protocol)) { aviso('Para bajar la copia sin notas, abrí el mapa con /synopsis:abrir.'); return; }
     if (compartir.ocupado) { aviso('Esperá un momento: todavía estoy armando lo anterior.'); return; }
     compartir.ocupado = true;
     compartir.sinNotas.disabled = true;
@@ -5437,7 +5466,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       if (partes.length !== 2) throw new Error('no encontré los datos en la página');
       const datos = JSON.stringify(datosSinNotas()).replace(/</g, '\\u003c');
       const bloque = '<script>window.CEREBRO = ' + datos + ';<\/script>';
-      bajar(new Blob([partes[0] + bloque + partes[1]], { type: 'text/html' }), nombreBajada('neuromapa-sin-notas', 'html'));
+      bajar(new Blob([partes[0] + bloque + partes[1]], { type: 'text/html' }), nombreBajada('synopsis-sin-notas', 'html'));
       aviso('Bajé una copia del mapa sin el texto ni los nombres de las notas. Esa sí se puede pasar.');
     } catch (e) {
       aviso('No pude armar la copia sin notas: ' + e.message + '.');
@@ -5726,7 +5755,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
   async function armarMiDia() {
     if (captura.grabacion) { aviso('Estoy grabando: la tarjeta, cuando termine el video.'); return; }
     if (compartir.ocupado) { aviso('Esperá un momento: todavía estoy armando lo anterior.'); return; }
-    if (!vivo.resumenDia) { aviso('«Mi día» necesita el servidor: abrí el mapa con /neuromapa:abrir (sin el plugin, con bin/neuromapa abrir).'); return; }
+    if (!vivo.resumenDia) { aviso('«Mi día» necesita el servidor: abrí el mapa con /synopsis:abrir (sin el plugin, con bin/synopsis abrir).'); return; }
     if (!(await confirmarNombres('tarjeta'))) return;
     compartir.ocupado = true;
     compartir.dia.disabled = true;
@@ -7062,12 +7091,12 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       e.preventDefault();
       if (!neuronasGL) return;
       neuronasGL.perdido = true;
-      console.warn('Synapsis: el navegador se llevó el contexto WebGL, espero a que lo devuelva');
+      console.warn('Synopsis: el navegador se llevó el contexto WebGL, espero a que lo devuelva');
     });
     lienzoNeuronas.addEventListener('webglcontextrestored', () => {
       const G = terminarGL(prepararGL());
       if (!G) {
-        console.warn('Synapsis: el WebGL volvió pero no se pudo rearmar; sigo con el dibujo 2D');
+        console.warn('Synopsis: el WebGL volvió pero no se pudo rearmar; sigo con el dibujo 2D');
         neuronasGL = null;
         if (cerebro && cerebro.px && !cerebro.baldes) cerebro.baldes = baldesDe(cerebro.px);
         pedirDibujo();
@@ -7087,14 +7116,14 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     try {
       [G.puntos, G.lineas, G.fondo].forEach(G.listo);
     } catch (e) {
-      console.warn('Synapsis: sin WebGL para las neuronas', e);
+      console.warn('Synopsis: sin WebGL para las neuronas', e);
       return null;
     }
     if (G.motas) {
       try {
         G.listo(G.motas);
       } catch (e) {
-        console.warn('Synapsis: sin motas de primer plano', e);
+        console.warn('Synopsis: sin motas de primer plano', e);
         G.motas = null;
       }
     }
@@ -7102,7 +7131,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       try {
         [G.brillo.desenfoque, G.brillo.mezcla].forEach(G.listo);
       } catch (e) {
-        console.warn('Synapsis: sin resplandor', e);
+        console.warn('Synopsis: sin resplandor', e);
         G.brillo = null;
       }
     }
@@ -7351,7 +7380,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
           '  gl_FragColor = vec4(uColMota * a, a);\n' +
           '}\n', UNIF.concat(['uDpr', 'uMotas', 'uColMota']));
       } catch (e) {
-        console.warn('Synapsis: sin motas de primer plano', e);
+        console.warn('Synopsis: sin motas de primer plano', e);
         motas = null;
       }
       const fondo = programa(
@@ -7399,7 +7428,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       return { gl, cv, puntos, lineas, fondo, motas, listo, brillo: prepararResplandor(gl, programa), focos: focosGL,
                vFoco: bufFoco.subarray(0, focosGL * 4), vFocoCol: bufFocoCol.subarray(0, focosGL * 4) };
     } catch (e) {
-      console.warn('Synapsis: sin WebGL para las neuronas', e);
+      console.warn('Synopsis: sin WebGL para las neuronas', e);
       return null;
     }
   }
@@ -7441,7 +7470,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       gl.getExtension('EXT_color_buffer_half_float');
       return { desenfoque, mezcla, hf, escena: null, a1: null, t1: null, a2: null, t2: null, esc: 1, w: 0, h: 0, falla: false, fuerza: 0, tF: 0 };
     } catch (e) {
-      console.warn('Synapsis: sin resplandor', e);
+      console.warn('Synopsis: sin resplandor', e);
       return null;
     }
   }
@@ -7486,7 +7515,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       R.h = h;
       if (!R.a1.ok || !R.t1.ok || !R.a2.ok || !R.t2.ok) {
         R.falla = true;
-        console.warn('Synapsis: sin resplandor (el framebuffer no quedó completo)');
+        console.warn('Synopsis: sin resplandor (el framebuffer no quedó completo)');
         return null;
       }
     }
@@ -7498,7 +7527,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       if (!R.hf) R.escena = objetivoGL(gl, R.escena, w, h, gl.UNSIGNED_BYTE, gl.NEAREST);
       if (!R.escena.ok) {
         R.falla = true;
-        console.warn('Synapsis: sin resplandor (la escena no entra en un framebuffer)');
+        console.warn('Synopsis: sin resplandor (la escena no entra en un framebuffer)');
         return null;
       }
       R.esc = R.escena.tipo === gl.UNSIGNED_BYTE ? 2 : 1;
@@ -10339,7 +10368,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       const colores = vivo.leyenda
         ? '<p>El color del verbo dice qué hizo. En cada fila, el primer puntito es el color del chat y el segundo, el del agente.</p>'
           + lista(vivo.leyenda().map(([nombre, color, texto]) => item(punto(color), nombre, texto, 'verbo')))
-        : '<p>El panel «Ahora» aparece cuando abrís el mapa con <code>/neuromapa:abrir</code> (sin el plugin, <code>sh bin/neuromapa abrir</code> o <code>bin\\neuromapa.cmd abrir</code>), que levanta el servidor.</p>';
+        : '<p>El panel «Ahora» aparece cuando abrís el mapa con <code>/synopsis:abrir</code> (sin el plugin, <code>sh bin/synopsis abrir</code> o <code>bin\\synopsis.cmd abrir</code>), que levanta el servidor.</p>';
       cuerpoAyuda.innerHTML =
         '<h3>El cerebro</h3>' + lista(QUE_VES.map(([n, t]) => item('', n, t, ''))) +
         '<h3>Lóbulos</h3>' + lista(lobulos) +
@@ -10534,9 +10563,9 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       cierre: ['cierra', '#94a3b8', 'chat cerrado'],
       'sub-fin': ['agente', '#a78bfa', 'un agente terminó'],
       falla: ['falló', '#ef4444', 'una herramienta falló'],
-      aviso: ['pista', '#38bdf8', 'Synapsis le pasó qué leer primero'],
-      recuerda: ['recuerda', '#38bdf8', 'al editar un archivo, Synapsis le recordó la nota que suele ir con él'],
-      guarda: ['guardar', '#38bdf8', 'Synapsis le recordó anotar en la memoria lo decidido'],
+      aviso: ['pista', '#38bdf8', 'Synopsis le pasó qué leer primero'],
+      recuerda: ['recuerda', '#38bdf8', 'al editar un archivo, Synopsis le recordó la nota que suele ir con él'],
+      guarda: ['guardar', '#38bdf8', 'Synopsis le recordó anotar en la memoria lo decidido'],
       choque: ['choque', '#ef4444', 'dos chats o agentes editaron el mismo archivo con menos de ' + MINUTOS_CHOQUE + ' min entre uno y otro']
     };
     const ESTADO_TXT = { trabajando: 'trabajando', esperando: 'espera tu OK', compactando: 'comprimiendo su memoria', listo: 'listo', cerrado: 'cerrado' };
@@ -10548,7 +10577,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       const v = verboDe(ev);
       return v ? v[0] : NOMBRE[ev.k] || ev.k || 'usa';
     };
-    const QUE_HACE = { leer: 'lee una nota o un archivo', buscar: 'busca texto en archivos', editar: 'edita un archivo', crear: 'crea un archivo', ejecutar: 'corre un comando', agente: 'lanza un agente', web: 'abre una página web', consulta: 'le pregunta a Synapsis (--sobre, --parecidas…); los rayos salen del lóbulo de la memoria hacia las notas que le recomendó', otro: 'usa otra herramienta (mira, anota, completa…)' };
+    const QUE_HACE = { leer: 'lee una nota o un archivo', buscar: 'busca texto en archivos', editar: 'edita un archivo', crear: 'crea un archivo', ejecutar: 'corre un comando', agente: 'lanza un agente', web: 'abre una página web', consulta: 'le pregunta a Synopsis (--sobre, --parecidas…); los rayos salen del lóbulo de la memoria hacia las notas que le recomendó', otro: 'usa otra herramienta (mira, anota, completa…)' };
     const QUE_COMANDO = { commit: 'hace un commit', compila: 'compila', prueba: 'corre una prueba', git: 'usa git', base: 'consulta una base de datos', cerebro: 'regenera el cerebro', lee: 'lee archivos por consola', busca: 'busca texto o archivos por consola', lista: 'lista carpetas', python: 'corre Python', node: 'corre Node o npm', red: 'se conecta a la red', archivos: 'copia, mueve o borra archivos', sistema: 'mira o cambia algo del sistema', script: 'corre un script' };
     const MOTIVO_PISTA = {
       p: ['por tus palabras', COLOR.consulta, 'rayo de la pista: eligió la nota porque el pedido coincide con un tramo de ella', 'por palabras'],
@@ -10643,7 +10672,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     const opcionConsulta = ev => OPCIONES_CEREBRO.has(ev.p) ? '--' + ev.p : '';
     const textoConsulta = ev => {
       const cuantas = recomendadas(ev).length;
-      return ['a Synapsis', opcionConsulta(ev)].filter(Boolean).join(' · ') + (cuantas ? ' → ' + cuantas + (cuantas === 1 ? ' nota' : ' notas') : '');
+      return ['a Synopsis', opcionConsulta(ev)].filter(Boolean).join(' · ') + (cuantas ? ' → ' + cuantas + (cuantas === 1 ? ' nota' : ' notas') : '');
     };
     function notasDe(ev) {
       if (ev._notas) return ev._notas;
@@ -10704,7 +10733,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     };
     const frase = ev => {
       if (ev.e === 'falla') return 'falló ' + recortar(nombreFalla(ev), 24);
-      if (ev.k === 'consulta') return ['consulta a Synapsis', opcionConsulta(ev)].filter(Boolean).join(' ');
+      if (ev.k === 'consulta') return ['consulta a Synopsis', opcionConsulta(ev)].filter(Boolean).join(' ');
       if (ev.f) return nombreEvento(ev) + ' ' + recortar(nombreCorto(ev), 24);
       const fs = rutasLeidas(ev);
       if (fs.length) return nombreEvento(ev) + ' ' + recortar(archivoCorto(fs[0]), 24) + yMas(fs.length - 1);
@@ -11122,7 +11151,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     let repintando = false;
     const ZOCALO_MIN = 1800;
     const ZOCALO_VIDA = 9000;
-    const QUE_EVENTO = { usuario: 'le llega un mensaje', aviso: 'recibe la pista de Synapsis', recuerda: 'Synapsis le recuerda una nota al editar', guarda: 'Synapsis le recuerda guardar lo decidido', fin: 'terminó de responder', espera: 'espera tu OK', compacta: 'comprime su memoria', inicio: 'abre el chat', cierre: 'cierra el chat', 'sub-fin': 'un agente terminó' };
+    const QUE_EVENTO = { usuario: 'le llega un mensaje', aviso: 'recibe la pista de Synopsis', recuerda: 'Synopsis le recuerda una nota al editar', guarda: 'Synopsis le recuerda guardar lo decidido', fin: 'terminó de responder', espera: 'espera tu OK', compacta: 'comprime su memoria', inicio: 'abre el chat', cierre: 'cierra el chat', 'sub-fin': 'un agente terminó' };
     const zocalo = { el: $('#zocalo'), quien: $('#zocalo-quien'), texto: $('#zocalo-texto'), ev: null, t: -Infinity, pendiente: null, espera: 0, apagar: 0 };
     const mayuscula = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 
@@ -11137,7 +11166,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
       if (ev.k === 'consulta') {
         const cuantas = recomendadas(ev).length;
         const op = opcionConsulta(ev);
-        return 'le pregunta a Synapsis' + (op ? ' (' + op + ')' : '') + (cuantas ? ' y le recomienda ' + cuantas + (cuantas === 1 ? ' nota' : ' notas') : '');
+        return 'le pregunta a Synopsis' + (op ? ' (' + op + ')' : '') + (cuantas ? ' y le recomienda ' + cuantas + (cuantas === 1 ? ' nota' : ' notas') : '');
       }
       if (ev.k === 'ejecutar') {
         const s = segundosDe(ev);
@@ -11285,10 +11314,10 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
     function textoConsultas(cq) {
       const n = v => Number.isFinite(v) && v > 0 ? v : 0;
       const total = n(cq.total);
-      if (!total) return 'Consultas a Synapsis: ninguna todavía.';
+      if (!total) return 'Consultas a Synopsis: ninguna todavía.';
       const opciones = Object.entries(cq.porOpcion || {}).filter(([o, v]) => OPCIONES_CEREBRO.has(o) && n(v))
         .sort((a, b) => b[1] - a[1]).map(([o, v]) => '-' + UNIR + '-' + UNIR + o + ESPACIO_FIJO + v).join(', ');
-      const partes = ['Consultas a Synapsis: ' + total + (opciones ? ' (' + opciones + ')' : '')];
+      const partes = ['Consultas a Synopsis: ' + total + (opciones ? ' (' + opciones + ')' : '')];
       if (n(cq.pedidos)) partes.push('el chat consultó en ' + n(cq.conConsulta) + ' de ' + n(cq.pedidos) + ' pedidos');
       if (n(cq.recomendadas)) partes.push('de ' + n(cq.recomendadas) + ' notas recomendadas leyó después ' + n(cq.leidas) + ' (' + Math.round(100 * n(cq.leidas) / n(cq.recomendadas)) + ' %)');
       return partes.join(' · ') + '.';
@@ -13082,7 +13111,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
         recibir(sano);
       } catch (error) {
         vivo.fallas = (vivo.fallas || 0) + 1;
-        console.error('Synapsis: no pude mostrar un evento en vivo (' + vivo.fallas + ' en esta pestaña):', error);
+        console.error('Synopsis: no pude mostrar un evento en vivo (' + vivo.fallas + ' en esta pestaña):', error);
       }
     }
 
@@ -13672,7 +13701,7 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
         asegurarChats();
         pedirDibujo();
       } catch (error) {
-        console.error('Synapsis: no pude volver al vivo después de repetir:', error);
+        console.error('Synopsis: no pude volver al vivo después de repetir:', error);
       } finally {
         probar.disabled = false;
         caja.classList.remove('repitiendo');
@@ -13891,6 +13920,165 @@ body.anonimo #bloque-salud, body.anonimo #bloque-aprendido, body.anonimo #result
   }
 
   iniciarVivo();
+})();
+</script>
+<script>
+(() => {
+  if (!/^https?:$/.test(location.protocol)) return;
+  const panel = document.getElementById('project-bindings');
+  let busy = false, shown = '';
+  async function refreshBindings() {
+    if (busy || document.hidden) return;
+    try {
+      const response = await fetch('/project-bindings', {cache: 'no-store'});
+      if (!response.ok) return;
+      const data = await response.json();
+      const signature = JSON.stringify(data.requests);
+      if (signature === shown) return;
+      shown = signature;
+      panel.replaceChildren();
+      panel.hidden = !data.requests.length;
+      for (const request of data.requests) {
+        const section = document.createElement('section');
+        const heading = document.createElement('strong');
+        heading.textContent = 'Encontramos una memoria anterior';
+        const project = document.createElement('p');
+        project.textContent = 'Proyecto: ' + request.project;
+        const folder = document.createElement('p');
+        folder.textContent = 'Memorias encontradas: ' + request.choices.length;
+        const message = document.createElement('p');
+        message.textContent = 'Confirma si pertenecen al mismo proyecto. Tus notas se conservarán.';
+        section.append(heading, project, folder, message);
+        const options = request.choices.map((item, index) => ['existing:' + index, 'Usar ' + item.folder]);
+        options.push(['independent', 'Crear memoria independiente']);
+        for (const [choice, label] of options) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = label;
+          button.addEventListener('click', async () => {
+            busy = true;
+            for (const item of section.querySelectorAll('button')) item.disabled = true;
+            try {
+              const result = await fetch('/project-bindings', {method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-Synopsis-Action': 'bind-project'},
+                body: JSON.stringify({id: request.id, choice})});
+              const value = await result.json();
+              if (!result.ok) throw new Error(value.error || 'No se pudo vincular.');
+              message.textContent = 'Proyecto vinculado. Continúa en tu asistente; al actualizar el mapa verás su memoria.';
+              for (const item of section.querySelectorAll('button')) item.remove();
+            } catch (error) {
+              message.textContent = error.message;
+              for (const item of section.querySelectorAll('button')) item.disabled = false;
+            } finally { busy = false; }
+          });
+          section.append(button);
+        }
+        panel.append(section);
+      }
+    } catch (_) { /* The static exported map does not provide this local endpoint. */ }
+  }
+  refreshBindings();
+  setInterval(refreshBindings, 10000);
+})();
+
+(function () {
+  const panel = document.getElementById('experience-status');
+  const content = document.getElementById('experience-status-content');
+  if (!panel || !content) return;
+  const labels = {needs_replay:'Histórico · falta reproducir',incompatible_interface:'Firma incompatible',scope_revised_or_retired:'Alcance cambiado o retirado',scope_unobserved:'Condición sin observar',policy_changed:'Contrato cambiado',superseded_by_current_assertion:'Reemplazado por un test actual',active:'Vigente',retired:'Retirada explícitamente',superseded:'Reemplazada',scheduled:'Vigencia futura',observed_improvement:'Mejora observada en estos tests',regression:'Introduce regresión',no_measured_gain:'Sin mejora medida',eligible:'Requisitos observados',inapplicable:'No aplica en este contexto',unknown:'Falta una observación',unsupported:'Falta respaldo',reported_harm:'Suspendida por resultado dañino',workspace_changed:'Proyecto cambiado durante la comprobación',observed_support:'Observación respaldada',contradicted:'Comprobación contradictoria',stale:'Evidencia desactualizada',needs_execution:'Prueba por ejecutar',unverified:'Sin comprobar',unavailable:'Comprobación no disponible',pending:'Revisión pendiente',running:'Revisando',retry:'Reintento pendiente',waiting_for_provider:'Esperando proveedor',failed:'Revisión detenida',expired:'Entrada vencida',conflict:'Requiere conciliación',awaiting_stop:'Esperando cierre del turno',rejected:'Entrada rechazada'};
+  let busy = false;
+  async function refresh() {
+    if (busy) return;
+    busy = true;
+    try {
+      const response = await fetch('/experience-status', {cache:'no-store'});
+      if (!response.ok) return;
+      const data = await response.json();
+      if (!Array.isArray(data.projects)) return;
+      content.replaceChildren();
+      panel.hidden = false;
+      if (!data.projects.length) { const empty = document.createElement('p'); empty.className = 'experience-intro'; empty.textContent = 'Tus experiencias, decisiones y pruebas aparecerán aquí al trabajar en tus proyectos.'; content.appendChild(empty); }
+      for (const project of data.projects) {
+        const title = document.createElement('h3'); title.textContent = project.project; content.appendChild(title);
+        const pending = project.reviews.filter(row => row.state !== 'complete');
+        if (pending.length) {
+          const message = document.createElement('p');
+          message.textContent = pending.map(row => (labels[row.state] || row.state) + (row.error ? ' · ' + row.error : '')).join('; ');
+          content.appendChild(message);
+          if (pending.some(row => ['failed','retry','waiting_for_provider'].includes(row.state))) {
+            const button = document.createElement('button'); button.textContent = 'Reintentar revisión';
+            button.addEventListener('click', async () => {
+              button.disabled = true;
+              try {
+                const result = await fetch('/experience-status', {method:'POST',headers:{'Content-Type':'application/json','X-Synopsis-Action':'review-memory'},body:JSON.stringify({project:project.id})});
+                button.textContent = result.ok ? 'Revisión programada' : 'No se pudo reintentar';
+              } catch { button.textContent = 'Sin conexión'; }
+              button.disabled = false;
+            });
+            content.appendChild(button);
+          }
+        }
+        const section = document.createElement('section'); section.className = 'experience-project'; content.appendChild(section);
+        const stats = document.createElement('div'); stats.className = 'experience-stats'; section.appendChild(stats);
+        const active = project.experiences.filter(item => item.lifecycle?.state === 'active').length;
+        for (const value of [active + (active === 1 ? ' experiencia vigente' : ' experiencias vigentes'), (project.experiences.length - active) + ' fuera de vigencia', (project.research || []).length + ((project.research || []).length === 1 ? ' investigación' : ' investigaciones'), (project.witnesses || []).length + ((project.witnesses || []).length === 1 ? ' testigo' : ' testigos')]) {
+          const stat = document.createElement('span'); stat.textContent = value; stats.appendChild(stat);
+        }
+        const grid = document.createElement('div'); grid.className = 'experience-grid'; section.appendChild(grid);
+        function paragraph(parent, text, className) { const node = document.createElement('p'); node.textContent = text; if (className) node.className = className; parent.appendChild(node); return node; }
+        function badge(parent, state) {
+          const tag = document.createElement('span'); tag.className = 'experience-badge'; tag.textContent = labels[state] || state;
+          tag.dataset.tone = ['eligible','observed_support','active','observed_improvement'].includes(state) ? 'good' : ['regression','reported_harm','contradicted','rejected'].includes(state) ? 'bad' : 'pending';
+          parent.appendChild(tag);
+        }
+        for (const item of project.experiences) {
+          const card = document.createElement('article'); card.className = 'experience-card'; grid.appendChild(card);
+          const heading = document.createElement('h4'); heading.textContent = item.name + ' · revisión ' + item.revision; card.appendChild(heading);
+          badge(card, item.verification.state);
+          paragraph(card, item.situation);
+          paragraph(card, 'Acción: ' + item.action);
+          paragraph(card, 'Límites: ' + item.limitations);
+          if (item.decision) paragraph(card, item.decision.key + ' → ' + item.decision.choice + ' · ' + item.decision.requires.length + ' condiciones declaradas');
+          if (item.lifecycle?.validity?.until) paragraph(card, 'Válida hasta: ' + item.lifecycle.validity.until);
+          if (item.lifecycle?.reason) paragraph(card, 'Estado: ' + item.lifecycle.reason);
+          for (const source of item.evidence || []) paragraph(card, source.path + ' · SHA ' + source.sha256.slice(0,12), 'experience-evidence');
+        }
+        if ((project.witnesses || []).length) {
+          const heading = document.createElement('h4'); heading.className = 'experience-section'; heading.textContent = 'Testigos de comportamiento · casos conservados'; section.appendChild(heading);
+          const witnessGrid = document.createElement('div'); witnessGrid.className = 'experience-grid'; section.appendChild(witnessGrid);
+          for (const witness of project.witnesses) {
+            const card = document.createElement('article'); card.className = 'experience-card'; witnessGrid.appendChild(card);
+            const heading = document.createElement('h4'); heading.textContent = witness.callable.path + ' :: ' + witness.callable.symbol; card.appendChild(heading);
+            badge(card,witness.state);
+            paragraph(card,witness.records + ' casos históricos · revisión de estado ' + witness.sequence);
+            paragraph(card,'Conserva entradas y salidas observadas aunque desaparezca el test. Requiere reproducción; no prueba corrección general.');
+            for (const evidence of witness.evidence || []) paragraph(card,evidence.path + ':' + evidence.line + ' · ' + evidence.case,'experience-evidence');
+            paragraph(card,'Testigo ' + witness.id.slice(0,12) + ' · fuente ' + witness.source_sha256.slice(0,12),'experience-evidence');
+          }
+        }
+        if ((project.timeline || []).length) {
+          const heading = document.createElement('h4'); heading.className = 'experience-section'; heading.textContent = 'Cambios de vigencia'; section.appendChild(heading);
+          const timeline = document.createElement('div'); timeline.className = 'experience-timeline'; section.appendChild(timeline);
+          for (const event of project.timeline.slice().reverse()) paragraph(timeline, event.recorded_at + ' · ' + event.name + ' · ' + (labels[event.state] || event.state) + '\n' + event.reason);
+        }
+        if ((project.research || []).length) {
+          const heading = document.createElement('h4'); heading.className = 'experience-section'; heading.textContent = 'Banco de investigación · copias aisladas'; section.appendChild(heading);
+          const researchGrid = document.createElement('div'); researchGrid.className = 'experience-grid'; section.appendChild(researchGrid);
+          for (const run of project.research) for (const candidate of run.candidates) {
+            const card = document.createElement('article'); card.className = 'experience-card'; researchGrid.appendChild(card);
+            const heading = document.createElement('h4'); heading.textContent = candidate.title; card.appendChild(heading); badge(card,candidate.state);
+            paragraph(card,candidate.hypothesis);
+            paragraph(card,'Archivos: ' + candidate.paths.join(', '));
+            for (const test of candidate.observations) paragraph(card,test.case + '\nOriginal: ' + (labels[test.baseline] || test.baseline) + ' → candidato: ' + (labels[test.candidate] || test.candidate));
+            for (const witness of candidate.behavior_observations || []) paragraph(card,'Testigo ' + witness.id.slice(0,12) + '\nOriginal: ' + (labels[witness.baseline] || witness.baseline) + ' → candidato: ' + (labels[witness.candidate] || witness.candidate) + '\nCasos coincidentes: ' + witness.matches.filter(Boolean).length + '/' + witness.matches.length);
+            paragraph(card,'Snapshot ' + run.snapshot_sha256.slice(0,12) + ' · ' + run.created,'experience-evidence');
+          }
+        }
+      }
+    } catch { /* Preserve the map when memory status is temporarily unavailable. */ }
+    finally { busy = false; }
+  }
+  refresh(); setInterval(refresh, 30000);
 })();
 </script>
 </body>

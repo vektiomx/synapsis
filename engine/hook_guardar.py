@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+from pathlib import Path
 
 CARPETA = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, CARPETA)
@@ -9,7 +10,7 @@ import hooks_comun
 UMBRAL = 5
 PAUSA = 15 * 60
 SIN_TRABAJO = ("md", "txt")
-TEXTO_COMPACTADA = ("Neuromapa: esta charla se acaba de compactar y el resumen de arriba es lo único que queda de lo que se "
+TEXTO_COMPACTADA = ("Synopsis: esta charla se acaba de compactar y el resumen de arriba es lo único que queda de lo que se "
                     "habló antes. Lo que ese resumen cuenta como decidido, aprendido o pendiente y todavía no está escrito en "
                     "la memoria (o en los documentos del proyecto) se pierde en la próxima compactación o al cerrar la charla. "
                     "Antes de seguir conviene pasarlo a la memoria, en la nota que ya cubre cada tema en vez de crear otra; si "
@@ -20,18 +21,26 @@ def extension(ruta):
     return os.path.splitext(ruta)[1][1:].lower()
 
 
-def cuentas(eventos, sesion, es_nota):
+def cuentas(eventos, sesion, es_nota, revisado=0.0, proyecto=None):
     from registro import numero
     propios = [ev for ev in eventos if ev.get("s") == sesion]
     nota = max((numero(ev.get("t")) for ev in propios if ev.get("e") == "post" and ev.get("k") in ("editar", "crear")
                 and isinstance(ev.get("f"), str) and es_nota(ev["f"])), default=0.0)
     avisado = max((numero(ev.get("t")) for ev in propios if ev.get("e") == "guarda"), default=0.0)
-    desde = max(nota, avisado)
+    desde = max(nota, avisado, revisado)
+    def del_proyecto(ruta):
+        if not proyecto:
+            return True
+        try:
+            return Path(ruta).resolve().is_relative_to(Path(proyecto))
+        except (OSError, ValueError):
+            return False
     import consultas
     archivos = {consultas.clave(ev["f"]) for ev in propios
                 if ev.get("e") == "post" and ev.get("k") in ("editar", "crear") and isinstance(ev.get("f"), str)
-                and extension(ev["f"]) not in SIN_TRABAJO and numero(ev.get("t")) > desde}
-    commits = sum(1 for ev in propios if ev.get("e") == "post" and ev.get("b") == "commit" and numero(ev.get("t")) > desde)
+                and del_proyecto(ev['f']) and extension(ev["f"]) not in SIN_TRABAJO and numero(ev.get("t")) > desde}
+    commits = sum(1 for ev in propios if ev.get("e") == "post" and ev.get("b") == "commit" and numero(ev.get("t")) > desde
+                  and (not ev.get('c') or del_proyecto(ev['c'])))
     return len(archivos), commits, nota > 0, avisado
 
 
@@ -43,13 +52,15 @@ def es_nota(ruta):
     return nucleo.dentro_de_fuentes(ruta) or nucleo.dentro_de_fuentes(consultas.clave(ruta))
 
 
-def texto_fin(archivos, commits, escribio):
+def texto_fin(archivos, commits, escribio, revisado=False):
     from textos import cantidad
     hecho = "se cambió 1 archivo" if archivos == 1 else "se cambiaron " + cantidad(archivos, "archivo", "archivos")
     if commits:
         hecho += " y se hizo 1 commit" if commits == 1 else " y se hicieron " + cantidad(commits, "commit", "commits")
-    antes = (f"Neuromapa: desde la última vez que esta charla escribió en la memoria {hecho}." if escribio else
-             f"Neuromapa: en esta charla {hecho} y todavía no se escribió nada en la memoria.")
+    antes = (f"Synopsis: desde la última vez que esta charla escribió en la memoria {hecho}." if escribio else
+             f"Synopsis: en esta charla {hecho} y todavía no se escribió nada en la memoria.")
+    if revisado:
+        antes = f'Synopsis: desde la última revisión de memoria de esta charla {hecho}.'
     return (antes + " Si salió una decisión, un porqué, un número o un paso que convenga recordar dentro de unas semanas, "
             "este es el momento de anotarlo en la nota que ya cubre ese tema. Si no hay nada nuevo que valga la pena "
             "guardar, no hace falta hacer nada.")
@@ -81,11 +92,22 @@ def aviso_fin(datos, ahora=None):
     from hook_choques import lineas_del_chat
     ahora = time.time() if ahora is None else ahora
     eventos = list(registro.eventos(lineas_del_chat(consultas.REGISTRO, sesion, ahora), 0))
-    archivos, commits, escribio, avisado = cuentas(eventos, sesion, es_nota)
+    from hook_cycle import project_for
+    from project_identity import _registered, note_owner
+    from memory_cycle import MemoryCycle
+    project = project_for(datos.get('cwd'), datos.get('workspace_roots'))
+    folder = _registered(project) if project else None
+    review = MemoryCycle(folder, project).last_review(str(datos.get('session_id') or '')) if folder else None
+    def local_note(path):
+        if folder:
+            return Path(path).resolve().is_relative_to(folder) and note_owner(path) == project
+        return es_nota(path)
+    archivos, commits, escribio, avisado = cuentas(eventos, sesion, local_note,
+                                                 review['at'] if review else 0.0, project)
     if ahora - avisado < PAUSA or not (archivos >= UMBRAL or (commits and archivos)):
         return None
     anotar(sesion, datos.get("cwd"), "fin", archivos)
-    return texto_fin(archivos, commits, escribio)
+    return texto_fin(archivos, commits, escribio, revisado=bool(review))
 
 
 def guardar_historial():

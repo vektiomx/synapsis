@@ -8,10 +8,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import comun
 
-NEUROMAPA_DIR = str(comun.raiz_motor())
+SYNOPSIS_DIR = str(comun.raiz_motor())
 os.environ.setdefault('CLAUDE_PLUGIN_DATA', str(comun.carpeta_datos()))
-if NEUROMAPA_DIR not in sys.path:
-    sys.path.insert(0, NEUROMAPA_DIR)
+if SYNOPSIS_DIR not in sys.path:
+    sys.path.insert(0, SYNOPSIS_DIR)
 
 def map_tool(name, args):
     if not isinstance(args, dict):
@@ -36,8 +36,12 @@ def get_last_user_prompt(path):
     if not path or not os.path.isfile(path):
         return ''
     try:
-        with open(path, 'r', encoding='utf-8', errors='replace') as f:
-            lines = f.readlines()
+        with open(path, 'rb') as f:
+            f.seek(0, 2)
+            size = f.tell()
+            f.seek(max(0, size - 1024 * 1024))
+            raw = f.read().splitlines()
+            lines = [line.decode('utf-8', errors='replace') for line in (raw[1:] if size > 1024 * 1024 else raw)]
         for line in reversed(lines):
             try:
                 row = json.loads(line)
@@ -53,106 +57,62 @@ def get_last_user_prompt(path):
         pass
     return ''
 
-def main():
-    event_type = sys.argv[1] if len(sys.argv) > 1 else ''
-    raw_input = ''
-    try:
-        raw_input = sys.stdin.read()
-    except Exception:
-        pass
-
-    try:
-        data = json.loads(raw_input) if raw_input.strip() else {}
-    except Exception:
-        data = {}
-
-    conversation_id = str(data.get('conversationId') or '')[:8]
+def handle(data, event_type):
+    import integration_runtime as runtime
+    mapping = {'SessionStart': 'SessionStart', 'PreInvocation': 'UserPromptSubmit',
+               'PreToolUse': 'PreToolUse', 'PostToolUse': 'PostToolUse', 'Stop': 'Stop'}
+    if event_type == 'PostInvocation' or (event_type == 'PreInvocation' and data.get('invocationNum', 1) > 1):
+        return {}
+    if event_type not in mapping:
+        raise ValueError('Unsupported Antigravity event')
     workspaces = data.get('workspacePaths') or []
-    cwd = workspaces[0] if workspaces else os.getcwd()
-    injected_message = None
-
-    try:
-        import hook_evento
-
-        if event_type == 'PreToolUse':
-            tool_call = data.get('toolCall') or {}
-            tool_name_raw = tool_call.get('name') or ''
-            args_raw = tool_call.get('args') or {}
-            mapped_name, mapped_input = map_tool(tool_name_raw, args_raw)
-
-            payload = {
-                'hook_event_name': 'PreToolUse',
-                'session_id': conversation_id,
-                'tool_name': mapped_name,
-                'tool_input': mapped_input,
-                'cwd': cwd,
-            }
-            ev = hook_evento.armar(payload)
-            hook_evento.escribir_evento(ev)
-
-        elif event_type == 'PostToolUse':
-            tool_call = data.get('toolCall') or {}
-            tool_name_raw = tool_call.get('name') or ''
-            args_raw = tool_call.get('args') or {}
-            mapped_name, mapped_input = map_tool(tool_name_raw, args_raw)
-            error = data.get('error')
-            payload = {
-                'hook_event_name': 'PostToolUse' if not error else 'PostToolUseFailure',
-                'session_id': conversation_id,
-                'tool_name': mapped_name,
-                'tool_input': mapped_input,
-                'cwd': cwd,
-                'error': error,
-            }
-            ev = hook_evento.armar(payload)
-            hook_evento.escribir_evento(ev)
-
-        elif event_type == 'PreInvocation':
-            prompt = get_last_user_prompt(data.get('transcriptPath'))
-            # Only record UserPromptSubmit on the initial invocation of a user turn
-            if data.get('invocationNum', 1) <= 1:
-                payload = {
-                    'hook_event_name': 'UserPromptSubmit',
-                    'session_id': conversation_id,
-                    'cwd': cwd,
-                    'prompt': prompt,
-                }
-                ev = hook_evento.armar(payload)
-                hook_evento.escribir_evento(ev)
-
-            # Query Neuromapa automatic context
-            try:
-                import hook_servir
-                if prompt:
-                    ctx = hook_servir.contexto(prompt, cwd, sesion=conversation_id)
-                    if ctx:
-                        injected_message = ctx
-            except Exception:
-                pass
-
-        elif event_type in ('PostInvocation', 'Stop'):
-            payload = {
-                'hook_event_name': 'Stop',
-                'session_id': conversation_id,
-                'cwd': cwd,
-            }
-            ev = hook_evento.armar(payload)
-            hook_evento.escribir_evento(ev)
-            try:
-                import aprender
-                aprender.quizas()
-            except Exception:
-                pass
-
-    except Exception:
-        pass
-
+    cwd = data.get('cwd') or (workspaces[0] if len(workspaces) == 1 else os.getcwd() if not workspaces else '')
+    if not cwd:
+        return {}
+    row = dict(synopsis_client='antigravity', last_assistant_message=data.get('last_assistant_message') or '', hook_event_name=mapping[event_type], session_id=str(data.get('conversationId') or ''),
+               cwd=cwd, workspace_roots=workspaces, transcript_path=data.get('transcriptPath'))
+    if event_type == 'PreInvocation':
+        row['prompt'] = data.get('prompt') or get_last_user_prompt(data.get('transcriptPath'))
+    if event_type in ('PreToolUse', 'PostToolUse'):
+        call = data.get('toolCall') or {}
+        row['tool_name'], row['tool_input'] = map_tool(call.get('name', ''), call.get('args', {}))
+        if data.get('error'):
+            row['hook_event_name'] = 'PostToolUseFailure'
+            row['error'] = data['error']
+    result = runtime.dispatch(row)
+    runtime.heartbeat('antigravity', event_type, not result['errors'])
+    for warning in result['errors']:
+        print('Synopsis: ' + warning, file=sys.stderr)
     if event_type == 'PreToolUse':
-        print(json.dumps({'decision': 'allow'}))
-    elif event_type == 'PreInvocation' and injected_message:
-        print(json.dumps({'injectSteps': [{'ephemeralMessage': injected_message}]}))
-    else:
-        print(json.dumps({}))
+        decision = result['decision'] or {}
+        return dict(decision=decision.get('permissionDecision', 'allow'),
+                    reason=decision.get('permissionDecisionReason', ''))
+    if event_type == 'PreInvocation':
+        messages = result['contexts'] + result['warnings']
+        if messages:
+            return dict(injectSteps=[dict(ephemeralMessage='\n'.join(messages))])
+    return {}
+
+
+def main():
+    import contextlib
+    import io
+    import integration_runtime as runtime
+    if '--probe' in sys.argv:
+        print(json.dumps(runtime.probe('antigravity')))
+        return
+    event_type = sys.argv[1] if len(sys.argv) > 1 else ''
+    try:
+        data = json.load(sys.stdin)
+        if not isinstance(data, dict):
+            raise ValueError('Expected a hook object')
+        with contextlib.redirect_stdout(io.StringIO()):
+            result = handle(data, event_type)
+    except Exception as error:
+        print('Synopsis: ' + type(error).__name__, file=sys.stderr)
+        result = {'decision': 'allow'} if event_type == 'PreToolUse' else {}
+    print(json.dumps(result, ensure_ascii=True))
+
 
 if __name__ == '__main__':
     main()

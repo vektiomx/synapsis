@@ -1,5 +1,6 @@
 import bisect
 import difflib
+import hashlib
 import json
 import math
 import os
@@ -70,8 +71,8 @@ NOTAS_A_REVISAR = 40
 PASAJES_POR_NOTA = 3
 RENGLON_POR_RAREZA = True
 LEER_PRIMERO = 4
-PUNTAJE_MINIMO_LEER = 1.0  # synapsis: no forzar "para leer primero" con coincidencias débiles (ver README)
-FRACCION_DEL_MEJOR = 0.3  # synapsis: además, descarta lo que no llegue a este % del mejor puntaje de la consulta
+PUNTAJE_MINIMO_LEER = 1.0  # synopsis: no forzar "para leer primero" con coincidencias débiles (ver README)
+FRACCION_DEL_MEJOR = 0.3  # synopsis: además, descarta lo que no llegue a este % del mejor puntaje de la consulta
 ARCHIVO_PRIMERO = 1
 ARCHIVO_ARRIBA = 2
 TOPE_SOBRE = 40
@@ -88,7 +89,7 @@ CODIGO_DEL_PROYECTO = True
 PARECIDO_MINIMO = 0.75
 PESO_ERRATA_DUDOSA = 0.6
 DISTANCIA_ERRATA = 2
-LARGO_DISTANCIA_2 = 8  # synapsis: palabras de 7 letras o menos solo se corrigen a distancia 1
+LARGO_DISTANCIA_2 = 8  # synopsis: palabras de 7 letras o menos solo se corrigen a distancia 1
 SUGERENCIAS = 3
 LARGO_CORREGIBLE = 4
 NOTAS_RARA = 2
@@ -125,7 +126,7 @@ PESO_COMMIT = 2
 RE_DERIVADA = re.compile(r"-(?:historia|parte)-\d+$")
 REGLAS = "@reglas"
 NINGUNO = "@ninguno"
-NOMBRE_PROPIO = "Neuromapa"
+NOMBRE_PROPIO = "Synopsis"
 NOMBRE_REGLAS = "Cómo trabajar"
 NOMBRE_NINGUNO = "Sin proyecto"
 COLORES_DE_PROYECTO = ("#199E70", "#56B4E9", "#D55E00", "#CC79A7")
@@ -176,9 +177,9 @@ VIDA_INDICE = 15 * 60
 ESPERA_INDICE = 6.0
 REARMANDO = "rearmando-indice.txt"
 ESPERA_REARMADO = 120
-VERSION_INDICE = 5
+VERSION_INDICE = 6
 MODULOS_DEL_INDICE = ("cerebro.py", "buscador.py", "medico.py", "configuracion.py", "textos.py", "archivos.py",
-                      "entidades.py", "donde.py", "fichas.py")
+                      "entidades.py", "donde.py", "fichas.py", "memory_store.py", "context_memory.py", "memory_sources.py")
 _formas_de = {}
 
 
@@ -264,8 +265,15 @@ def forma_base(palabra):
 
 def proyectos_conocidos():
     import consultas
-    return [(consultas.clave(p["raiz"]).rstrip("/"), p) for p in nucleo.CONFIG["proyectos"]] + \
-        [(consultas.clave(c).rstrip("/"), {"aparte": True}) for c in nucleo.carpetas_propias()]
+    result = [(consultas.clave(p["raiz"]).rstrip("/"), p) for p in nucleo.CONFIG["proyectos"]]
+    from project_identity import registered_memories
+    seen = {root for root, _ in result}
+    for record in registered_memories(nucleo.configuracion.archivo()):
+        root = consultas.clave(record['project']).rstrip('/')
+        if root not in seen:
+            result.append((root, {'alias': Path(record['project']).name, 'nombre': Path(record['project']).name}))
+            seen.add(root)
+    return result + [(consultas.clave(c).rstrip("/"), {"aparte": True}) for c in nucleo.carpetas_propias()]
 
 
 def separados(lista):
@@ -373,6 +381,11 @@ def proyecto_de_cada_nota(cerebro):
     memorias = []
     for nodo in cerebro.nodos:
         i = nodo["id"]
+        from project_identity import note_owner
+        actual = note_owner(nodo['ruta'])
+        if actual:
+            salida[i] = consultas.clave(actual).rstrip('/')
+            continue
         if not cerebro.fuente_de.get(i, {}).get("memoria"):
             salida[i] = raiz_que_contiene(consultas.clave(nodo["ruta"]), lista)
             continue
@@ -422,6 +435,10 @@ def grupos_base():
                        "color": p.get("color") or COLORES_DE_PROYECTO[len(grupos) % len(COLORES_DE_PROYECTO)]})
     grupos += [{"clave": REGLAS, "id": REGLAS, "nombre": NOMBRE_REGLAS, "color": COLOR_REGLAS},
                {"clave": "", "id": NINGUNO, "nombre": NOMBRE_NINGUNO, "color": COLOR_NINGUNO}]
+    counts = Counter(group['nombre'] for group in grupos)
+    for group in grupos:
+        if counts[group['nombre']] > 1 and group['clave'] not in ('', REGLAS):
+            group['nombre'] += ' (' + group['clave'] + ')'
     return grupos
 
 
@@ -572,6 +589,11 @@ class Indice:
                 "grupo": nodo["grupo"],
                 "proyecto": proyectos.get(nodo["id"], ""),
                 "descripcion": nodo.get("descripcion", ""),
+                "owner_project": cerebro.fuente_de.get(nodo["id"], {}).get("proyecto", ""),
+                "signature": list(nodo["_firma"]) if nodo.get("_firma") else None,
+                "content_hash": hashlib.sha256((nodo.get("_cabeza", "") + nodo["_cuerpo"]).encode()).hexdigest(),
+                "lifecycle": {key: nucleo.dato(nodo.get("_frontmatter", {}), key, True)
+                              for key in ("state", "expires_at")},
                 "gancho": gancho,
                 "pesoFicha": PESO_FICHA if gancho or nucleo.dato(nodo.get("_frontmatter", {}), "description")
                 else PESO_FICHA_AUTOMATICA,
@@ -579,7 +601,8 @@ class Indice:
                 "secciones": [],
             })
             ficha = " ".join((nodo["titulo"], nodo["titulo"], nodo.get("descripcion", ""), nodo.get("slug", ""),
-                              nucleo.Path(nodo["ruta"]).stem, gancho))
+                              nucleo.Path(nodo["ruta"]).stem, gancho,
+                              nucleo.dato(nodo.get("_frontmatter", {}), "retrieval_cues", True)))
             cuenta = contar(ficha)
             self.largos_ficha.append(sum(cuenta.values()) or 1)
             for termino, veces in cuenta.items():
@@ -1014,7 +1037,7 @@ class Indice:
                         if parecidas:
                             raras[palabra] = cuantas
                 elif not any(p in self.post or p in self.fichas or p in self.tarjetas for p in self.expandir(palabra)):
-                    # synapsis: a distancia 2 cualquier palabra de 6-7 letras tiene demasiados
+                    # synopsis: a distancia 2 cualquier palabra de 6-7 letras tiene demasiados
                     # vecinos reales sin relación ("readme"→"read"); solo se permite esa
                     # distancia a partir de LARGO_DISTANCIA_2 letras (ver README).
                     tope = DISTANCIA_ERRATA if len(palabra) >= LARGO_DISTANCIA_2 else 1
@@ -1028,10 +1051,12 @@ class Indice:
         return " ".join(dict.fromkeys(nuevas)), sugerencias, raras
 
     def permitidas(self, grupos):
-        if not grupos:
-            return None
-        grupos = set(grupos)
-        return {n for n, nota in enumerate(self.notas) if nota["grupo"] in grupos}
+        from memory_store import active
+        groups = set(grupos) if grupos else None
+        from context_memory import unchanged
+        return {n for n, note in enumerate(self.notas)
+                if (groups is None or note["grupo"] in groups) and active(note.get("lifecycle", {}))
+                and unchanged(note)}
 
     def buscar(self, consulta, maximo=8, grupos=None):
         comienzo = time.perf_counter()
@@ -1104,6 +1129,14 @@ class Indice:
     def sobre(self, tema, grupos=None, memoria=None):
         comienzo = time.perf_counter()
         permitidas = self.permitidas(grupos)
+        # Automatic hooks must not borrow rules from a different project.
+        if memoria is not None and getattr(memoria, "proyecto", None):
+            import consultas
+            from context_memory import belongs
+            root = next((p["raiz"] for p in nucleo.CONFIG["proyectos"]
+                         if consultas.clave(p["raiz"]).rstrip("/") == memoria.proyecto.rstrip("/")), None)
+            if root and Path(root).is_absolute():
+                permitidas &= {n for n, note in enumerate(self.notas) if belongs(note, root)}
         corregida, sugerencias, raras = self.corregir(tema)
         palabras, mapa, final, secciones_de, _, rareza, sin_tarjeta = self.puntuar(tema, permitidas, sugerencias, raras)
         if memoria is not None:
@@ -1367,7 +1400,8 @@ def llave_del_indice():
     programa = tuple(nucleo.firma(nucleo.CARPETA / m) for m in MODULOS_DEL_INDICE)
     import fichas
     extras = (configuracion.archivo(), nucleo.DATOS / "sugerencias.json", medico.HECHOS, medico.DESCARTADOS, fichas.ARCHIVO)
-    return VERSION_INDICE, programa, nucleo.huella(extras), tuple(cabeza_git(r) for r in medico.repos_conocidos())
+    from memory_sources import generations
+    return VERSION_INDICE, programa, nucleo.huella(extras), tuple(cabeza_git(r) for r in medico.repos_conocidos()), generations()
 
 
 def indice_guardado(ruta, llave, viejo=False):

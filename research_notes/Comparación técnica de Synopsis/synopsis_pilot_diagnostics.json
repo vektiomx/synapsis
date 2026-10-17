@@ -1,0 +1,924 @@
+[
+  {
+    "domain": "artifact-storage",
+    "scenario": "true",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we archive build artifacts?",
+    "active_path": null,
+    "groups": []
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "true",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we archive build artifacts?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "preservar-bytes-del-artefacto-archivado",
+        "state": "selected",
+        "selected": "enlace-duro-con-fuente-inmutable",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "archivo-copia-independiente-fuente-mutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "archivo-hard-link-fuente-inmutable",
+            "state": "eligible",
+            "stale_paths": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "true",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "El usuario informó que las escrituras posteriores en una fuente mutable también modificaron el artefacto archivado mediante un enlace duro. El usuario informó del archivado de un artefacto de compilación inmutable.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "preservar-bytes-del-artefacto-archivado",
+        "state": "selected",
+        "selected": "enlace-duro-con-fuente-inmutable",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "archivo-copia-independiente-fuente-mutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "archivo-hard-link-fuente-inmutable",
+            "state": "eligible",
+            "stale_paths": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "false",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we archive build artifacts?",
+    "active_path": null,
+    "groups": []
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "false",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we archive build artifacts?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "preservar-bytes-del-artefacto-archivado",
+        "state": "selected",
+        "selected": "copia-independiente-con-fuente-mutable",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "archivo-copia-independiente-fuente-mutable",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "archivo-hard-link-fuente-inmutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "false",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "El usuario informó que las escrituras posteriores en una fuente mutable también modificaron el artefacto archivado mediante un enlace duro. El usuario informó del archivado de un artefacto de compilación inmutable.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "preservar-bytes-del-artefacto-archivado",
+        "state": "selected",
+        "selected": "copia-independiente-con-fuente-mutable",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "archivo-copia-independiente-fuente-mutable",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "archivo-hard-link-fuente-inmutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "unknown",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we archive build artifacts?",
+    "active_path": null,
+    "groups": []
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "unknown",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we archive build artifacts?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "preservar-bytes-del-artefacto-archivado",
+        "state": "no_applicable_case",
+        "selected": null,
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "archivo-copia-independiente-fuente-mutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "archivo-hard-link-fuente-inmutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "unknown",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "El usuario informó que las escrituras posteriores en una fuente mutable también modificaron el artefacto archivado mediante un enlace duro. El usuario informó del archivado de un artefacto de compilación inmutable.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "preservar-bytes-del-artefacto-archivado",
+        "state": "no_applicable_case",
+        "selected": null,
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "archivo-copia-independiente-fuente-mutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "archivo-hard-link-fuente-inmutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "irrelevant-added-field",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we archive build artifacts?",
+    "active_path": null,
+    "groups": []
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "irrelevant-added-field",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we archive build artifacts?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "preservar-bytes-del-artefacto-archivado",
+        "state": "no_applicable_case",
+        "selected": null,
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "archivo-copia-independiente-fuente-mutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "archivo-hard-link-fuente-inmutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "artifact-storage",
+    "scenario": "irrelevant-added-field",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "El usuario informó que las escrituras posteriores en una fuente mutable también modificaron el artefacto archivado mediante un enlace duro. El usuario informó del archivado de un artefacto de compilación inmutable.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "preservar-bytes-del-artefacto-archivado",
+        "state": "no_applicable_case",
+        "selected": null,
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "archivo-copia-independiente-fuente-mutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "archivo-hard-link-fuente-inmutable",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "true",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we schedule this event stream?",
+    "active_path": null,
+    "groups": []
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "true",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we schedule this event stream?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "paralelismo-segun-conmutatividad",
+        "state": "selected",
+        "selected": "workers-paralelos-para-adiciones-independientes",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "worker-ordenado-operaciones-no-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "workers-paralelos-adiciones-conmutativas",
+            "state": "eligible",
+            "stale_paths": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "true",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "Según el relato del usuario, workers paralelos procesaron multiplicación y suma sobre un acumulador compartido; invertir la ejecución cambió el resultado. Se informó de una ejecución con workers paralelos que procesaron adiciones independientes a un conjunto.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "paralelismo-segun-conmutatividad",
+        "state": "selected",
+        "selected": "workers-paralelos-para-adiciones-independientes",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "worker-ordenado-operaciones-no-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "workers-paralelos-adiciones-conmutativas",
+            "state": "eligible",
+            "stale_paths": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "false",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we schedule this event stream?",
+    "active_path": null,
+    "groups": []
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "false",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we schedule this event stream?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "paralelismo-segun-conmutatividad",
+        "state": "selected",
+        "selected": "worker-ordenado-para-operaciones-no-conmutativas",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "worker-ordenado-operaciones-no-conmutativas",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "workers-paralelos-adiciones-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "false",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "Según el relato del usuario, workers paralelos procesaron multiplicación y suma sobre un acumulador compartido; invertir la ejecución cambió el resultado. Se informó de una ejecución con workers paralelos que procesaron adiciones independientes a un conjunto.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "paralelismo-segun-conmutatividad",
+        "state": "selected",
+        "selected": "worker-ordenado-para-operaciones-no-conmutativas",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "worker-ordenado-operaciones-no-conmutativas",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "workers-paralelos-adiciones-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "unknown",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we schedule this event stream?",
+    "active_path": null,
+    "groups": []
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "unknown",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we schedule this event stream?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "paralelismo-segun-conmutatividad",
+        "state": "no_applicable_case",
+        "selected": null,
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "worker-ordenado-operaciones-no-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "workers-paralelos-adiciones-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "unknown",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "Según el relato del usuario, workers paralelos procesaron multiplicación y suma sobre un acumulador compartido; invertir la ejecución cambió el resultado. Se informó de una ejecución con workers paralelos que procesaron adiciones independientes a un conjunto.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "paralelismo-segun-conmutatividad",
+        "state": "no_applicable_case",
+        "selected": null,
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "worker-ordenado-operaciones-no-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "workers-paralelos-adiciones-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "irrelevant-added-field",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we schedule this event stream?",
+    "active_path": null,
+    "groups": []
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "irrelevant-added-field",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we schedule this event stream?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "paralelismo-segun-conmutatividad",
+        "state": "no_applicable_case",
+        "selected": null,
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "worker-ordenado-operaciones-no-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "workers-paralelos-adiciones-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "event-workers",
+    "scenario": "irrelevant-added-field",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "Según el relato del usuario, workers paralelos procesaron multiplicación y suma sobre un acumulador compartido; invertir la ejecución cambió el resultado. Se informó de una ejecución con workers paralelos que procesaron adiciones independientes a un conjunto.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "paralelismo-segun-conmutatividad",
+        "state": "no_applicable_case",
+        "selected": null,
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "worker-ordenado-operaciones-no-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          },
+          {
+            "name": "workers-paralelos-adiciones-conmutativas",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "true",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we compare Unicode resource identifiers?",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "selected",
+        "selected": "normalizar-a-nfc",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "true",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we compare Unicode resource identifiers?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "selected",
+        "selected": "normalizar-a-nfc",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "true",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "El usuario informó una comparación de identificadores Unicode canónicamente equivalentes. Según el usuario, normalizar a NFC un identificador firmado sensible a bytes provocó un fallo de validación.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "selected",
+        "selected": "normalizar-a-nfc",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "false",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we compare Unicode resource identifiers?",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "selected",
+        "selected": "preservar-bytes-originales",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "inapplicable",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "eligible",
+            "stale_paths": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "false",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we compare Unicode resource identifiers?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "selected",
+        "selected": "preservar-bytes-originales",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "inapplicable",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "eligible",
+            "stale_paths": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "false",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "El usuario informó una comparación de identificadores Unicode canónicamente equivalentes. Según el usuario, normalizar a NFC un identificador firmado sensible a bytes provocó un fallo de validación.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "selected",
+        "selected": "preservar-bytes-originales",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "inapplicable",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "eligible",
+            "stale_paths": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "unknown",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we compare Unicode resource identifiers?",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "needs_evidence",
+        "selected": null,
+        "probes": 1,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "unknown",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "unknown",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we compare Unicode resource identifiers?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "needs_evidence",
+        "selected": null,
+        "probes": 1,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "unknown",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "unknown",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "El usuario informó una comparación de identificadores Unicode canónicamente equivalentes. Según el usuario, normalizar a NFC un identificador firmado sensible a bytes provocó un fallo de validación.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "needs_evidence",
+        "selected": null,
+        "probes": 1,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "unknown",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "irrelevant-added-field",
+    "kind": "original-query",
+    "analysis_only": true,
+    "query": "How should we compare Unicode resource identifiers?",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "selected",
+        "selected": "normalizar-a-nfc",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "irrelevant-added-field",
+    "kind": "same-query-path-assisted",
+    "analysis_only": true,
+    "query": "How should we compare Unicode resource identifiers?",
+    "active_path": "context.json",
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "selected",
+        "selected": "normalizar-a-nfc",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "domain": "unicode-identity",
+    "scenario": "irrelevant-added-field",
+    "kind": "translated-query",
+    "analysis_only": true,
+    "query": "El usuario informó una comparación de identificadores Unicode canónicamente equivalentes. Según el usuario, normalizar a NFC un identificador firmado sensible a bytes provocó un fallo de validación.",
+    "active_path": null,
+    "groups": [
+      {
+        "key": "comparacion-identificadores-unicode",
+        "state": "selected",
+        "selected": "normalizar-a-nfc",
+        "probes": 0,
+        "alternatives": [
+          {
+            "name": "nfc-identificadores-equivalentes",
+            "state": "eligible",
+            "stale_paths": []
+          },
+          {
+            "name": "preservar-bytes-identificadores-firmados",
+            "state": "stale",
+            "stale_paths": [
+              "context.json"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

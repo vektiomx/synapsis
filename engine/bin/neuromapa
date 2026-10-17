@@ -1,3 +1,0 @@
-#!/bin/sh
-raiz="$(cd "$(dirname "$0")/.." && pwd)"
-exec sh "$raiz/scripts/python.sh" --consola "$raiz/neuromapa.py" "$@"

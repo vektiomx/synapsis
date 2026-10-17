@@ -1,0 +1,26 @@
+{
+  "notes": [
+    {"name": "routing", "description": "Ruteo y planificación de trayectos", "content": "Los trayectos usan OSRM alojado en infraestructura propia. El proveedor autorizado es el OSRM privado.", "cues": ["route planning directions provider", "cómo calcula el camino del camión"]},
+    {"name": "cache", "description": "Redis: duración de caché", "content": "La caché Redis caduca a los 120 segundos. Esta es la corrección vigente.", "cues": ["redis cache ttl retention"]},
+    {"name": "old-cache", "description": "Redis: regla anterior retirada", "content": "La caché Redis caducaba a los 90 segundos. La regla fue retirada.", "state": "archived"},
+    {"name": "deployment", "description": "Despliegue y recuperación de versiones", "content": "Para revertir un despliegue usa el artefacto de la versión estable anterior. Primero verifica la versión del servicio.", "cues": ["rollback release deployment recovery", "volver a la versión anterior"]},
+    {"name": "communication", "description": "Preferencias de comunicación", "content": "El usuario prefiere respuestas breves en español, con ejemplos concretos cuando ayuden.", "cues": ["how should you explain things", "idioma respuestas estilo"]},
+    {"name": "temporary", "description": "Código temporal de campaña", "content": "La campaña temporal utiliza el código NEBULA-ROJA.", "expires_at": "2000-01-01T00:00:00Z"},
+    {"name": "billing", "description": "Recordatorios de facturación", "content": "Los recordatorios de facturación se envían únicamente al responsable administrativo.", "cues": ["a quién avisar una factura vencida", "invoice notification recipient"]}
+  ],
+  "queries": [
+    {"query": "trayectos OSRM privado", "expected": "routing"},
+    {"query": "route planning directions provider", "expected": "routing"},
+    {"query": "cómo calcula el camino del camión", "expected": "routing"},
+    {"query": "Redis caché segundos", "expected": "cache", "forbidden": ["old-cache"]},
+    {"query": "redis cache ttl retention", "expected": "cache", "forbidden": ["old-cache"]},
+    {"query": "rollback release deployment recovery", "expected": "deployment"},
+    {"query": "volver a la versión anterior", "expected": "deployment"},
+    {"query": "how should you explain things", "expected": "communication"},
+    {"query": "invoice notification recipient", "expected": "billing"},
+    {"query": "a quién avisar una factura vencida", "expected": "billing"},
+    {"query": "NEBULA ROJA campaña temporal", "expected": null},
+    {"query": "quásares neutrinos astrofísica", "expected": null},
+    {"query": "acuario peces arrecife", "expected": null}
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "repository_sha": "1f6e615c2ddfeffa8ba709401afafa1e9ffa9452",
+  "fixture": "/tmp/shadowfrog-audit-probes-zhifog_t/example",
+  "result": "passed",
+  "limitations": "No LLM or Dream run; no git commit/push, installation, private remote or user auth. Hook delivers actual actionable discoveries by resolving the source viewer script; this is direct invocation, not a live Claude/Copilot client.",
+  "probes": [
+    {
+      "name": "viewer-summary",
+      "exit_code": 0,
+      "stdout": "Shadow Knowledge Base Summary\n==================================================\n  Files shadowed:    3\n  Symbols tracked:   9\n  Discoveries:       33\n  Preferences:       0\n  Cross-cutting:     3\n\nBy source:\n  exploration       33 (100.0%) ##################################################\n\nBy status:\n  verified          33 (100.0%) ##################################################\n\nBy label:\n  bug               10\n  security           4\n  performance        2\n  tech-debt          2\n  feature-gap        1\n\nFile                                      Symbols  Disc.\n---------------------------------------- -------- ------\ncart.py                                         4     14\ninventory.py                                    2     10\ntest_cart.py                                    3      9\n\nCross-cutting discoveries:\n  [edge-case] Coupon case normalization mismatch\n  [behavior] Global coupon cache side effects\n  [edge-case] Mutation through discount pipeline\n\nLast update: 2026-04-20T16:30:00Z (dream)\nLast commit: 69de9194d8d30d980a41fa0e1bace8fc76d82e24\n",
+      "stderr": ""
+    },
+    {
+      "name": "viewer-top",
+      "exit_code": 0,
+      "stdout": "Top 3 of 10 actionable discoveries for cart.py:\n- [bug] `COUPON_CACHE` (verified, citation_score: 0): Caches None for invalid codes. Once an invalid code is looked up, the None result is permanently cached, preventing any future lookup even if the underlying data changes.\n- [bug,performance] `COUPON_CACHE` (verified, citation_score: 0): Case-variant lookups create duplicate cache entries for the same logical coupon. validate_coupon(\"save20\") caches \"SAVE20\" → valid, then calculate_total(\"save20\") caches \"save20\" → None. Cache grows 2× faster with mixed-case usage.\n- [bug] `get_coupon` (v\n(...)\n",
+      "stderr": ""
+    },
+    {
+      "name": "viewer-invariants",
+      "exit_code": 0,
+      "stdout": "✓ Invariants OK (3 per-file shadows, 3 cross-cutting discoveries)\n",
+      "stderr": ""
+    },
+    {
+      "name": "citation-increment",
+      "exit_code": 0,
+      "stdout": "Recorded 1 citation(s) in .shadow/cart.py.md:\n  0 -> 1: Returns None for unknown codes (via dict.get default), not an exception. Callers must handle None.\n",
+      "stderr": ""
+    },
+    {
+      "name": "hook-context",
+      "exit_code": 0,
+      "stdout": "{\"additionalContext\": \"[ShadowFrog] Actionable discoveries for cart.py (verify against source before acting):\\nTop 3 of 10 actionable discoveries for cart.py:\\n- [bug] `COUPON_CACHE` (verified, citation_score: 0): Caches None for invalid codes. Once an invalid code is looked up, the None result is permanently cached, preventing any future lookup even if the underlying data changes.\\n- [bug,performance] `COUPON_CACHE` (verified, citation_score: 0): Case-variant lookups create duplicate cache entries for the same logical coupon. validate_coupon(\\\"save20\\\") caches \\\"SAVE20\\\" \\u2192 valid, then calculate_total(\\\"save20\\\") caches \\\"save20\\\" \\u2192 None. Cache grows 2\\u00d7 faster with mixed-case usage.\\n- [bug] `get_coupon` (v\\n(...)\\nCapture user-shared knowledge as source: user. /shadow-frog\", \"hookSpecificOutput\": {\"hookEventName\": \"PreToolUse\", \"additionalContext\": \"[ShadowFrog] Actionable discoveries for cart.py (verify against source before acting):\\nTop 3 of 10 actionable discoveries for cart.py:\\n- [bug] `COUPON_CACHE` (verified, citation_score: 0): Caches None for invalid codes. Once an invalid code is looked up, the None result is permanently cached, preventing any future lookup even if the underlying data changes.\\n- [bug,performance] `COUPON_CACHE` (verified, citation_score: 0): Case-variant lookups create duplicate cache entries for the same logical coupon. validate_coupon(\\\"save20\\\") caches \\\"SAVE20\\\" \\u2192 valid, then calculate_total(\\\"save20\\\") caches \\\"save20\\\" \\u2192 None. Cache grows 2\\u00d7 faster with mixed-case usage.\\n- [bug] `get_coupon` (v\\n(...)\\nCapture user-shared knowledge as source: user. /shadow-frog\"}}\n",
+      "stderr": ""
+    }
+  ]
+}

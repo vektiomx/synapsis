@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Actualiza engine/ desde una copia del proyecto original (lumiel777/neuromapa),
-sin pisar a ciegas los archivos que synapsis parchó.
+"""Actualiza engine/ desde una copia del proyecto original (Synopsis),
+sin pisar a ciegas los archivos que synopsis parchó.
 
 Uso:
-    python3 actualizar_motor.py /ruta/a/un/clon/nuevo/de/neuromapa
-    python3 actualizar_motor.py /ruta/a/un/clon/nuevo/de/neuromapa --aplicar
+    python3 actualizar_motor.py /ruta/a/un/clon/nuevo/de/synopsis
+    python3 actualizar_motor.py /ruta/a/un/clon/nuevo/de/synopsis --aplicar
 
-Sin --aplicar, no escribe nada: solo dice qué archivos copiaría tal cual y para
+Sin --aplicar, no escribe nada: solo dice qué archivos nuevos copiaría y para
 cuáles archivos parchados hay que revisar el diff a mano (y lo muestra).
 """
 import argparse
@@ -17,10 +17,10 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parent
 ENGINE = BASE / "engine"
 
-# Archivos con cambios propios de synapsis: nunca se pisan solos, se muestra el diff.
-PARCHADOS = {"buscador.py", "servidor.py"}
+# Todos los módulos existentes están protegidos: una actualización se revisa, nunca se aplica a ciegas.
+PARCHADOS = {path.name for path in ENGINE.rglob("*.py")}
 
-# synapsis no vendoriza esto a propósito (ver README): queda igual aunque cambie upstream.
+# synopsis no vendoriza esto a propósito (ver README): queda igual aunque cambie upstream.
 CARPETAS_EXCLUIDAS = {"demo", "docs", ".github"}
 
 
@@ -31,12 +31,12 @@ def listar_py(carpeta):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("origen", type=Path, help="Carpeta con un clon nuevo de lumiel777/neuromapa")
+    parser.add_argument("origen", type=Path, help="Carpeta con un clon nuevo de Synopsis")
     parser.add_argument("--aplicar", action="store_true", help="Copia de verdad los archivos sin cambios propios")
     args = parser.parse_args()
     origen = args.origen.resolve()
     if not (origen / "cerebro.py").is_file():
-        sys.exit(f"{origen} no parece un clon de neuromapa (no encontré cerebro.py ahí).")
+        sys.exit(f"{origen} no parece un clon de synopsis (no encontré cerebro.py ahí).")
 
     propios = listar_py(origen)
     vendorizados = listar_py(ENGINE)
@@ -67,7 +67,7 @@ def main():
         for rel in distintos_sin_parche:
             print(f"  ~ {rel}")
     if distintos_con_parche:
-        print(f"\nCambiaron en el original Y tienen un parche propio de synapsis — revisar a mano:")
+        print(f"\nCambiaron en el original Y tienen un parche propio de synopsis — revisar a mano:")
         for rel in distintos_con_parche:
             print(f"\n--- {rel} (original nuevo vs. engine/ actual) ---")
             import difflib

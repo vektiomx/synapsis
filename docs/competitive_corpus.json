@@ -1,0 +1,902 @@
+{
+  "development": [
+    {
+      "artifact": {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "flag": true
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": 534
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "flag": false
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": 416
+            }
+          }
+        ],
+        "policy": "Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n return 534 if context[\"flag\"] else 416\n",
+        "source_id": "numeric_mode_policy-1701-history"
+      },
+      "current_source": "def policy(context):\n if context.get(\"emergency\"): return -1\n return 0\n",
+      "current_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_extension(self):\n  self.assertEqual(policy({'emergency': True}),-1)\n",
+      "expected_action": "patch",
+      "family": "numeric_mode_policy",
+      "hidden_calls": [
+        {
+          "args": [
+            {
+              "flag": true,
+              "noise": 1701
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "flag": false,
+              "noise": null
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "emergency": true
+            }
+          ],
+          "kwargs": {}
+        }
+      ],
+      "hidden_expected": [
+        {
+          "value": 534
+        },
+        {
+          "value": 416
+        },
+        {
+          "value": -1
+        }
+      ],
+      "historical_source": "def policy(context):\n return 534 if context[\"flag\"] else 416\n",
+      "historical_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_history(self):\n  self.assertEqual(policy({'flag': True}),534)\n  self.assertEqual(policy({'flag': False}),416)\n",
+      "id": "numeric_mode_policy-1701-applicable_history",
+      "scenario": "applicable_history",
+      "seed": 1701,
+      "task": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible."
+    },
+    {
+      "artifact": {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "items": [
+                    3,
+                    1,
+                    3,
+                    2
+                  ]
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": [
+                3,
+                1,
+                2
+              ]
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "items": [
+                    [
+                      2
+                    ],
+                    [
+                      1
+                    ],
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": [
+                [
+                  2
+                ],
+                [
+                  1
+                ]
+              ]
+            }
+          }
+        ],
+        "policy": "Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n result=[]\n for item in context[\"items\"]:\n  if item not in result: result.append(item)\n return result\n",
+        "source_id": "stable_sequence_processing-1702-history"
+      },
+      "current_source": "def policy(context):\n if context.get(\"emergency\"): return []\n return sorted(set(context[\"items\"]))\n",
+      "current_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_extension(self):\n  self.assertEqual(policy({'emergency': True}),[])\n",
+      "expected_action": "patch",
+      "family": "stable_sequence_processing",
+      "hidden_calls": [
+        {
+          "args": [
+            {
+              "items": [
+                "b",
+                "a",
+                "b",
+                null,
+                false
+              ]
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "items": [
+                {
+                  "a": 1
+                },
+                {
+                  "b": 2
+                },
+                {
+                  "a": 1
+                }
+              ]
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "emergency": true
+            }
+          ],
+          "kwargs": {}
+        }
+      ],
+      "hidden_expected": [
+        {
+          "value": [
+            "b",
+            "a",
+            null,
+            false
+          ]
+        },
+        {
+          "value": [
+            {
+              "a": 1
+            },
+            {
+              "b": 2
+            }
+          ]
+        },
+        {
+          "value": []
+        }
+      ],
+      "historical_source": "def policy(context):\n result=[]\n for item in context[\"items\"]:\n  if item not in result: result.append(item)\n return result\n",
+      "historical_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_history(self):\n  self.assertEqual(policy({'items': [3, 1, 3, 2]}),[3, 1, 2])\n  self.assertEqual(policy({'items': [[2], [1], [2]]}),[[2], [1]])\n",
+      "id": "stable_sequence_processing-1702-applicable_history",
+      "scenario": "applicable_history",
+      "seed": 1702,
+      "task": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible."
+    },
+    {
+      "artifact": {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "text": " AbC "
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": "AbC"
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "text": "\tÉx\t"
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": "\tÉx\t"
+            }
+          }
+        ],
+        "policy": "Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n return context[\"text\"].strip(\" \")\n",
+        "source_id": "text_identity_boundaries-1703-history"
+      },
+      "current_source": "def policy(context):\n if context.get(\"emergency\"): return ''\n return context[\"text\"].strip().lower()\n",
+      "current_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_extension(self):\n  self.assertEqual(policy({'emergency': True}),'')\n",
+      "expected_action": "patch",
+      "family": "text_identity_boundaries",
+      "hidden_calls": [
+        {
+          "args": [
+            {
+              "text": "  Aß\t  "
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "text": " Hello "
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "emergency": true
+            }
+          ],
+          "kwargs": {}
+        }
+      ],
+      "hidden_expected": [
+        {
+          "value": "Aß\t"
+        },
+        {
+          "value": " Hello "
+        },
+        {
+          "value": ""
+        }
+      ],
+      "historical_source": "def policy(context):\n return context[\"text\"].strip(\" \")\n",
+      "historical_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_history(self):\n  self.assertEqual(policy({'text': ' AbC '}),'AbC')\n  self.assertEqual(policy({'text': '\\tÉx\\t'}),'\\tÉx\\t')\n",
+      "id": "text_identity_boundaries-1703-applicable_history",
+      "scenario": "applicable_history",
+      "seed": 1703,
+      "task": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible."
+    },
+    {
+      "artifact": {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "base": {
+                    "a": 3,
+                    "b": 4
+                  },
+                  "patch": {
+                    "a": null,
+                    "b": 0,
+                    "c": false
+                  }
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": {
+                "a": 3,
+                "b": 0,
+                "c": false
+              }
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "base": {},
+                  "patch": {
+                    "empty": "",
+                    "none": null
+                  }
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": {
+                "empty": ""
+              }
+            }
+          }
+        ],
+        "policy": "Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n result=context[\"base\"].copy()\n for key,value in context[\"patch\"].items():\n  if value is not None: result[key]=value\n return result\n",
+        "source_id": "sparse_payload_merge-1704-history"
+      },
+      "current_source": "def policy(context):\n if context.get(\"emergency\"): return {}\n return {key:value for key,value in context[\"patch\"].items() if value}\n",
+      "current_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_extension(self):\n  self.assertEqual(policy({'emergency': True}),{})\n",
+      "expected_action": "patch",
+      "family": "sparse_payload_merge",
+      "hidden_calls": [
+        {
+          "args": [
+            {
+              "base": {
+                "keep": 1704,
+                "replace": 1
+              },
+              "patch": {
+                "keep": null,
+                "replace": false,
+                "zero": 0
+              }
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "base": {
+                "x": 8
+              },
+              "patch": {
+                "x": "",
+                "y": []
+              }
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "emergency": true
+            }
+          ],
+          "kwargs": {}
+        }
+      ],
+      "hidden_expected": [
+        {
+          "value": {
+            "keep": 1704,
+            "replace": false,
+            "zero": 0
+          }
+        },
+        {
+          "value": {
+            "x": "",
+            "y": []
+          }
+        },
+        {
+          "value": {}
+        }
+      ],
+      "historical_source": "def policy(context):\n result=context[\"base\"].copy()\n for key,value in context[\"patch\"].items():\n  if value is not None: result[key]=value\n return result\n",
+      "historical_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_history(self):\n  self.assertEqual(policy({'base': {'a': 3, 'b': 4}, 'patch': {'a': None, 'b': 0, 'c': False}}),{'a': 3, 'b': 0, 'c': False})\n  self.assertEqual(policy({'base': {}, 'patch': {'empty': '', 'none': None}}),{'empty': ''})\n",
+      "id": "sparse_payload_merge-1704-applicable_history",
+      "scenario": "applicable_history",
+      "seed": 1704,
+      "task": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible."
+    }
+  ],
+  "limits": "Eight synthetic tasks, not real OSS issues; small reserved set cannot establish universal superiority.",
+  "protocol": "synopsis.competitive-corpus.v1",
+  "reserved": [
+    {
+      "artifact": {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "flag": true
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": 137
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "flag": false
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": 791
+            }
+          }
+        ],
+        "policy": "Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n return 137 if context[\"flag\"] else 791\n",
+        "source_id": "numeric_mode_policy-2901-history"
+      },
+      "current_source": "def policy(context):\n if context.get(\"emergency\"): return -1\n return 0\n",
+      "current_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_extension(self):\n  self.assertEqual(policy({'emergency': True}),-1)\n",
+      "expected_action": "patch",
+      "family": "numeric_mode_policy",
+      "hidden_calls": [
+        {
+          "args": [
+            {
+              "flag": true,
+              "noise": 2901
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "flag": false,
+              "noise": null
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "emergency": true
+            }
+          ],
+          "kwargs": {}
+        }
+      ],
+      "hidden_expected": [
+        {
+          "value": 137
+        },
+        {
+          "value": 791
+        },
+        {
+          "value": -1
+        }
+      ],
+      "historical_source": "def policy(context):\n return 137 if context[\"flag\"] else 791\n",
+      "historical_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_history(self):\n  self.assertEqual(policy({'flag': True}),137)\n  self.assertEqual(policy({'flag': False}),791)\n",
+      "id": "numeric_mode_policy-2901-applicable_history",
+      "scenario": "applicable_history",
+      "seed": 2901,
+      "task": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible."
+    },
+    {
+      "artifact": {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "items": [
+                    3,
+                    1,
+                    3,
+                    2
+                  ]
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": [
+                3,
+                1,
+                2
+              ]
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "items": [
+                    [
+                      2
+                    ],
+                    [
+                      1
+                    ],
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": [
+                [
+                  2
+                ],
+                [
+                  1
+                ]
+              ]
+            }
+          }
+        ],
+        "policy": "Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n result=[]\n for item in context[\"items\"]:\n  if item not in result: result.append(item)\n return result\n",
+        "source_id": "stable_sequence_processing-2902-history"
+      },
+      "current_source": "def policy(context):\n if context.get(\"emergency\"): return []\n return sorted(set(context[\"items\"]))\n",
+      "current_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_extension(self):\n  self.assertEqual(policy({'emergency': True}),[])\n",
+      "expected_action": "patch",
+      "family": "stable_sequence_processing",
+      "hidden_calls": [
+        {
+          "args": [
+            {
+              "items": [
+                "b",
+                "a",
+                "b",
+                null,
+                false
+              ]
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "items": [
+                {
+                  "a": 1
+                },
+                {
+                  "b": 2
+                },
+                {
+                  "a": 1
+                }
+              ]
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "emergency": true
+            }
+          ],
+          "kwargs": {}
+        }
+      ],
+      "hidden_expected": [
+        {
+          "value": [
+            "b",
+            "a",
+            null,
+            false
+          ]
+        },
+        {
+          "value": [
+            {
+              "a": 1
+            },
+            {
+              "b": 2
+            }
+          ]
+        },
+        {
+          "value": []
+        }
+      ],
+      "historical_source": "def policy(context):\n result=[]\n for item in context[\"items\"]:\n  if item not in result: result.append(item)\n return result\n",
+      "historical_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_history(self):\n  self.assertEqual(policy({'items': [3, 1, 3, 2]}),[3, 1, 2])\n  self.assertEqual(policy({'items': [[2], [1], [2]]}),[[2], [1]])\n",
+      "id": "stable_sequence_processing-2902-irrelevant_distractors",
+      "scenario": "irrelevant_distractors",
+      "seed": 2902,
+      "task": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible."
+    },
+    {
+      "artifact": {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "withdrawn",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "text": " AbC "
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": "AbC"
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "text": "\tÉx\t"
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": "\tÉx\t"
+            }
+          }
+        ],
+        "policy": "Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n return context[\"text\"].strip(\" \")\n",
+        "source_id": "text_identity_boundaries-2903-history"
+      },
+      "current_source": "def policy(context):\n if context.get(\"emergency\"): return ''\n return context[\"text\"].strip().lower()\n",
+      "current_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_extension(self):\n  self.assertEqual(policy({'emergency': True}),'')\n",
+      "expected_action": "abstain",
+      "family": "text_identity_boundaries",
+      "hidden_calls": [
+        {
+          "args": [
+            {
+              "text": "  Aß\t  "
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "text": " Hello "
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "emergency": true
+            }
+          ],
+          "kwargs": {}
+        }
+      ],
+      "hidden_expected": [
+        {
+          "value": "Aß\t"
+        },
+        {
+          "value": " Hello "
+        },
+        {
+          "value": ""
+        }
+      ],
+      "historical_source": "def policy(context):\n return context[\"text\"].strip(\" \")\n",
+      "historical_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_history(self):\n  self.assertEqual(policy({'text': ' AbC '}),'AbC')\n  self.assertEqual(policy({'text': '\\tÉx\\t'}),'\\tÉx\\t')\n",
+      "id": "text_identity_boundaries-2903-withdrawn_policy",
+      "scenario": "withdrawn_policy",
+      "seed": 2903,
+      "task": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible."
+    },
+    {
+      "artifact": {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "base": {
+                    "a": 3,
+                    "b": 4
+                  },
+                  "patch": {
+                    "a": null,
+                    "b": 0,
+                    "c": false
+                  }
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": {
+                "a": 3,
+                "b": 0,
+                "c": false
+              }
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "base": {},
+                  "patch": {
+                    "empty": "",
+                    "none": null
+                  }
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": {
+                "empty": ""
+              }
+            }
+          }
+        ],
+        "policy": "Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n result=context[\"base\"].copy()\n for key,value in context[\"patch\"].items():\n  if value is not None: result[key]=value\n return result\n",
+        "source_id": "sparse_payload_merge-2904-history"
+      },
+      "current_source": "def policy(context, revision):\n if context.get(\"emergency\"): return {}\n return {key:value for key,value in context[\"patch\"].items() if value}\n",
+      "current_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_extension(self):\n  self.assertEqual(policy({'emergency': True}, 2),{})\n",
+      "expected_action": "abstain",
+      "family": "sparse_payload_merge",
+      "hidden_calls": [
+        {
+          "args": [
+            {
+              "base": {
+                "keep": 2904,
+                "replace": 1
+              },
+              "patch": {
+                "keep": null,
+                "replace": false,
+                "zero": 0
+              }
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "base": {
+                "x": 8
+              },
+              "patch": {
+                "x": "",
+                "y": []
+              }
+            }
+          ],
+          "kwargs": {}
+        },
+        {
+          "args": [
+            {
+              "emergency": true
+            }
+          ],
+          "kwargs": {}
+        }
+      ],
+      "hidden_expected": [
+        {
+          "value": {
+            "keep": 2904,
+            "replace": false,
+            "zero": 0
+          }
+        },
+        {
+          "value": {
+            "x": "",
+            "y": []
+          }
+        },
+        {
+          "value": {}
+        }
+      ],
+      "historical_source": "def policy(context):\n result=context[\"base\"].copy()\n for key,value in context[\"patch\"].items():\n  if value is not None: result[key]=value\n return result\n",
+      "historical_test": "import unittest\nfrom policy import policy\nclass Policy(unittest.TestCase):\n def test_history(self):\n  self.assertEqual(policy({'base': {'a': 3, 'b': 4}, 'patch': {'a': None, 'b': 0, 'c': False}}),{'a': 3, 'b': 0, 'c': False})\n  self.assertEqual(policy({'base': {}, 'patch': {'empty': '', 'none': None}}),{'empty': ''})\n",
+      "id": "sparse_payload_merge-2904-changed_interface",
+      "scenario": "changed_interface",
+      "seed": 2904,
+      "task": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible."
+    }
+  ]
+}

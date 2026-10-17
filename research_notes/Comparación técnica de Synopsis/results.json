@@ -1,0 +1,532 @@
+{
+  "protocol": "real-oss-synthetic-pilot.v1",
+  "model": {
+    "provider": "codex",
+    "model": null,
+    "embedding": "BAAI/bge-small-en-v1.5"
+  },
+  "versions": {
+    "mem0": "0724291bd864cf807e88ee8981c8226644e8fb42",
+    "graphiti": "d50741d1bf463cbe3859eb73914cbff1b66839e6"
+  },
+  "runs": [
+    {
+      "framework": "mem0",
+      "domain": "artifact-storage",
+      "captures": [
+        {
+          "results": [
+            {
+              "id": "436788df-345a-4b27-85ce-c73ca27f255d",
+              "memory": "El usuario archivó exitosamente un artefacto de compilación inmutable mediante un enlace duro: conservó los bytes esperados y ahorró espacio en disco. context.json indicaba \"immutable_source\": true; el éxito se limitó a fuentes inmutables.",
+              "event": "ADD"
+            },
+            {
+              "id": "87a33f49-2846-4f2b-bd94-4c65ca25578d",
+              "memory": "El contrato de archivado en contract.txt exige preservar los bytes existentes al archivar. Un enlace duro comparte las escrituras con el inodo original y solo es aceptable si la fuente permanece inmutable; de lo contrario, debe hacerse una copia independiente.",
+              "event": "ADD"
+            }
+          ]
+        },
+        {
+          "results": [
+            {
+              "id": "8e782987-97ff-4c43-8eaa-f75b38bec579",
+              "memory": "El usuario archivó un artefacto mutable mediante un enlace duro; una escritura posterior en la fuente también modificó los bytes archivados. Sustituyó el enlace duro por una copia independiente y comprobó que las escrituras posteriores en la fuente ya no alteraban el artefacto archivado. context.json indicaba \"immutable_source\": false.",
+              "event": "ADD"
+            }
+          ]
+        }
+      ],
+      "answers": [
+        {
+          "response": {
+            "choice": "hardlink",
+            "reason": "El contrato vigente permite enlaces duros cuando la fuente permanece inmutable, condición declarada por immutable_source=true. El fallo recordado correspondía a una fuente mutable."
+          },
+          "expected": "hardlink",
+          "correct": true,
+          "request_chars": 2834
+        },
+        {
+          "response": {
+            "choice": "copy",
+            "reason": "El contrato vigente exige preservar los bytes al archivar y permite enlaces duros solo si la fuente permanece inmutable. Como immutable_source es false, corresponde una copia independiente."
+          },
+          "expected": "copy",
+          "correct": true,
+          "request_chars": 2835
+        }
+      ],
+      "retrieval": {
+        "results": [
+          {
+            "id": "8e782987-97ff-4c43-8eaa-f75b38bec579",
+            "memory": "El usuario archivó un artefacto mutable mediante un enlace duro; una escritura posterior en la fuente también modificó los bytes archivados. Sustituyó el enlace duro por una copia independiente y comprobó que las escrituras posteriores en la fuente ya no alteraban el artefacto archivado. context.json indicaba \"immutable_source\": false.",
+            "hash": "fa4a1008821cd4c8130f546f7dd8ccf7",
+            "metadata": null,
+            "score": 0.6367239508590912,
+            "created_at": "2026-10-17T05:33:47.267573+00:00",
+            "updated_at": "2026-10-17T05:33:47.267573+00:00",
+            "user_id": "artifact-storage",
+            "attributed_to": "user",
+            "score_details": {
+              "semantic_score": 0.6367239508590912,
+              "bm25_score": 0.0,
+              "entity_boost": 0.0,
+              "raw_score": 0.6367239508590912,
+              "max_possible_score": 1.0,
+              "final_score": 0.6367239508590912,
+              "threshold": 0.1
+            }
+          },
+          {
+            "id": "87a33f49-2846-4f2b-bd94-4c65ca25578d",
+            "memory": "El contrato de archivado en contract.txt exige preservar los bytes existentes al archivar. Un enlace duro comparte las escrituras con el inodo original y solo es aceptable si la fuente permanece inmutable; de lo contrario, debe hacerse una copia independiente.",
+            "hash": "3f69a8abd5cf77f2ac8639a7b421e4c1",
+            "metadata": null,
+            "score": 0.6360037288944704,
+            "created_at": "2026-10-17T05:33:38.498097+00:00",
+            "updated_at": "2026-10-17T05:33:38.498097+00:00",
+            "user_id": "artifact-storage",
+            "attributed_to": "user",
+            "score_details": {
+              "semantic_score": 0.6360037288944704,
+              "bm25_score": 0.0,
+              "entity_boost": 0.0,
+              "raw_score": 0.6360037288944704,
+              "max_possible_score": 1.0,
+              "final_score": 0.6360037288944704,
+              "threshold": 0.1
+            }
+          },
+          {
+            "id": "436788df-345a-4b27-85ce-c73ca27f255d",
+            "memory": "El usuario archivó exitosamente un artefacto de compilación inmutable mediante un enlace duro: conservó los bytes esperados y ahorró espacio en disco. context.json indicaba \"immutable_source\": true; el éxito se limitó a fuentes inmutables.",
+            "hash": "44c502ae05a8a52580267bfa9ee7c34b",
+            "metadata": null,
+            "score": 0.5863225378418377,
+            "created_at": "2026-10-17T05:33:38.498058+00:00",
+            "updated_at": "2026-10-17T05:33:38.498058+00:00",
+            "user_id": "artifact-storage",
+            "attributed_to": "user",
+            "score_details": {
+              "semantic_score": 0.5863225378418377,
+              "bm25_score": 0.0,
+              "entity_boost": 0.0,
+              "raw_score": 0.5863225378418377,
+              "max_possible_score": 1.0,
+              "final_score": 0.5863225378418377,
+              "threshold": 0.1
+            }
+          }
+        ]
+      },
+      "seconds": 29.517782459995942
+    },
+    {
+      "framework": "mem0",
+      "domain": "event-workers",
+      "captures": [
+        {
+          "results": [
+            {
+              "id": "0c1678de-fb9c-45aa-a451-a177262bee9d",
+              "memory": "Los trabajadores paralelos procesaron adiciones independientes a un conjunto. Las operaciones conmutan y todos los órdenes de ejecución probados produjeron el mismo conjunto resultante; context.json registra explícitamente \"operations_commute\": true.",
+              "event": "ADD"
+            },
+            {
+              "id": "3634faa8-69bf-465f-9ed6-b82925bd64d7",
+              "memory": "contract.txt establece que los trabajadores concurrentes pueden reordenar eventos y que ese reordenamiento conserva el resultado únicamente cuando las operaciones conmutan. Un flujo de adiciones independientes y conmutativas a un conjunto puede usar trabajadores paralelos; un flujo que combina multiplicación y suma sobre un mismo acumulador debe preservar el orden de entrada.",
+              "event": "ADD"
+            }
+          ]
+        },
+        {
+          "results": [
+            {
+              "id": "c8e0944d-0a9b-4022-84c0-cbfb8d6eaa79",
+              "memory": "Los trabajadores paralelos procesaron una multiplicación seguida de una suma sobre un acumulador compartido; invertir el orden de ejecución produjo un resultado diferente. El flujo de operaciones no conmutativas se trasladó a un trabajador que preserva el orden de entrada y se recuperó el resultado esperado. context.json registra explícitamente \"operations_commute\": false.",
+              "event": "ADD"
+            }
+          ]
+        }
+      ],
+      "answers": [
+        {
+          "response": {
+            "choice": "parallel",
+            "reason": "El contexto actual declara que las operaciones conmutan; según el contrato vigente, pueden procesarse con trabajadores paralelos sin alterar el resultado."
+          },
+          "expected": "parallel",
+          "correct": true,
+          "request_chars": 3069
+        },
+        {
+          "response": {
+            "choice": "ordered",
+            "reason": "La configuración actual declara que las operaciones no conmutan. Según el contrato vigente, reordenarlas solo preserva el resultado cuando conmutan, por lo que debe preservarse el orden de entrada."
+          },
+          "expected": "ordered",
+          "correct": true,
+          "request_chars": 3070
+        }
+      ],
+      "retrieval": {
+        "results": [
+          {
+            "id": "3634faa8-69bf-465f-9ed6-b82925bd64d7",
+            "memory": "contract.txt establece que los trabajadores concurrentes pueden reordenar eventos y que ese reordenamiento conserva el resultado únicamente cuando las operaciones conmutan. Un flujo de adiciones independientes y conmutativas a un conjunto puede usar trabajadores paralelos; un flujo que combina multiplicación y suma sobre un mismo acumulador debe preservar el orden de entrada.",
+            "hash": "46dc59a6f64365e0f4a3e66f214ebac9",
+            "metadata": null,
+            "score": 0.6159050361768019,
+            "created_at": "2026-10-17T05:34:06.107650+00:00",
+            "updated_at": "2026-10-17T05:34:06.107650+00:00",
+            "user_id": "event-workers",
+            "attributed_to": "user",
+            "score_details": {
+              "semantic_score": 0.6159050361768019,
+              "bm25_score": 0.0,
+              "entity_boost": 0.0,
+              "raw_score": 0.6159050361768019,
+              "max_possible_score": 1.0,
+              "final_score": 0.6159050361768019,
+              "threshold": 0.1
+            }
+          },
+          {
+            "id": "0c1678de-fb9c-45aa-a451-a177262bee9d",
+            "memory": "Los trabajadores paralelos procesaron adiciones independientes a un conjunto. Las operaciones conmutan y todos los órdenes de ejecución probados produjeron el mismo conjunto resultante; context.json registra explícitamente \"operations_commute\": true.",
+            "hash": "78fdbbbecdb95c1c22df07fb7d72a206",
+            "metadata": null,
+            "score": 0.5415091360859982,
+            "created_at": "2026-10-17T05:34:06.107626+00:00",
+            "updated_at": "2026-10-17T05:34:06.107626+00:00",
+            "user_id": "event-workers",
+            "attributed_to": "user",
+            "score_details": {
+              "semantic_score": 0.5415091360859982,
+              "bm25_score": 0.0,
+              "entity_boost": 0.0,
+              "raw_score": 0.5415091360859982,
+              "max_possible_score": 1.0,
+              "final_score": 0.5415091360859982,
+              "threshold": 0.1
+            }
+          },
+          {
+            "id": "c8e0944d-0a9b-4022-84c0-cbfb8d6eaa79",
+            "memory": "Los trabajadores paralelos procesaron una multiplicación seguida de una suma sobre un acumulador compartido; invertir el orden de ejecución produjo un resultado diferente. El flujo de operaciones no conmutativas se trasladó a un trabajador que preserva el orden de entrada y se recuperó el resultado esperado. context.json registra explícitamente \"operations_commute\": false.",
+            "hash": "28db82108995661cb4041f3d4ce8293a",
+            "metadata": null,
+            "score": 0.5334406907250864,
+            "created_at": "2026-10-17T05:34:12.484518+00:00",
+            "updated_at": "2026-10-17T05:34:12.484518+00:00",
+            "user_id": "event-workers",
+            "attributed_to": "user",
+            "score_details": {
+              "semantic_score": 0.5334406907250864,
+              "bm25_score": 0.0,
+              "entity_boost": 0.0,
+              "raw_score": 0.5334406907250864,
+              "max_possible_score": 1.0,
+              "final_score": 0.5334406907250864,
+              "threshold": 0.1
+            }
+          }
+        ]
+      },
+      "seconds": 24.45766274999187
+    },
+    {
+      "framework": "mem0",
+      "domain": "unicode-identity",
+      "captures": [
+        {
+          "results": [
+            {
+              "id": "bd6d0ec7-de15-4d10-8113-614db88c5426",
+              "memory": "El usuario normalizó a NFC los identificadores de visualización canónicamente equivalentes antes de compararlos; ambos resolvieron correctamente al mismo recurso porque el contrato de identidad permite equivalencia canónica, como indica canonical_equivalence_allowed: true en context.json.",
+              "event": "ADD"
+            },
+            {
+              "id": "1e4628bb-b84a-4233-821c-1c804dd47884",
+              "memory": "Según contract.txt, los identificadores firmados cuya identidad depende de los bytes deben conservar exactamente los bytes originales; aplicar normalización Unicode puede invalidar la firma.",
+              "event": "ADD"
+            }
+          ]
+        },
+        {
+          "results": [
+            {
+              "id": "c85dc0eb-406e-4f51-99b7-8fb3bf4538e8",
+              "memory": "El usuario normalizó a NFC un identificador firmado sensible a los bytes y la validación de la firma falló porque cambiaron los bytes. Conservar los bytes originales corrigió la validación; este endpoint no permitía equivalencia canónica, según canonical_equivalence_allowed: false en context.json.",
+              "event": "ADD"
+            }
+          ]
+        }
+      ],
+      "answers": [
+        {
+          "response": {
+            "choice": "normalize-nfc",
+            "reason": "El contrato actual permite normalizar a NFC cuando se admite equivalencia canónica, y context.json declara canonical_equivalence_allowed: true. Esto establece la condición aplicable, sin demostrar causalidad."
+          },
+          "expected": "normalize-nfc",
+          "correct": true,
+          "request_chars": 2920
+        },
+        {
+          "response": {
+            "choice": "preserve-bytes",
+            "reason": "El contexto actual declara que no se permite equivalencia canónica, por lo que deben conservarse los bytes originales al comparar. Esto no demuestra que los identificadores estén firmados ni que haya ocurrido un fallo de firma."
+          },
+          "expected": "preserve-bytes",
+          "correct": true,
+          "request_chars": 2921
+        }
+      ],
+      "retrieval": {
+        "results": [
+          {
+            "id": "1e4628bb-b84a-4233-821c-1c804dd47884",
+            "memory": "Según contract.txt, los identificadores firmados cuya identidad depende de los bytes deben conservar exactamente los bytes originales; aplicar normalización Unicode puede invalidar la firma.",
+            "hash": "902c8dd693faaba581f0c327f8689543",
+            "metadata": null,
+            "score": 0.38719092244229103,
+            "created_at": "2026-10-17T05:34:30.992794+00:00",
+            "updated_at": "2026-10-17T05:34:30.992794+00:00",
+            "user_id": "unicode-identity",
+            "attributed_to": "user",
+            "score_details": {
+              "semantic_score": 0.7351603870009616,
+              "bm25_score": 0.03922145788362046,
+              "entity_boost": 0.0,
+              "raw_score": 0.7743818448845821,
+              "max_possible_score": 2.0,
+              "final_score": 0.38719092244229103,
+              "threshold": 0.1
+            }
+          },
+          {
+            "id": "bd6d0ec7-de15-4d10-8113-614db88c5426",
+            "memory": "El usuario normalizó a NFC los identificadores de visualización canónicamente equivalentes antes de compararlos; ambos resolvieron correctamente al mismo recurso porque el contrato de identidad permite equivalencia canónica, como indica canonical_equivalence_allowed: true en context.json.",
+            "hash": "cffbe255e03f65dcec8792e9d1e4aabe",
+            "metadata": null,
+            "score": 0.3700879341487946,
+            "created_at": "2026-10-17T05:34:30.992761+00:00",
+            "updated_at": "2026-10-17T05:34:30.992761+00:00",
+            "user_id": "unicode-identity",
+            "attributed_to": "user",
+            "score_details": {
+              "semantic_score": 0.7401758682975892,
+              "bm25_score": 0.0,
+              "entity_boost": 0.0,
+              "raw_score": 0.7401758682975892,
+              "max_possible_score": 2.0,
+              "final_score": 0.3700879341487946,
+              "threshold": 0.1
+            }
+          },
+          {
+            "id": "c85dc0eb-406e-4f51-99b7-8fb3bf4538e8",
+            "memory": "El usuario normalizó a NFC un identificador firmado sensible a los bytes y la validación de la firma falló porque cambiaron los bytes. Conservar los bytes originales corrigió la validación; este endpoint no permitía equivalencia canónica, según canonical_equivalence_allowed: false en context.json.",
+            "hash": "4d14b6830e7ea894be7273b087f173d3",
+            "metadata": null,
+            "score": 0.3671468385231861,
+            "created_at": "2026-10-17T05:34:36.914501+00:00",
+            "updated_at": "2026-10-17T05:34:36.914501+00:00",
+            "user_id": "unicode-identity",
+            "attributed_to": "user",
+            "score_details": {
+              "semantic_score": 0.7342936770463722,
+              "bm25_score": 0.0,
+              "entity_boost": 0.0,
+              "raw_score": 0.7342936770463722,
+              "max_possible_score": 2.0,
+              "final_score": 0.3671468385231861,
+              "threshold": 0.1
+            }
+          }
+        ]
+      },
+      "seconds": 24.53566650400171
+    },
+    {
+      "framework": "graphiti",
+      "domain": "artifact-storage",
+      "captures": [
+        {
+          "nodes": 2,
+          "edges": 1
+        },
+        {
+          "nodes": 2,
+          "edges": 0
+        }
+      ],
+      "answers": [
+        {
+          "response": {
+            "choice": "hardlink",
+            "reason": "El contrato permite un enlace duro cuando la fuente permanece inmutable, condición declarada por immutable_source: true en context.json."
+          },
+          "expected": "hardlink",
+          "correct": true,
+          "request_chars": 1202
+        },
+        {
+          "response": {
+            "choice": "copy",
+            "reason": "El contrato actual exige una copia independiente cuando la fuente no permanece inmutable; context.json declara immutable_source=false."
+          },
+          "expected": "copy",
+          "correct": true,
+          "request_chars": 1203
+        }
+      ],
+      "retrieval": [
+        {
+          "uuid": "e30b190a-874a-4974-9b93-ff8dafcc770a",
+          "group_id": "artifact_storage",
+          "source_node_uuid": "489ddab8-94b2-48c3-b495-58cc0a66a878",
+          "target_node_uuid": "10611652-3e32-4bba-a340-5ee0623e405b",
+          "created_at": "2026-10-17T05:35:29.974159Z",
+          "name": "SATISFIES_CONDITION_IN",
+          "fact": "context.json sets immutable_source to true, satisfying the condition in contract.txt that permits archiving with a hard link when the source remains immutable; contract.txt requires preservation of the bytes at archive time because a hard link shares writes with the original inode, and otherwise requires an independent copy.",
+          "fact_embedding": null,
+          "episodes": [
+            "cec84d14-cfc1-48fa-bb78-259a676b4bd6"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "seconds": 65.24612926700502
+    },
+    {
+      "framework": "graphiti",
+      "domain": "event-workers",
+      "captures": [
+        {
+          "nodes": 2,
+          "edges": 1
+        },
+        {
+          "nodes": 2,
+          "edges": 0
+        }
+      ],
+      "answers": [
+        {
+          "response": {
+            "choice": "parallel",
+            "reason": "La configuración actual declara que las operaciones conmutan; según el contrato vigente, esa condición permite reordenarlas con trabajadores paralelos preservando el resultado."
+          },
+          "expected": "parallel",
+          "correct": true,
+          "request_chars": 1153
+        },
+        {
+          "response": {
+            "choice": "ordered",
+            "reason": "El contexto actual declara que las operaciones no conmutan; según el contrato, reordenarlas solo preserva el resultado cuando conmutan. La memoria que indica true está obsoleta."
+          },
+          "expected": "ordered",
+          "correct": true,
+          "request_chars": 1154
+        }
+      ],
+      "retrieval": [
+        {
+          "uuid": "03706ee4-79c6-4b59-8065-e753edd69c9b",
+          "group_id": "event_workers",
+          "source_node_uuid": "dddff2a4-d2a1-46c5-bf0f-25521a0fd8ff",
+          "target_node_uuid": "9bdf7d47-6281-44e8-b986-9dae94eb3453",
+          "created_at": "2026-10-17T05:36:13.836071Z",
+          "name": "SATISFIES_COMMUTATIVITY_REQUIREMENT",
+          "fact": "context.json records operations_commute as true, satisfying the condition in contract.txt that operations must commute for event reordering by concurrent workers to preserve the result.",
+          "fact_embedding": null,
+          "episodes": [
+            "84bd0d42-bdd8-46dd-ba46-2956921227c2"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "seconds": 52.00680444498721
+    },
+    {
+      "framework": "graphiti",
+      "domain": "unicode-identity",
+      "captures": [
+        {
+          "nodes": 2,
+          "edges": 1
+        },
+        {
+          "nodes": 2,
+          "edges": 0
+        }
+      ],
+      "answers": [
+        {
+          "response": {
+            "choice": "normalize-nfc",
+            "reason": "La configuración actual permite la equivalencia canónica y el contrato establece que NFC es correcto bajo esa condición."
+          },
+          "expected": "normalize-nfc",
+          "correct": true,
+          "request_chars": 1184
+        },
+        {
+          "response": {
+            "choice": "preserve-bytes",
+            "reason": "La configuración actual no permite equivalencia canónica; NFC fusionaría cadenas cuya identidad debe conservarse. La memoria que indica lo contrario está obsoleta."
+          },
+          "expected": "preserve-bytes",
+          "correct": true,
+          "request_chars": 1185
+        }
+      ],
+      "retrieval": [
+        {
+          "uuid": "5c49e93a-61b3-4fd3-8608-dfcb6da8ba23",
+          "group_id": "unicode_identity",
+          "source_node_uuid": "23bfc6b8-e5dd-45ad-b92b-ec939f0e1eba",
+          "target_node_uuid": "8acb607e-46fe-4eda-b173-2cc6bbcf6826",
+          "created_at": "2026-10-17T05:37:00.882592Z",
+          "name": "IS_CONSISTENT_WITH",
+          "fact": "context.json sets canonical_equivalence_allowed to true, consistent with contract.txt's rule that NFC normalization is correct for identifiers whose identity contract allows canonical equivalence.",
+          "fact_embedding": null,
+          "episodes": [
+            "519587a4-7aba-4937-b238-126e25b3ca78"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "seconds": 39.84631021300447
+    }
+  ],
+  "limitations": [
+    "Synthetic short decision tasks, no repository patch benchmark or statistical superiority.",
+    "Native Codex custom provider adapters; real framework algorithms, LLM inference and CPU embeddings; not default OpenAI configuration.",
+    "No spaCy NLP extra: Mem0 entity linking fallback may differ from recommended NLP setup.",
+    "Same contracts visible in current files can resolve tasks without memory.",
+    "No token billing metrics; wall time and raw native request traces only."
+  ],
+  "calls": {
+    "mem0": 12,
+    "graphiti": 18
+  }
+}

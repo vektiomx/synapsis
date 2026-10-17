@@ -15,7 +15,7 @@ CATEGORIAS = [
      "haberlo leído en este chat; una carpeta vista por dos caminos cuenta como dos archivos)."),
     ("cambiado por otro", ("modified since read", "has been modified since"),
      "Otro chat, un agente o un programa lo cambió después de leerlo: releerlo justo antes de editar (y mirar "
-     "{neuromapa} --choques)."),
+     "{synopsis} --choques)."),
     ("texto que no está", ("string to replace not found",),
      "Antes de un Edit, releer el tramo exacto: el texto cambió, o tiene otros espacios o finales de línea."),
     ("texto repetido", ("matches of the string to replace",),
@@ -25,7 +25,7 @@ CATEGORIAS = [
     ("ruta que no existe", ("file does not exist", "path does not exist"),
      "Comprobar la ruta antes de leerla (Glob), con cuidado en las carpetas con espacios."),
     ("archivo demasiado grande", ("exceeds maximum allowed tokens",),
-     "Leer por partes (offset y limit) o ir derecho al tramo con {neuromapa} --mapa o Grep."),
+     "Leer por partes (offset y limit) o ir derecho al tramo con {synopsis} --mapa o Grep."),
     ("parámetros inválidos", ("inputvalidationerror",),
      "Revisar los parámetros de la herramienta antes de llamarla."),
 ]
@@ -104,7 +104,7 @@ def resumir(lista, ahora, dias):
         por_dia_ahora = g["recientes"] / (RECIENTE / DIA)
         tendencia = ("bajó" if por_dia_ahora < por_dia_antes * 0.6 else "subió" if por_dia_ahora > por_dia_antes * 1.4
                      else "sigue igual")
-        salida.append({"categoria": nombre or "otros errores", "leccion": leccion.replace("{neuromapa}", configuracion.comando()),
+        salida.append({"categoria": nombre or "otros errores", "leccion": leccion.replace("{synopsis}", configuracion.comando()),
                        "veces": g["veces"],
                        "chats": len(g["sesiones"]), "recientes": g["recientes"], "herramientas": sorted(g["herramientas"]),
                        "porDiaAntes": por_dia_antes, "porDiaAhora": por_dia_ahora, "tendencia": tendencia if dias > 2 else ""})

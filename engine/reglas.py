@@ -10,7 +10,7 @@ from archivos import dentro, es_sensible, escribir_atomico
 from textos import cantidad, detalle
 
 CARPETA = (".claude", "rules")
-MARCA = "neuromapa"
+MARCA = "synopsis"
 DIAS_CARGAS = 30
 MARCA_CARGA = b'"e":"regla"'
 ENTERA = 2500
@@ -31,7 +31,7 @@ RE_WIKI = re.compile(r"\[\[([^\]|#]+)(?:[|#][^\]]*)?\]\]")
 RE_PROPIA = re.compile(r"^" + MARCA + r":[ \t]*(.*?)[ \t]*$", re.M)
 ESTADOS = {"nueva": "no existe todavía", "igual": "ya está escrita y al día",
            "propia": "ya está escrita, pero la memoria o la carpeta cambiaron: se puede volver a escribir",
-           "ajena": "ya hay otra regla con ese nombre que no escribió Neuromapa: no se toca"}
+           "ajena": "ya hay otra regla con ese nombre que no escribió Synopsis: no se toca"}
 
 
 def proyectos():
@@ -269,7 +269,7 @@ def escribir(c, datos, ahora=None):
     destino = destino_de(c)
     estado = estado_de(c)
     if estado == "ajena":
-        return None, None, f"{destino} ya existe y no la escribió Neuromapa: no la toco."
+        return None, None, f"{destino} ya existe y no la escribió Synopsis: no la toco."
     if estado == "igual":
         return destino, None, None
     if not dentro(destino, c["donde"]):

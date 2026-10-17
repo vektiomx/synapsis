@@ -45,7 +45,7 @@ def aviso(datos):
         detalle = f"; comparten: {comparten}" if comparten else ""
         partes.append(f'{os.path.basename(r["ruta"])} ({decimal(r["puntaje"], 2)}{detalle})')
     nueva = os.path.basename(ruta)
-    return (f'Neuromapa: la memoria nueva {nueva} se parece a {" y a ".join(partes)}. '
+    return (f'Synopsis: la memoria nueva {nueva} se parece a {" y a ".join(partes)}. '
             "Revisá si es lo mismo: si lo es, sumalo a la que ya existe en vez de tener dos.")
 
 

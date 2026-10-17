@@ -1,0 +1,13 @@
+{
+  "controller_revision": "resolved-artifact-prompt-v2-for-reserved",
+  "development_limit": "The first five profiles used raw retrieval plus resolved source text. Full-history/no-memory and all reserved runs use de-duplicated source text. Development is exploratory; held-out comparison uses one common prompt. Original traces retained.",
+  "shadow_correction": "Before patch evaluation, corrected top-only retrieval to official viewer search plus reading the target file shadow. Original top-only results preserved. No reacquisition.",
+  "files": {
+    "tools/competitive_benchmark.py": "fa49896e2d9fc680907d6190c134e345b352103a5b318b951b97519b4b5c91d7",
+    "tools/competitive_sdk.py": "b766d982203425cb753921a3b79fccc1f51871ec46bffb5b18e270d93966b3e4",
+    "tools/competitive_corpus.py": "735e0961e5cda45e11d7b50b5feff7ee8246dec606d880dbbf08a4dc1ba09a11",
+    "engine/behavior_memory.py": "4247a9d6e6f30ff3624966e90af0c9ce7ebcf203798033012d49a5fc47021c17",
+    "engine/behavior_runner.py": "4481348453e26e5f6f54c1f596889eea8480ce010ecf6ff5c6162189a6ee59ba",
+    "engine/research_workbench.py": "2c9d95e595b75f5d021d3d146f1ebb0e0f877229f3260644ff10b6ad7662395b"
+  }
+}

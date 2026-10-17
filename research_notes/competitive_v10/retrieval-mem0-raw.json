@@ -1,0 +1,570 @@
+{
+  "numeric_mode_policy-1701-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "2e5381f5-b513-413f-a962-78224d33d1aa",
+          "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"flag\": true}], \"kwargs\": {}}, \"expected\": {\"value\": 534}}, {\"call\": {\"args\": [{\"flag\": false}], \"kwargs\": {}}, \"expected\": {\"value\": 416}}], \"policy\": \"Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return 534 if context[\\\"flag\\\"] else 416\\n\", \"source_id\": \"numeric_mode_policy-1701-history\"}",
+          "hash": "ffc8fdd85f532aafe2673eb2462190d1",
+          "metadata": {
+            "source_id": "numeric_mode_policy-1701-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.18995334409538184,
+          "created_at": "2026-10-17T07:56:21.858163+00:00",
+          "updated_at": "2026-10-17T07:56:21.858163+00:00",
+          "user_id": "numeric_mode_policy-1701-applicable_history",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.32832601614590917,
+            "bm25_score": 0.05158067204485453,
+            "entity_boost": 0.0,
+            "raw_score": 0.3799066881907637,
+            "max_possible_score": 2.0,
+            "final_score": 0.18995334409538184,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "numeric_mode_policy-1701-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "2e5381f5-b513-413f-a962-78224d33d1aa",
+            "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"flag\": true}], \"kwargs\": {}}, \"expected\": {\"value\": 534}}, {\"call\": {\"args\": [{\"flag\": false}], \"kwargs\": {}}, \"expected\": {\"value\": 416}}], \"policy\": \"Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return 534 if context[\\\"flag\\\"] else 416\\n\", \"source_id\": \"numeric_mode_policy-1701-history\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 0.9888918669894338,
+      "retrieval_seconds": 0.008422561004408635,
+      "acquisition_llm_calls": 0,
+      "request_characters": 0,
+      "wall_seconds": 4.163251158999628
+    }
+  },
+  "stable_sequence_processing-1702-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "18fac1c8-9d9e-4fda-8ffb-74fc3ec19e41",
+          "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"items\": [3, 1, 3, 2]}], \"kwargs\": {}}, \"expected\": {\"value\": [3, 1, 2]}}, {\"call\": {\"args\": [{\"items\": [[2], [1], [2]]}], \"kwargs\": {}}, \"expected\": {\"value\": [[2], [1]]}}], \"policy\": \"Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=[]\\n for item in context[\\\"items\\\"]:\\n  if item not in result: result.append(item)\\n return result\\n\", \"source_id\": \"stable_sequence_processing-1702-history\"}",
+          "hash": "fa975cc915e16fd0be332c1de3b5de95",
+          "metadata": {
+            "source_id": "stable_sequence_processing-1702-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.17502168310617108,
+          "created_at": "2026-10-17T07:56:24.130757+00:00",
+          "updated_at": "2026-10-17T07:56:24.130757+00:00",
+          "user_id": "stable_sequence_processing-1702-applicable_history",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.31447688619926306,
+            "bm25_score": 0.035566480013079126,
+            "entity_boost": 0.0,
+            "raw_score": 0.35004336621234217,
+            "max_possible_score": 2.0,
+            "final_score": 0.17502168310617108,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "stable_sequence_processing-1702-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "18fac1c8-9d9e-4fda-8ffb-74fc3ec19e41",
+            "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"items\": [3, 1, 3, 2]}], \"kwargs\": {}}, \"expected\": {\"value\": [3, 1, 2]}}, {\"call\": {\"args\": [{\"items\": [[2], [1], [2]]}], \"kwargs\": {}}, \"expected\": {\"value\": [[2], [1]]}}], \"policy\": \"Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=[]\\n for item in context[\\\"items\\\"]:\\n  if item not in result: result.append(item)\\n return result\\n\", \"source_id\": \"stable_sequence_processing-1702-history\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 0.18794998800149187,
+      "retrieval_seconds": 0.02765549800824374,
+      "acquisition_llm_calls": 0,
+      "request_characters": 0,
+      "wall_seconds": 1.5133364789944608
+    }
+  },
+  "text_identity_boundaries-1703-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "b99af28f-d78f-4a19-aef8-7188a34aa93a",
+          "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"text\": \" AbC \"}], \"kwargs\": {}}, \"expected\": {\"value\": \"AbC\"}}, {\"call\": {\"args\": [{\"text\": \"\\tÉx\\t\"}], \"kwargs\": {}}, \"expected\": {\"value\": \"\\tÉx\\t\"}}], \"policy\": \"Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return context[\\\"text\\\"].strip(\\\" \\\")\\n\", \"source_id\": \"text_identity_boundaries-1703-history\"}",
+          "hash": "41f5baca189c8a8372ea5277e3125425",
+          "metadata": {
+            "source_id": "text_identity_boundaries-1703-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.16742616960286882,
+          "created_at": "2026-10-17T07:56:25.287145+00:00",
+          "updated_at": "2026-10-17T07:56:25.287145+00:00",
+          "user_id": "text_identity_boundaries-1703-applicable_history",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.2981020957013356,
+            "bm25_score": 0.03675024350440202,
+            "entity_boost": 0.0,
+            "raw_score": 0.33485233920573765,
+            "max_possible_score": 2.0,
+            "final_score": 0.16742616960286882,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "text_identity_boundaries-1703-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "b99af28f-d78f-4a19-aef8-7188a34aa93a",
+            "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"text\": \" AbC \"}], \"kwargs\": {}}, \"expected\": {\"value\": \"AbC\"}}, {\"call\": {\"args\": [{\"text\": \"\\tÉx\\t\"}], \"kwargs\": {}}, \"expected\": {\"value\": \"\\tÉx\\t\"}}], \"policy\": \"Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return context[\\\"text\\\"].strip(\\\" \\\")\\n\", \"source_id\": \"text_identity_boundaries-1703-history\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 0.0969571550085675,
+      "retrieval_seconds": 0.006534405998536386,
+      "acquisition_llm_calls": 0,
+      "request_characters": 0,
+      "wall_seconds": 1.0641217920056079
+    }
+  },
+  "sparse_payload_merge-1704-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "142d04b8-ec26-45d4-8379-93a241832d7a",
+          "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"base\": {\"a\": 3, \"b\": 4}, \"patch\": {\"a\": null, \"b\": 0, \"c\": false}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"a\": 3, \"b\": 0, \"c\": false}}}, {\"call\": {\"args\": [{\"base\": {}, \"patch\": {\"empty\": \"\", \"none\": null}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"empty\": \"\"}}}], \"policy\": \"Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=context[\\\"base\\\"].copy()\\n for key,value in context[\\\"patch\\\"].items():\\n  if value is not None: result[key]=value\\n return result\\n\", \"source_id\": \"sparse_payload_merge-1704-history\"}",
+          "hash": "696062f9bffe5726bffec2eb34ee0a04",
+          "metadata": {
+            "source_id": "sparse_payload_merge-1704-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.1665494715566988,
+          "created_at": "2026-10-17T07:56:26.309166+00:00",
+          "updated_at": "2026-10-17T07:56:26.309166+00:00",
+          "user_id": "sparse_payload_merge-1704-applicable_history",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.2983162353437674,
+            "bm25_score": 0.0347827077696302,
+            "entity_boost": 0.0,
+            "raw_score": 0.3330989431133976,
+            "max_possible_score": 2.0,
+            "final_score": 0.1665494715566988,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "sparse_payload_merge-1704-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "142d04b8-ec26-45d4-8379-93a241832d7a",
+            "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"base\": {\"a\": 3, \"b\": 4}, \"patch\": {\"a\": null, \"b\": 0, \"c\": false}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"a\": 3, \"b\": 0, \"c\": false}}}, {\"call\": {\"args\": [{\"base\": {}, \"patch\": {\"empty\": \"\", \"none\": null}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"empty\": \"\"}}}], \"policy\": \"Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=context[\\\"base\\\"].copy()\\n for key,value in context[\\\"patch\\\"].items():\\n  if value is not None: result[key]=value\\n return result\\n\", \"source_id\": \"sparse_payload_merge-1704-history\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 0.1051559160114266,
+      "retrieval_seconds": 0.007083670992869884,
+      "acquisition_llm_calls": 0,
+      "request_characters": 0,
+      "wall_seconds": 1.0731174570100848
+    }
+  },
+  "numeric_mode_policy-2901-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "adb23071-3413-4259-bf05-b0d198824b7e",
+          "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"flag\": true}], \"kwargs\": {}}, \"expected\": {\"value\": 137}}, {\"call\": {\"args\": [{\"flag\": false}], \"kwargs\": {}}, \"expected\": {\"value\": 791}}], \"policy\": \"Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return 137 if context[\\\"flag\\\"] else 791\\n\", \"source_id\": \"numeric_mode_policy-2901-history\"}",
+          "hash": "641492a93a5e73a15d2bd0aceb214316",
+          "metadata": {
+            "source_id": "numeric_mode_policy-2901-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.1863688726196147,
+          "created_at": "2026-10-17T07:59:21.841373+00:00",
+          "updated_at": "2026-10-17T07:59:21.841373+00:00",
+          "user_id": "numeric_mode_policy-2901-applicable_history",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.3211570731943749,
+            "bm25_score": 0.05158067204485453,
+            "entity_boost": 0.0,
+            "raw_score": 0.3727377452392294,
+            "max_possible_score": 2.0,
+            "final_score": 0.1863688726196147,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "numeric_mode_policy-2901-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "adb23071-3413-4259-bf05-b0d198824b7e",
+            "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"flag\": true}], \"kwargs\": {}}, \"expected\": {\"value\": 137}}, {\"call\": {\"args\": [{\"flag\": false}], \"kwargs\": {}}, \"expected\": {\"value\": 791}}], \"policy\": \"Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return 137 if context[\\\"flag\\\"] else 791\\n\", \"source_id\": \"numeric_mode_policy-2901-history\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 0.15229183199699037,
+      "retrieval_seconds": 0.015600101003656164,
+      "acquisition_llm_calls": 0,
+      "request_characters": 0,
+      "wall_seconds": 2.7071851959917694
+    }
+  },
+  "stable_sequence_processing-2902-irrelevant_distractors": {
+    "memory": {
+      "results": [
+        {
+          "id": "5fbcd3fb-88cf-4b88-b33f-fbebd3bb8525",
+          "memory": "{\"callable\": {\"path\": \"unrelated_2.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 102\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-2\"}",
+          "hash": "bb659ca2af5d3d262fddd03fb9dd2fc8",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-2",
+            "path": "unrelated_2.py",
+            "symbol": "policy"
+          },
+          "score": 0.21561370262015553,
+          "created_at": "2026-10-17T07:59:23.229930+00:00",
+          "updated_at": "2026-10-17T07:59:23.229930+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.4148159859053431,
+            "bm25_score": 0.01641141933496797,
+            "entity_boost": 0.0,
+            "raw_score": 0.43122740524031106,
+            "max_possible_score": 2.0,
+            "final_score": 0.21561370262015553,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "f2f28da1-10c1-4d15-bf7a-1228e0a29136",
+          "memory": "{\"callable\": {\"path\": \"unrelated_3.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 103\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-3\"}",
+          "hash": "723e598338723e1b9f29b822457382da",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-3",
+            "path": "unrelated_3.py",
+            "symbol": "policy"
+          },
+          "score": 0.21337313518611195,
+          "created_at": "2026-10-17T07:59:23.255241+00:00",
+          "updated_at": "2026-10-17T07:59:23.255241+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.4103348510372559,
+            "bm25_score": 0.01641141933496797,
+            "entity_boost": 0.0,
+            "raw_score": 0.4267462703722239,
+            "max_possible_score": 2.0,
+            "final_score": 0.21337313518611195,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "03f9ac85-0a5c-467f-bd07-9b0a667f63cf",
+          "memory": "{\"callable\": {\"path\": \"unrelated_1.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 101\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-1\"}",
+          "hash": "9359beef8c9a9de882f14d755df4c7e4",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-1",
+            "path": "unrelated_1.py",
+            "symbol": "policy"
+          },
+          "score": 0.21324243558028214,
+          "created_at": "2026-10-17T07:59:23.204752+00:00",
+          "updated_at": "2026-10-17T07:59:23.204752+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.4100734518255963,
+            "bm25_score": 0.01641141933496797,
+            "entity_boost": 0.0,
+            "raw_score": 0.42648487116056427,
+            "max_possible_score": 2.0,
+            "final_score": 0.21324243558028214,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "7cea00a6-0c37-4390-91bd-389540596c17",
+          "memory": "{\"callable\": {\"path\": \"unrelated_0.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 100\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-0\"}",
+          "hash": "b0d705ff8a1d7a7c2cae4fb55c96249d",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-0",
+            "path": "unrelated_0.py",
+            "symbol": "policy"
+          },
+          "score": 0.21056899439098048,
+          "created_at": "2026-10-17T07:59:23.173400+00:00",
+          "updated_at": "2026-10-17T07:59:23.173400+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.404726569446993,
+            "bm25_score": 0.01641141933496797,
+            "entity_boost": 0.0,
+            "raw_score": 0.42113798878196096,
+            "max_possible_score": 2.0,
+            "final_score": 0.21056899439098048,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "f4b6e7fd-3e88-458b-b83b-9284eef65cf1",
+          "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"items\": [3, 1, 3, 2]}], \"kwargs\": {}}, \"expected\": {\"value\": [3, 1, 2]}}, {\"call\": {\"args\": [{\"items\": [[2], [1], [2]]}], \"kwargs\": {}}, \"expected\": {\"value\": [[2], [1]]}}], \"policy\": \"Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=[]\\n for item in context[\\\"items\\\"]:\\n  if item not in result: result.append(item)\\n return result\\n\", \"source_id\": \"stable_sequence_processing-2902-history\"}",
+          "hash": "556bdaa8bc50e30098c51a9033511d6f",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.16509753928552467,
+          "created_at": "2026-10-17T07:59:23.056430+00:00",
+          "updated_at": "2026-10-17T07:59:23.056430+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.314476886199263,
+            "bm25_score": 0.015718192371786333,
+            "entity_boost": 0.0,
+            "raw_score": 0.33019507857104935,
+            "max_possible_score": 2.0,
+            "final_score": 0.16509753928552467,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "stable_sequence_processing-2902-history",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-0",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-1",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-2",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-3"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "f4b6e7fd-3e88-458b-b83b-9284eef65cf1",
+            "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"items\": [3, 1, 3, 2]}], \"kwargs\": {}}, \"expected\": {\"value\": [3, 1, 2]}}, {\"call\": {\"args\": [{\"items\": [[2], [1], [2]]}], \"kwargs\": {}}, \"expected\": {\"value\": [[2], [1]]}}], \"policy\": \"Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=[]\\n for item in context[\\\"items\\\"]:\\n  if item not in result: result.append(item)\\n return result\\n\", \"source_id\": \"stable_sequence_processing-2902-history\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      },
+      {
+        "results": [
+          {
+            "id": "7cea00a6-0c37-4390-91bd-389540596c17",
+            "memory": "{\"callable\": {\"path\": \"unrelated_0.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 100\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-0\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      },
+      {
+        "results": [
+          {
+            "id": "03f9ac85-0a5c-467f-bd07-9b0a667f63cf",
+            "memory": "{\"callable\": {\"path\": \"unrelated_1.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 101\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-1\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      },
+      {
+        "results": [
+          {
+            "id": "5fbcd3fb-88cf-4b88-b33f-fbebd3bb8525",
+            "memory": "{\"callable\": {\"path\": \"unrelated_2.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 102\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-2\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      },
+      {
+        "results": [
+          {
+            "id": "f2f28da1-10c1-4d15-bf7a-1228e0a29136",
+            "memory": "{\"callable\": {\"path\": \"unrelated_3.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 103\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-3\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 0.22583477701118682,
+      "retrieval_seconds": 0.00813606999872718,
+      "acquisition_llm_calls": 0,
+      "request_characters": 0,
+      "wall_seconds": 1.2645661200076574
+    }
+  },
+  "text_identity_boundaries-2903-withdrawn_policy": {
+    "memory": {
+      "results": [
+        {
+          "id": "f78e2f18-87ac-4a71-b566-90bc520c7d81",
+          "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"withdrawn\", \"observations\": [{\"call\": {\"args\": [{\"text\": \" AbC \"}], \"kwargs\": {}}, \"expected\": {\"value\": \"AbC\"}}, {\"call\": {\"args\": [{\"text\": \"\\tÉx\\t\"}], \"kwargs\": {}}, \"expected\": {\"value\": \"\\tÉx\\t\"}}], \"policy\": \"Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return context[\\\"text\\\"].strip(\\\" \\\")\\n\", \"source_id\": \"text_identity_boundaries-2903-history\"}",
+          "hash": "5fd1f2e01bd84c14276d4202a9f3c561",
+          "metadata": {
+            "source_id": "text_identity_boundaries-2903-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.16998192260370754,
+          "created_at": "2026-10-17T07:59:24.213282+00:00",
+          "updated_at": "2026-10-17T07:59:24.213282+00:00",
+          "user_id": "text_identity_boundaries-2903-withdrawn_policy",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.30321360170301304,
+            "bm25_score": 0.03675024350440202,
+            "entity_boost": 0.0,
+            "raw_score": 0.33996384520741507,
+            "max_possible_score": 2.0,
+            "final_score": 0.16998192260370754,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "text_identity_boundaries-2903-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "f78e2f18-87ac-4a71-b566-90bc520c7d81",
+            "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"withdrawn\", \"observations\": [{\"call\": {\"args\": [{\"text\": \" AbC \"}], \"kwargs\": {}}, \"expected\": {\"value\": \"AbC\"}}, {\"call\": {\"args\": [{\"text\": \"\\tÉx\\t\"}], \"kwargs\": {}}, \"expected\": {\"value\": \"\\tÉx\\t\"}}], \"policy\": \"Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return context[\\\"text\\\"].strip(\\\" \\\")\\n\", \"source_id\": \"text_identity_boundaries-2903-history\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 0.12011651099601295,
+      "retrieval_seconds": 0.007325949001824483,
+      "acquisition_llm_calls": 0,
+      "request_characters": 0,
+      "wall_seconds": 1.0409580600098707
+    }
+  },
+  "sparse_payload_merge-2904-changed_interface": {
+    "memory": {
+      "results": [
+        {
+          "id": "f68a0fbd-b0bc-4c37-a008-15e75a996b3e",
+          "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"base\": {\"a\": 3, \"b\": 4}, \"patch\": {\"a\": null, \"b\": 0, \"c\": false}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"a\": 3, \"b\": 0, \"c\": false}}}, {\"call\": {\"args\": [{\"base\": {}, \"patch\": {\"empty\": \"\", \"none\": null}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"empty\": \"\"}}}], \"policy\": \"Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=context[\\\"base\\\"].copy()\\n for key,value in context[\\\"patch\\\"].items():\\n  if value is not None: result[key]=value\\n return result\\n\", \"source_id\": \"sparse_payload_merge-2904-history\"}",
+          "hash": "222662fe649165e0886347f8e3cea8b3",
+          "metadata": {
+            "source_id": "sparse_payload_merge-2904-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.1665494715566988,
+          "created_at": "2026-10-17T07:59:25.314169+00:00",
+          "updated_at": "2026-10-17T07:59:25.314169+00:00",
+          "user_id": "sparse_payload_merge-2904-changed_interface",
+          "role": "user",
+          "score_details": {
+            "semantic_score": 0.2983162353437674,
+            "bm25_score": 0.0347827077696302,
+            "entity_boost": 0.0,
+            "raw_score": 0.3330989431133976,
+            "max_possible_score": 2.0,
+            "final_score": 0.1665494715566988,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "sparse_payload_merge-2904-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "f68a0fbd-b0bc-4c37-a008-15e75a996b3e",
+            "memory": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"base\": {\"a\": 3, \"b\": 4}, \"patch\": {\"a\": null, \"b\": 0, \"c\": false}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"a\": 3, \"b\": 0, \"c\": false}}}, {\"call\": {\"args\": [{\"base\": {}, \"patch\": {\"empty\": \"\", \"none\": null}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"empty\": \"\"}}}], \"policy\": \"Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=context[\\\"base\\\"].copy()\\n for key,value in context[\\\"patch\\\"].items():\\n  if value is not None: result[key]=value\\n return result\\n\", \"source_id\": \"sparse_payload_merge-2904-history\"}",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 0.1191220709879417,
+      "retrieval_seconds": 0.007730336001259275,
+      "acquisition_llm_calls": 0,
+      "request_characters": 0,
+      "wall_seconds": 1.099694927004748
+    }
+  }
+}

@@ -1,340 +1,284 @@
-# Synapsis — one shared memory for Claude Code, Codex, and Antigravity
+# Synopsis
 
-*[Versión en español](README.md)*
+Local, shared memory for AI assistants. Synopsis retrieves project-scoped evidence,
+keeps corrections and provenance, and exposes JSON context packets through MCP and CLI.
 
-Synapsis connects Claude Code, Codex, and Antigravity to the same live memory: each
-tool gets real lifecycle hooks (not just an MCP server the model may or may not decide
-to call), all pointing at the same engine and the same live 3D memory map.
+[Español](README.md) · [Architecture](docs/architecture.md)
 
-![The live map](docs-img/mapa-en-vivo.gif)
+## macOS and Windows adaptation (0.11 · development)
 
-## What it does
+Source installers: `install-macos.command` and `install-windows.cmd`, requiring
+Python 3.11+. Per-user map autostart, Windows commands without Git Bash, and platform
+capability diagnostics. Native desktop validation and signed bundled runtimes are
+pending; isolated experiments still require Linux/bubblewrap.
+[Installation, scope and validation](docs/desktop_adaptation.md).
 
-- **A map of your notes.** It gathers each project's memory
-  (`~/.claude/projects/*/memory/`) and draws it as a brain: each note is a neuron, and
-  every time a note names another one, a connection.
-- **Live.** While you work (from any of the 3 tools), you see which note is being read,
-  which file is being edited, which agent was launched, and in which chat — all on the
-  same page, no matter which of the 3 tools generated it.
-- **A health checker.** Reviews the memory: links to notes that no longer exist, notes
-  nobody references, duplicate memories, incomplete headers.
-- **A search tool.** Says which notes to read first for a topic, flags data that might
-  be outdated, and gathers the recorded decisions that touch it — before answering.
-- **Learns from your usage.** What gets used together gets connected; what stops
-  repeating gets forgotten. Each machine learns from its own usage.
+## Verifiable behavioral memory (0.10)
 
-What `synapsis` adds on top of that: the three tools (Claude Code, Codex, Antigravity)
-feed and read **the same** brain, with real hooks in all three — not only in the one
-that has the official plugin.
+Preserve observed input/output cases after their original test disappears. The
+research workbench checks candidates against those cases and current tests, with
+signature, scope, retirement and changed-contract boundaries. Prompts and edits
+receive provenance hints. Witness capture requires no LLM inference.
+[Workflow and diagram](docs/behavior_memory.md) · [Reproducible comparison](docs/competitive_evaluation.md).
 
-## How the engine searches and learns, in short
+## Living memory and research (0.9)
 
-It's not semantic indexing and there are no embeddings: it's lexical word search
-(BM25-style, with typo correction), combined with a graph of which notes and files get
-used together. That graph is actually pruned — weak connections fade away on their
-own over time, they don't pile up forever.
+Unified context, explicit validity, and bounded Python function experiments compared
+with the original in isolated snapshots. The panel shows evidence and test outcomes.
+[Workflow, commands and limits](docs/research_workbench.md).
 
-**What it learned on its own**, with nobody telling it which files belonged together
-(real output from `cerebro.py --aprendido`, taken after the session where a new
-category was added to a service catalog — the files touched together are exactly the
-ones it connected):
+## Hybrid retrieval and experience lab (0.8)
 
-![Learned co-occurrence weight between files](docs-img/coocurrencia-aprendida.svg)
+Installation prepares local multilingual embeddings. Retrieval fuses BM25, technical
+anchors and real vectors, then validates current conditions and contrasting cases.
+The optional Linux lab challenges an existing named test in disposable snapshots.
+[Evaluación 0.8](docs/upgrade_evaluation.md) · [Decision flow](docs/decision_rag.md) · [Runtime and limits](docs/local_semantics.md).
 
-**How well it actually works in practice, unvarnished:** of the notes it recommended,
-this is how many times they actually got read afterward (out of every 10 times it
-recommended them):
+## Install: Linux, macOS and Windows
 
-![Effectiveness of the recommendations](docs-img/efectividad-pistas.svg)
+Requires Python 3.11+ and an installed supported client. Git is used to download
+this repository; downloading and extracting its ZIP also works. The core needs no
+external Python packages, API keys or administrator permissions. Optional semantic
+search downloads dependencies and a model during initial installation and needs
+Internet access. Use `--no-semantic` to skip it.
 
-This is honest on purpose: some notes get used afterward almost every time, others
-almost never. It's not a marketing number — it's the real metric the engine itself
-keeps (`aprendido.json`) to calibrate itself.
+This source installation runs from the downloaded directory: keep it in a stable
+location. Python and signed macOS/Windows packages are not bundled.
 
-**Why that happened, and the real fix.** Digging into the 0-out-of-10, we found the
-exact cause: the engine always tried to fill a fixed quota of 4 notes per response,
-even when none were actually relevant — and the typo corrector sometimes "corrects" a
-word into a different, unrelated but valid word (both real, 1-2 letters apart).
-Measured in this same session, same question, before and after adding a minimum score
-to qualify for that quota:
+### Linux
 
-| | Before | After |
-|---|---|---|
-| Notices for a question unrelated to any note | 3 (2 were pure noise) | 1 |
-| A genuinely related question | 3 correct notes | 3 correct notes (unchanged) |
-
-The engine's own official smoke test (753 cases) was also run: 750 passed, 3 are
-Windows/PowerShell-specific and don't apply on this machine — no real failures.
-
-**Round two: the fixed floor wasn't enough.** Testing with more real questions turned
-up a case the 1.0 floor didn't catch: asking about payroll also pulled in "Landing
-design direction" (score 2.1, above the floor, but only 18% of the score of the note
-that actually matched, 11.38). A second rule got added: besides the fixed floor, also
-drop anything that doesn't reach 30% of that query's best score.
-
-| Real question | Before (fixed floor only) | After (+ relative floor) |
-|---|---|---|
-| "how's payroll going this week" | Payroll + Landing design | Payroll only |
-| "landing page in remotion" | Landing + Payroll | Landing only |
-
-Confirmed again against the official smoke test (750/753, unchanged) and synapsis's
-own suite (11/11).
-
-**Round three: the typo corrector kept inventing relationships.** The "readme"→"read"
-case (six letters, two apart) got through because the corrector allowed correcting to
-2 letters apart for any word, no matter how short. That got restricted: 2-letter-apart
-corrections now only apply to words of 8+ letters; shorter ones only get 1-letter-apart
-corrections. Confirmed: "readme" no longer gets "corrected" to "read".
-
-**What's left, honestly:** "nuevo"→"nueve" and "trae"→"true" still get through — both
-are real words, 1 letter apart, the smallest distance that exists. Without a full
-dictionary (which this project deliberately doesn't have, to stay simple and dependency-
-free) there's no generic way to know the original word was already valid. The relative
-floor from the previous round is still the real defense against the damage this
-causes, not the corrector itself.
-
-**Second finding, verifying the fix through the real path (not the console):**
-testing it through the MCP server the way Claude Code actually uses it, the fix
-wasn't applied — the live map server had the old code loaded in memory from before
-`buscador.py` got patched. **If you change anything in `engine/`, you have to
-restart that server** (`neuromapa abrir --reiniciar`) for it to take effect;
-otherwise it keeps running the old code indefinitely, with no warning that it's
-stale. After restarting it, the real path (MCP server → `sobre`) gives the same
-result as the direct test: 1 note, not 3.
-
-## What real benefit this has for a project
-
-- **Less "we already decided this," repeated.** An architecture decision, a non-obvious
-  business rule, a testing gotcha — they become a note tied to the code they touch. The
-  next time anyone (or any of the 3 AIs) touches that code, the note surfaces on its
-  own, before the question gets asked again or the same mistake repeats.
-- **It doesn't depend on which AI you used that day.** If the decision got written down
-  while working with Claude Code, and you open Codex the next day, the note still
-  shows up — before `synapsis`, each tool had its own silo.
-- **Stale memory cleans itself up.** If something got noted and never got used again,
-  its weight decays; if a note goes stale or points at code that no longer exists, the
-  health checker flags it for review instead of leaving it as silent truth.
-
-## How it does it
-
-Each tool has its own "hook" format (a lifecycle event: a session started, it's about to
-use a tool, it finished, etc.) and its own config file. `synapsis` doesn't invent a new
-protocol — it translates:
-
-| Tool | Where it writes config | What it translates |
-|---|---|---|
-| **Claude Code** | `~/.claude/settings.json` | Nothing: it uses the engine's own `hook_*.py` scripts, the same event names. Replaces the marketplace plugin (disables it to avoid duplicate events). |
-| **Codex** | `~/.codex/hooks.json` + `config.toml` | 12 lifecycle events (`SessionStart`, `PreToolUse`, `Stop`, etc.) into the shape the engine expects, plus an MCP server (standard protocol) with 7 tools. |
-| **Antigravity** | `~/.gemini/config/hooks.json` | 5 events (`PreInvocation`, `PreToolUse`, `PostToolUse`, `PostInvocation`, `Stop`), also translating its own tool names (`run_command` → `Bash`, `view_file` → `Read`, etc.) into the ones the engine recognizes. |
-
-The vendored engine (`engine/`) never knows which of the 3 called it — it just receives
-events in the same shape, which is why they all end up in the same place:
-`~/.claude/plugins/data/neuromapa-neuromapa/en-vivo/eventos.jsonl` (the log that feeds
-the map) and `~/.claude/projects/*/memory/` (the actual notes, which were already
-shared per project before `synapsis` existed — see "Myths" below).
-
-## Install
-
-```sh
-python3 bin/synapsis install              # interactive selector: shows what can be installed before you choose
-python3 bin/synapsis install claude        # Claude Code only
-python3 bin/synapsis install codex         # Codex only
-python3 bin/synapsis install antigravity   # Antigravity only
+```bash
+git clone https://github.com/vektiomx/synapsis.git synopsis
+cd synopsis
+python3 bin/synopsis install
 ```
 
-The selector runs the same check (`--dry-run`) it would use to install, so what you see
-in the menu is real, not a guess:
+### macOS
 
-```
-¿Dónde instalo Synapsis?
-  1) Claude Code  [OK]
-  2) Codex        [OK]
-  3) Antigravity  [OK]
-  4) Todas las que digan OK
-```
+Install Python 3.11+ first. In Terminal:
 
-If something can't be installed (for example, an MCP server from a different config
-already occupying the name "neuromapa" in Codex), the reason shows up right there,
-before you pick.
-
-Each installer adds the hooks without touching the ones you already have (it backs up
-to `~/.claude/neuromapa-backups`, `~/.codex/neuromapa-backups`, or
-`~/.gemini/config/neuromapa-backups` before writing, and it's safe to run again if you
-install a new tool later). To only check without changing anything, add `--dry-run`.
-
-### The live map as a service (Linux)
-
-On Linux with systemd, `python3 bin/synapsis install` also installs and starts the
-map service after the selected integrations finish successfully.
-With `--dry-run`, it only shows the plan without writing files or starting services.
-If the service fails, the command reports the error and exits with a nonzero status;
-the installed integrations are preserved. Without systemd, open the map manually
-with `neuromapa abrir`. You can also manage the service separately:
-
-```sh
-python3 linux/instalar_servicio_mapa.py              # turns it on and sets it to autostart
-python3 linux/instalar_servicio_mapa.py --dry-run     # just shows what it would do
-python3 linux/instalar_servicio_mapa.py --quitar      # uninstalls it
+```bash
+git clone https://github.com/vektiomx/synapsis.git synopsis
+cd synopsis
+sh install-macos.command
 ```
 
-Uses `systemd --user`: starts every time you log in, and if the process dies, it
-restarts on its own (`Restart=on-failure`). Actually tested: installed, confirmed
-`active (running)` via `systemctl --user status`, killed with `kill -9` and it
-recovered on its own within seconds with a new PID; uninstalled and confirmed nothing
-was left running and the service file was gone.
+The map uses a per-user LaunchAgent to start at login.
 
-To make it start even before logging in (not just at login): `loginctl enable-linger
-<your user>`.
+### Windows
 
-**Mac and Windows: not implemented.** They'd need `launchd` and Task Scheduler
-respectively — couldn't test either (no access to those machines), so nothing's built
-for them yet. Keep using `neuromapa abrir` by hand there.
+Install Python 3.11+ with the `py` launcher or Python available on PATH.
+In PowerShell:
 
-### Open the map easily
-
-Installation on Linux and macOS adds `synapsis` to `~/.local/bin`.
-With that directory on PATH, run this from any project:
-
-```sh
-synapsis abrir
+```powershell
+git clone https://github.com/vektiomx/synapsis.git synopsis
+cd synopsis
+.\install-windows.cmd
 ```
 
-It opens the browser with authenticated access and reuses a running map.
-You can also reinstall with `synapsis install codex`.
-If the installer reports a missing PATH entry, add `export PATH="$HOME/.local/bin:$PATH"`
-to your shell configuration and open a new terminal.
+In CMD, run `install-windows.cmd` from the same folder. No Git Bash or PowerShell
+execution-policy change is needed. The command is installed under
+`%LOCALAPPDATA%\Synopsis\bin`; the map starts at login for your user.
 
-### After installing
+### Options and first use
 
-- **Claude Code**: restart the app. If you had the "neuromapa" plugin active, it got
-  disabled — you lose `/neuromapa:abrir`, `/neuromapa:salud`, and `/neuromapa:sobre`
-  (those are the plugin's); use the scripts in `engine/` directly if you need them.
-- **Codex**: restart the app and trust the new hooks with `/hooks` in the CLI — Codex
-  doesn't trust new hooks on its own.
-- **Antigravity**: restart the app.
+The installer detects available clients and connects hooks, MCP and shared memory.
+It preserves unrelated settings and backs up modified files. Linux uses a systemd
+user service when available; otherwise open the map manually with `synopsis abrir`.
+The isolated experiment lab requires Linux and bubblewrap; memory, MCP and the map
+have adapters for all three systems.
 
-If you'd rather use a different copy of the engine, set `NEUROMAPA_ROOT` to that path
-before installing; to force the data folder, `NEUROMAPA_DATA`. Both are resolved in
-`comun.py`.
+In the examples below, on Windows replace `python3 bin/synopsis` with
+`py -3 bin/synopsis` (or `python bin/synopsis` without the `py` launcher).
 
-## Tests actually run (real numbers from this machine, not estimates)
-
-Measured with `time` on this installation, on 2026-10-11:
-
-| Operation | Real time |
-|---|---|
-| `install_claude_code.py --dry-run` (validates 17 hooks) | 0.040 s |
-| `install_codex.py --dry-run` (validates 12 hooks + MCP) | 0.044 s |
-| `install_antigravity.py --dry-run` (validates 5 hooks) | 0.040 s |
-| One real Codex hook end-to-end (receives the event, translates it, writes to the log) | 0.119 s |
-
-Functional verification (not just shape): each one was really installed in a separate
-test folder, sent a real event with the exact payload each tool actually sends, and
-confirmed it showed up in `eventos.jsonl` — for all 3. Since then it's also been
-confirmed with all 3 real apps in normal use — see "Verified live" below.
-
-## What each installer does
-
-- **Claude Code** (`claude-code/`): writes the 17 hooks directly into
-  `~/.claude/settings.json`, pointing at the `hook_*.py` scripts the engine already
-  ships (the same ones the marketplace plugin uses, which is why nothing needs
-  translating here).
-- **Codex** (`codex/`): translates Codex's 12 lifecycle events into the engine's
-  format, and adds the MCP server (`sobre`, `buscar`, `leer_nota`, `avisar_charla`,
-  `guardar`, `abrir_mapa`, `salud`) for when the model decides to use them directly.
-- **Antigravity** (`antigravity/`): translates its events (`PreInvocation`,
-  `PreToolUse`, `PostToolUse`, `PostInvocation`, `Stop`) into the same format.
-
-## The server now detects when it's stale
-
-The live map saved a fingerprint of its code on startup, but never compared it again
-when reopened — so if someone patched `engine/` without using `--reiniciar`, the map
-kept answering with the old code, silently, forever. The comparison got added: now
-`neuromapa abrir` checks whether the code on disk changed since that map started, and
-if it did, it restarts itself (same as `--reiniciar`, without having to remember to
-pass it). Actually tested: started a map, touched `buscador.py`, and reopening it
-printed *"El código de Neuromapa cambió desde que este mapa se prendió: lo reinicio
-para usar el nuevo"* and started clean. The official smoke test (753 cases) stayed at
-750/753 after this change.
-
-## Synapsis's own tests (not the engine's)
-
-`tests/test_installers.py` (no dependencies, `python3 -m unittest discover -s tests`)
-covers our own code: installing twice doesn't duplicate hooks, an old install under
-the previous name ("Neuromapa") gets recognized and replaced instead of stacking,
-disabling the marketplace plugin doesn't touch other hooks (e.g. Orca's),
-reinstalling Antigravity doesn't overwrite unrelated keys in `hooks.json`, and the
-shared memory skill copies correctly. 11/11 pass, including one that encodes the real
-Codex duplication bug found and fixed today — if
-it ever comes back, this test catches it before a user does.
-
-## Codex and Antigravity now know when to save memory (with a real limit)
-
-Until now, only Claude Code had the "save this without being asked" push — it comes
-from its own product, not the engine. A shared skill got added
-(`skill_memoria/SKILL.md`) that `bin/synapsis install` copies on its own, for Codex
-and Antigravity, explaining when to save a note and the exact format — no special MCP
-tool needed, because saving memory is just writing a `.md` file (any tool with file
-editing can already do that).
-
-**The real, honest limit:** these tools' "Skills" load **on demand** (when the
-request resembles the skill's description), not always, the way Claude Code's own
-prompt does. Couldn't confirm this live (would need to see Codex/Antigravity decide
-to save something on their own in a real conversation) — still pending for you to
-confirm by using it, same as we did with the hooks.
-
-## Myths worth clearing up
-
-- **"If I never installed Claude Code, I have no memory."** False: the notes folder
-  (`~/.claude/projects/.../memory/`) gets created by whoever writes to it first, no
-  matter which of the 3 tools that is. What *is* uneven: the *habit* of saving memory on
-  its own, without being asked, is an instruction from Claude Code's own product (its
-  system prompt), not something the engine enforces — Codex and Antigravity only do it
-  if their model decides to call `guardar` on its own.
-- **"Memory is stored inside this repo."** No, and it shouldn't be: it lives in a folder
-  per project (`~/.claude/projects/<your-project>/memory/`), so one project's memory
-  doesn't mix with another's. This repo only holds the engine and the bridges.
-
-## Maintaining the vendored engine
-
-`engine/` is a fixed copy, not a link to the original: if a new version ships upstream,
-it doesn't arrive on its own. Instead of copying files by hand (easy to overwrite a
-patch without noticing), use `actualizar_motor.py`:
-
-```sh
-python3 actualizar_motor.py /path/to/a/fresh/clone/of/neuromapa            # just shows what would change
-python3 actualizar_motor.py /path/to/a/fresh/clone/of/neuromapa --aplicar  # actually copies what's safe
+```bash
+python3 bin/synopsis install codex --dry-run
+python3 bin/synopsis install --all
+python3 bin/synopsis install codex --no-service --no-color
 ```
 
-It auto-copies what changed in files with no patch of ours; for the ones that do have
-a patch (`buscador.py`, `servidor.py`) it never overwrites them on its own — it shows
-the full diff between what's running here and the new version, so the patch can be
-reapplied by hand on top of that. Tested with a real simulated change: it correctly
-copied the one unpatched file and left the two patched ones untouched, showing exactly
-the expected diff. After updating, run `bin/synapsis install` again on each machine.
+`--dry-run` writes nothing. The default installation also works noninteractively.
+Restart your assistant and open a new shell after installation. Some Codex clients
+require trusting lifecycle hooks via `/hooks`.
 
-**Watch out for 2 local patches**, which don't exist in the original project — if you
-update `engine/` by copying in files from a newer version, they get lost and need to
-be reapplied by hand:
-- `engine/buscador.py`: `PUNTAJE_MINIMO_LEER`, `FRACCION_DEL_MEJOR`, and
-  `LARGO_DISTANCIA_2` (the relevance floors and correction limit, see above).
-- `engine/servidor.py`: the code-fingerprint comparison on reopen, so the map
-  restarts itself if the code changed (see above).
+```bash
+synopsis                 # open the authenticated map
+synopsis --help
+```
 
-## Verified live
+`synopsis doctor` (or `doctor --json`) distinguishes transport readiness, installed
+configuration and actual IDE activity. A successful probe never fabricates a chat or
+claims the host has trusted its hooks. Initial host consent may still be required.
 
-Confirmed with all 3 real apps running (not simulated): using Codex and Antigravity
-normally, their actions show up on the live map. One real detail to reproduce it: in
-**Codex you have to go through the CLI** (the desktop app isn't enough) and **trust
-the hooks by hand** with `/hooks` — otherwise Codex silently ignores them and it
-looks like nothing works.
+## Store and retrieve memory
 
-If something doesn't show up on the map, check that first (did you use the CLI? did
-you trust the hooks?) before assuming something is broken.
+```bash
+printf '%s\n' 'Redis cache entries expire after 120 seconds.' | \
+  synopsis memory save --project /absolute/project --file cache-policy \
+  --description 'Redis cache duration' --source 'user:decision' \
+  --state confirmed --cue 'cache ttl retention'
 
-## Real limitation
+synopsis recall 'cache ttl retention' --project /absolute/project --budget 3000
+synopsis memory history --project /absolute/project --file cache-policy
+```
 
-No bridge gives Codex or Antigravity the exact equivalent of Claude Code's automatic
-`UserPromptSubmit` hook for always surfacing context: the bridge calls the engine, but
-if that tool's model doesn't use the context the hook injects, there's no way to force
-it from here.
+Markdown remains editable; writes through the API use a project lock, SQLite revision
+ledger and recoverable outbox for the note/index pair. Identical retries are idempotent.
+Corrections use `--overwrite --expected-revision N` to reject stale writers. Explicit
+replacement preserves an existing external file as a historical revision.
+
+States: `inferred` (default), `confirmed`, `archived`. Optional `--expires-at` accepts
+an ISO 8601 timestamp with timezone. Expired and archived notes are excluded from
+recommendations, not deleted from history. States and provenance are client assertions,
+not automatic fact checking. `--cue` supplies retrieval vocabulary, including bilingual
+questions, separately from factual content; optional real embeddings add semantic retrieval when available (see [models](docs/models.md)).
+
+Context packets contain file/line citations, hashes, provenance and retrieval reasons.
+Their complete serialized JSON is bounded in characters, not estimated tokens. Retrieval
+abstains when evidence is missing and rechecks cited passages and lifecycle on disk.
+Explicit outcome feedback (`useful`, `irrelevant`, `incorrect`) produces a bounded ranking
+adjustment tied to exact file revisions. It evaluates the entire packet, not each excerpt.
+It cannot create lexical evidence. Feedback stores hashes and references, not prompts or
+passages. Evaluations older than 90 days are ignored and purged when a new packet is registered.
+
+```bash
+synopsis feedback PACKET_ID --project /absolute/project --outcome useful --source user:review
+```
+
+## Any compatible model client
+
+Launch `python3 /absolute/synopsis/bin/synopsis mcp` as an MCP stdio server. Use
+`recordar`, `guardar`, `historial_memoria`, and `evaluar_recuerdo`. Tools expose Spanish
+names and structured context output. Clients without MCP can use the CLI JSON interface.
+Your client must feed retrieved context into its model; Synopsis does not change weights
+or guarantee that every client will honor lifecycle hooks.
+
+State defaults to `~/.local/share/synopsis`; notes remain in the shared
+`~/.claude/projects/<encoded-project-path>/memory/` layout, usable without Claude installed.
+Override with `SYNOPSIS_ROOT` and `SYNOPSIS_DATA`.
+
+`migrate-data /previous/data` previews a copy of persistent configuration/history to an
+empty destination; add `--apply` to execute it. Originals are retained. Live sessions,
+map keys and caches are excluded. Existing services and integrations are not disabled;
+retire those before activating the replacement installation.
+
+## Validation
+
+```bash
+python3 -B -m unittest discover -s tests
+python3 -B tools/evaluate_memory.py
+python3 -B engine/herramientas/prueba_humo.py
+```
+
+The versioned synthetic retrieval suite reports recall@5, MRR, abstention and cross-project
+leaks. It does not measure model intelligence or establish LoCoMo performance. The full
+engine suite needs localhost sockets and a browser; PowerShell checks need Windows.
+
+Inherited code retains its [MIT license](LICENSE).
+
+## Native OpenCode and Cursor integration
+
+Run `synopsis install opencode` or `synopsis install cursor`, or let the default
+installer detect all available clients. OpenCode loads a local plugin that registers
+MCP through its configuration hook without rewriting existing JSONC. It uses the
+experimental system-context hook. Cursor installs global hooks, MCP and a skill;
+context is supported at session start and after tool use. Its documented prompt
+submission hook does not support context injection, so the initial guidance asks the
+agent to query memory for each task. No cloud or remote-machine configuration is installed.
+
+## Durable task continuity
+
+The shared runtime opens memory turns, retrieves project-scoped evidence and keeps
+queued operations across interruptions. Closing a turn requires verified writes or
+an explicit no_change reason. Working checkpoints live outside durable knowledge
+notes and use optimistic concurrency. `synopsis cycle status --project /path/project`
+shows pending work. `synopsis run` provides an additional command-adapter JSON protocol
+that withholds the answer until memory reconciliation succeeds. Native IDE hooks
+remain cooperative. Scripted adapter tests demonstrate mechanisms, not model quality.
+See [protocol and limitations](docs/continuity.md).
+
+## Project identity and existing memories
+
+New memories use a full canonical-root identity under SYNOPSIS_DATA/projects.
+Explicitly assigned existing memories are adopted in place, preserving notes and
+revision history. Ambiguous unowned legacy folders are never assigned by their lossy
+IDE directory name. Inspect them with `synopsis memory-location --project /path`,
+then bind the known owner using `--bind /existing/memory --apply`. Working checkpoints
+now follow commit order independently of task creation order and wall-clock changes.
+
+## Ready model connectors and hybrid retrieval
+
+`synopsis run --project /absolute/project --prompt 'Remember the retention is 300 seconds'`
+now works without a custom adapter. It detects local Ollama and native authenticated
+Codex, Claude and OpenCode clients. Use `--provider` and `--model` to select a backend.
+OpenAI Responses and compatible chat endpoints are supported through environment
+variables. `synopsis providers` reports availability without making inference calls.
+Accounts and model access are still required; no API keys are bundled.
+
+Hybrid retrieval fuses lexical evidence and optional real embeddings, cached by
+provider/model/content inside each project's state. Only scoped, active notes enter
+the embedding provider; remote embedding endpoints require explicit configuration.
+Backend failures preserve lexical retrieval. Query vectors are not persisted.
+
+`synopsis reconcile --project /absolute/project --output /tmp/review.json` produces
+a semantic review plan. Inspect it, then apply with `--apply /tmp/review.json`.
+Changed versions and unresolved contradictions block destructive reconciliation.
+`synopsis learn` stores outcome-bearing experiences with local evidence hashes;
+these remain inferred observations, not verified universal truths.
+
+See [models, privacy and protocols](docs/models.md). Build a distributable archive
+with `python3 tools/build_release.py --output /tmp/synopsis.zip`.
+
+## Strict evidence output (0.3)
+
+`synopsis run` now uses synopsis.run.v2. The model selects source IDs and proposes
+literal memory support; the controller builds the factual answer from checked
+excerpts, exact JSON observations or bounded decimal arithmetic. Unsupported drafts
+are never published as the answer. Missing support produces abstention.
+
+Memory without a durable controller admission is quarantined for strict output,
+even when another client labelled it confirmed. Existing notes/history remain in
+place. Updates require complete source passages and the current revision.
+
+This checks source fidelity, not universal truth or perfect relevance. Strict mode
+trades unrestricted prose for enforceable evidence binding. IDE hooks remain
+cooperative; native MCP clients can use responder_con_evidencia and CLI verify.
+See [the evidence guard contract and limitations](docs/evidence_guard.md).
+
+## Automatic project binding (0.4 development branch)
+
+The first native hook or memory operation registers the workspace. Existing memories
+are reused in place when client metadata proves ownership. Ambiguous migrations are
+resolved through the authenticated map panel, without editing configuration files.
+Workspace markers preserve local identity across recognized moves; copies and
+worktrees retain independent memory. Worktrees have a shared group identifier, not
+a shared branch knowledge store. See [the detailed contract](docs/project_binding.md).
+
+## Independent automatic review (0.5)
+
+Native end-of-turn hooks now queue a bounded private turn for background review.
+The reviewer uses the same client's CLI or a local Ollama generation model. It admits
+source-bound user/file passages, preserves revisions, and checks persistence receipts.
+Unsupported assertions and uncertain replacements remain conflicts; unavailable
+providers leave work pending. Temporary input expires on the next queue access after
+24 hours and is deleted after processing. No full transcripts or tool outputs are
+captured. Run `synopsis reviews --project /path/project` to inspect results.
+See [the complete lifecycle and limits](docs/continuity.md).
+
+
+## Scoped development experiences (0.6)
+
+Experiences now retain situation, action, rationale, reported outcome, applicability,
+evidence, limits and counterexamples. Native review may capture them automatically;
+hooks and the experiencias MCP tool retrieve them by task/path. Checks support only
+the declared observation, never the whole inferred narrative. Source drift becomes
+stale. Python unittest replay is optional and requires functional Linux isolation.
+Pending review recovery and a map status panel are included. See [the contract](docs/experiences.md).
+
+### Decision RAG (0.7)
+
+Synopsis can retrieve contrasting experiences for the same problem, check their
+current requirements, and identify the observation needed to distinguish choices.
+Use `synopsis experience decide` or the existing `experiencias` MCP tool's `decide`
+operation. Hooks include it automatically where the client supports the event.
+[Protocol, flow and limitations](docs/decision_rag.md).

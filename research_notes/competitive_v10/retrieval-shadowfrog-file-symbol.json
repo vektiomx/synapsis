@@ -1,0 +1,142 @@
+{
+  "numeric_mode_policy-1701-applicable_history": {
+    "memory": {
+      "viewer": "Search: 'policy' (3 results)\n==================================================\n\npolicy.py.md (3 matches)\n---------------------------\n  policy.py.md::policy\n  **Ámbito:** `policy.py::policy`, exclusivamente la interfaz original de un argumento `policy(context)`.\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  **Ciclo de vida:** activo (`active`).\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  **source_id:** `numeric_mode_policy-1701-history`.\n  (?, source: ?)\n  citation_score: 0\n",
+      "file": "## `policy`\n\n- **Ámbito:** `policy.py::policy`, exclusivamente la interfaz original de un argumento `policy(context)`.\n- **Ciclo de vida:** activo (`active`).\n- **source_id:** `numeric_mode_policy-1701-history`.\n\n### Comportamiento y contrato\n\n- Devuelve exactamente `534` cuando `context[\"flag\"]` es verdadero y `416` cuando es falso. El código histórico y las observaciones suministradas para `true` y `false` coinciden.\n  _(verified, source: exploration, citation_score: 0; source_id: numeric_mode_policy-1701-history)_\n- Preservar la política numérica exacta de la fuente histórica; no inventar nuevos números. Este contrato se limita a la interfaz original `policy(context)`.\n  _(verified, source: user, citation_score: 0; source_id: numeric_mode_policy-1701-history)_\n\n## Cross-References\n\nSin referencias cruzadas en los artefactos suministrados."
+    },
+    "source_ids": [
+      "numeric_mode_policy-1701-history"
+    ],
+    "metrics": {
+      "acquisition_seconds": 9.268911453997134,
+      "retrieval_seconds": 0.054871367014129646,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9409,
+      "wall_seconds": 9.32819077000022
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits.",
+    "adapter_correction": "Before any patch evaluation: read the per-file shadow per official workflow; --top alone only returns bug/security labels. Initial retrieval preserved separately."
+  },
+  "stable_sequence_processing-1702-applicable_history": {
+    "memory": {
+      "viewer": "Search: 'policy' (6 results)\n==================================================\n\npolicy.py.md (6 matches)\n---------------------------\n  policy.py.md::policy(context)\n  Devuelve una lista con la primera aparición de cada elemento de `context[\"items\"]`, conservando el orden de encuentro. D\n  (verified, source: exploration)\n  citation_score: 0\n  policy.py.md::policy\n  Archivo: `policy.py`\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Símbolo: `policy(context)`\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Ciclo de vida: activo (`active`).\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Alcance: únicamente la interfaz original de un argumento `policy(context)`.\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  source_id: `stable_sequence_processing-1702-history`\n  (?, source: ?)\n  citation_score: 0\n",
+      "file": "## `policy`\n\n- Archivo: `policy.py`\n- Símbolo: `policy(context)`\n- Ciclo de vida: activo (`active`).\n- Alcance: únicamente la interfaz original de un argumento `policy(context)`.\n- source_id: `stable_sequence_processing-1702-history`\n\n### `policy(context)`\n\n- Devuelve una lista con la primera aparición de cada elemento de `context[\"items\"]`, conservando el orden de encuentro. Determina los duplicados mediante igualdad de Python y admite elementos JSON no hashables, pues comprueba pertenencia en una lista sin usar conjuntos. El código suministrado confirma este comportamiento; las observaciones aportadas especifican `[3, 1, 3, 2] → [3, 1, 2]` y `[[2], [1], [2]] → [[2], [1]]`.\n  _(verified, source: exploration, citation_score: 0)_\n  source_id: `stable_sequence_processing-1702-history`\n\n### Cross-References\n\nSin referencias cruzadas en los artefactos suministrados."
+    },
+    "source_ids": [
+      "stable_sequence_processing-1702-history"
+    ],
+    "metrics": {
+      "acquisition_seconds": 10.790216504014097,
+      "retrieval_seconds": 0.06185722599911969,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9533,
+      "wall_seconds": 10.843952521012397
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits.",
+    "adapter_correction": "Before any patch evaluation: read the per-file shadow per official workflow; --top alone only returns bug/security labels. Initial retrieval preserved separately."
+  },
+  "text_identity_boundaries-1703-applicable_history": {
+    "memory": {
+      "viewer": "Search: 'policy' (2 results)\n==================================================\n\npolicy.py.md (2 matches)\n---------------------------\n  policy.py.md::policy\n  En la interfaz original de un solo argumento `policy(context)`, devuelve `context[\"text\"]` eliminando únicamente los esp\n  (verified, source: exploration)\n  citation_score: 0\n  policy.py.md::policy\n  Las observaciones históricas especifican que `{\"text\": \" AbC \"}` devuelve `\"AbC\"` y `{\"text\": \"\\tÉx\\t\"}` devuelve `\"\\tÉx\n  (verified, source: exploration)\n  citation_score: 0\n",
+      "file": "## `policy`\n\n- En la interfaz original de un solo argumento `policy(context)`, devuelve `context[\"text\"]` eliminando únicamente los espacios ASCII de ambos extremos. Conserva las mayúsculas, las minúsculas y todos los demás caracteres, incluidos tabuladores y espacios de no separación. Alcance: exclusivamente esa interfaz original. Ciclo de vida: activo.\n  _(verified, source: exploration, citation_score: 0)_\n  source_id: `text_identity_boundaries-1703-history`\n- Las observaciones históricas especifican que `{\"text\": \" AbC \"}` devuelve `\"AbC\"` y `{\"text\": \"\\tÉx\\t\"}` devuelve `\"\\tÉx\\t\"`; ambos resultados concuerdan con el código suministrado, `context[\"text\"].strip(\" \")`.\n  _(verified, source: exploration, citation_score: 0)_\n  source_id: `text_identity_boundaries-1703-history`\n\n## Cross-References\n\nSin referencias cruzadas en los artefactos suministrados."
+    },
+    "source_ids": [
+      "text_identity_boundaries-1703-history"
+    ],
+    "metrics": {
+      "acquisition_seconds": 8.194628606011975,
+      "retrieval_seconds": 0.056379977002507076,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9445,
+      "wall_seconds": 8.246411888001603
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits.",
+    "adapter_correction": "Before any patch evaluation: read the per-file shadow per official workflow; --top alone only returns bug/security labels. Initial retrieval preserved separately."
+  },
+  "sparse_payload_merge-1704-applicable_history": {
+    "memory": {
+      "viewer": "Search: 'policy' (3 results)\n==================================================\n\npolicy.py.md (3 matches)\n---------------------------\n  policy.py.md::policy\n  `policy.py::policy` — Estado: activo (`lifecycle: active`). Alcance: únicamente la interfaz original de un argumento `po\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Crea una copia superficial de `context[\"base\"]` y aplica las entradas de `context[\"patch\"]` cuyo valor no sea `None`. Co\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Los ejemplos aportados especifican que base `{\"a\": 3, \"b\": 4}` y patch `{\"a\": null, \"b\": 0, \"c\": false}` producen `{\"a\":\n  (?, source: ?)\n  citation_score: 0\n",
+      "file": "## `policy`\n\n- `policy.py::policy` — Estado: activo (`lifecycle: active`). Alcance: únicamente la interfaz original de un argumento `policy(context)`.\n  _(verified, source: exploration, source_id: sparse_payload_merge-1704-history, citation_score: 0)_\n- Crea una copia superficial de `context[\"base\"]` y aplica las entradas de `context[\"patch\"]` cuyo valor no sea `None`. Conserva `False`, `0`, cadenas vacías y colecciones vacías. Un valor `None` no reemplaza una clave existente ni agrega una clave nueva; el diccionario base no se modifica.\n  _(verified, source: exploration, source_id: sparse_payload_merge-1704-history, citation_score: 0)_\n- Los ejemplos aportados especifican que base `{\"a\": 3, \"b\": 4}` y patch `{\"a\": null, \"b\": 0, \"c\": false}` producen `{\"a\": 3, \"b\": 0, \"c\": false}`; con base `{}` y patch `{\"empty\": \"\", \"none\": null}`, el resultado es `{\"empty\": \"\"}`. Ambos resultados concuerdan con la lectura del código suministrado.\n  _(verified, source: exploration, source_id: sparse_payload_merge-1704-history, citation_score: 0)_\n\n## Cross-References\n\nSin referencias cruzadas en los artefactos suministrados."
+    },
+    "source_ids": [
+      "sparse_payload_merge-1704-history"
+    ],
+    "metrics": {
+      "acquisition_seconds": 11.29629863500304,
+      "retrieval_seconds": 0.05111197000951506,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9647,
+      "wall_seconds": 11.36173161699844
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits.",
+    "adapter_correction": "Before any patch evaluation: read the per-file shadow per official workflow; --top alone only returns bug/security labels. Initial retrieval preserved separately."
+  },
+  "numeric_mode_policy-2901-applicable_history": {
+    "memory": {
+      "viewer": "Search: 'policy' (3 results)\n==================================================\n\npolicy.py.md (3 matches)\n---------------------------\n  policy.py.md::policy\n  Activa en `policy.py::policy`. Su alcance es exclusivamente la interfaz original de un argumento: `policy(context)`.\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Devuelve `137` si `context[\"flag\"]` es verdadero y `791` en caso contrario. Las observaciones históricas registran `137`\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Conservar exactamente los valores numéricos de la política histórica: `137` y `791`; no inventar números nuevos.\n  (?, source: ?)\n  citation_score: 0\n",
+      "file": "## `policy`\n\n- Activa en `policy.py::policy`. Su alcance es exclusivamente la interfaz original de un argumento: `policy(context)`.\n  _(verified, source: exploration, source_id: numeric_mode_policy-2901-history, citation_score: 0)_\n- Devuelve `137` si `context[\"flag\"]` es verdadero y `791` en caso contrario. Las observaciones históricas registran `137` para `{\"flag\": true}` y `791` para `{\"flag\": false}`; el código fuente confirma ambos resultados.\n  _(verified, source: exploration, source_id: numeric_mode_policy-2901-history, citation_score: 0)_\n- Conservar exactamente los valores numéricos de la política histórica: `137` y `791`; no inventar números nuevos.\n  _(verified, source: user, source_id: numeric_mode_policy-2901-history, citation_score: 0)_\n\n## Cross-References\n\nSin referencias cruzadas registradas."
+    },
+    "source_ids": [
+      "numeric_mode_policy-2901-history"
+    ],
+    "metrics": {
+      "acquisition_seconds": 8.45896650000941,
+      "retrieval_seconds": 0.05976959200052079,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9409,
+      "wall_seconds": 8.518899959002738
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits."
+  },
+  "stable_sequence_processing-2902-irrelevant_distractors": {
+    "memory": {
+      "viewer": "Search: 'policy' (4 results)\n==================================================\n\npolicy.py.md (4 matches)\n---------------------------\n  policy.py.md::policy\n  En `policy.py::policy`, `policy(context)` elimina duplicados de `context[\"items\"]` mediante igualdad de Python, conserva\n  (verified, source: exploration)\n  citation_score: 0\n  policy.py.md::policy\n  source_id: `stable_sequence_processing-2902-history`\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Alcance: exclusivamente la interfaz original de un argumento `policy(context)`.\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Ciclo de vida: `active`.\n  (?, source: ?)\n  citation_score: 0\n",
+      "file": "## `policy`\n\n- En `policy.py::policy`, `policy(context)` elimina duplicados de `context[\"items\"]` mediante igualdad de Python, conserva la primera aparición y mantiene el orden de encuentro. Admite elementos no hashables: `[3, 1, 3, 2]` produce `[3, 1, 2]` y `[[2], [1], [2]]` produce `[[2], [1]]`. Verificado mediante lectura del código y las observaciones suministradas.\n  _(verified, source: exploration, citation_score: 0)_\n  - source_id: `stable_sequence_processing-2902-history`\n  - Alcance: exclusivamente la interfaz original de un argumento `policy(context)`.\n  - Ciclo de vida: `active`.\n\n## Cross-References\n\nSin referencias cruzadas aplicables."
+    },
+    "source_ids": [
+      "stable_sequence_processing-2902-history"
+    ],
+    "metrics": {
+      "acquisition_seconds": 6.539097832996049,
+      "retrieval_seconds": 0.05509026198706124,
+      "acquisition_llm_calls": 1,
+      "request_characters": 10833,
+      "wall_seconds": 6.594478853003238
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits."
+  },
+  "text_identity_boundaries-2903-withdrawn_policy": {
+    "memory": {
+      "viewer": "Search: 'policy' (3 results)\n==================================================\n\npolicy.py.md (3 matches)\n---------------------------\n  policy.py.md::policy\n  **Ciclo de vida:** retirado (`withdrawn`). Registro histórico limitado a la interfaz original de un argumento `policy(co\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Devuelve `context[\"text\"].strip(\" \")`: elimina únicamente espacios ASCII de ambos extremos y conserva mayúsculas, minúsc\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Las observaciones históricas especifican que `policy({\"text\": \" AbC \"})` devuelve `\"AbC\"` y `policy({\"text\": \"\\tÉx\\t\"})`\n  (?, source: ?)\n  citation_score: 0\n",
+      "file": "## `policy`\n\n- **Ciclo de vida:** retirado (`withdrawn`). Registro histórico limitado a la interfaz original de un argumento `policy(context)`; no establece el comportamiento de interfaces posteriores.\n  _(verified, source: user, citation_score: 0; source_id: text_identity_boundaries-2903-history)_\n\n- Devuelve `context[\"text\"].strip(\" \")`: elimina únicamente espacios ASCII de ambos extremos y conserva mayúsculas, minúsculas y cualquier otro carácter, incluidos tabuladores y espacios de no separación.\n  _(verified, source: exploration, citation_score: 0; verificado mediante lectura del código suministrado; source_id: text_identity_boundaries-2903-history)_\n\n- Las observaciones históricas especifican que `policy({\"text\": \" AbC \"})` devuelve `\"AbC\"` y `policy({\"text\": \"\\tÉx\\t\"})` devuelve `\"\\tÉx\\t\"`. Son resultados esperados suministrados, sin ejecución de pruebas en esta sesión.\n  _(verified, source: user, citation_score: 0; source_id: text_identity_boundaries-2903-history)_\n\n## Cross-References\n\nSin referencias cruzadas en los artefactos suministrados."
+    },
+    "source_ids": [
+      "text_identity_boundaries-2903-history"
+    ],
+    "metrics": {
+      "acquisition_seconds": 9.893123115994968,
+      "retrieval_seconds": 0.06047026099986397,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9448,
+      "wall_seconds": 9.953756184011581
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits."
+  },
+  "sparse_payload_merge-2904-changed_interface": {
+    "memory": {
+      "viewer": "Search: 'policy' (5 results)\n==================================================\n\npolicy.py.md (5 matches)\n---------------------------\n  policy.py.md::policy\n  **Ubicación:** `policy.py::policy`.\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  **Ciclo de vida:** activo (`active`).\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  **Alcance:** exclusivamente la interfaz original de un argumento `policy(context)`.\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Copia superficialmente `context[\"base\"]` y sobrescribe o agrega únicamente los valores de `context[\"patch\"]` distintos d\n  (?, source: ?)\n  citation_score: 0\n  policy.py.md::policy\n  Las observaciones suministradas documentan que `{a: 3, b: 4}` con el parche `{a: null, b: 0, c: false}` produce `{a: 3, \n  (?, source: ?)\n  citation_score: 0\n",
+      "file": "## `policy`\n\n- **Ubicación:** `policy.py::policy`.\n- **Ciclo de vida:** activo (`active`).\n- **Alcance:** exclusivamente la interfaz original de un argumento `policy(context)`.\n- Copia superficialmente `context[\"base\"]` y sobrescribe o agrega únicamente los valores de `context[\"patch\"]` distintos de `None`. Conserva `False`, cero, cadenas vacías y colecciones vacías; un valor `None` mantiene el valor previo o deja ausente la clave si no existía. No modifica el diccionario base.\n  _(verified, source: exploration, citation_score: 0, source_id: sparse_payload_merge-2904-history)_\n- Las observaciones suministradas documentan que `{a: 3, b: 4}` con el parche `{a: null, b: 0, c: false}` produce `{a: 3, b: 0, c: false}`; una base vacía con `{empty: \"\", none: null}` produce `{empty: \"\"}`. Estos resultados concuerdan con el código suministrado; no se ejecutaron pruebas.\n  _(verified, source: exploration, citation_score: 0, source_id: sparse_payload_merge-2904-history)_\n\n## Cross-References\n\nSin referencias cruzadas en los artefactos suministrados."
+    },
+    "source_ids": [
+      "sparse_payload_merge-2904-history"
+    ],
+    "metrics": {
+      "acquisition_seconds": 11.55041878799966,
+      "retrieval_seconds": 0.05324049301270861,
+      "acquisition_llm_calls": 1,
+      "request_characters": 9647,
+      "wall_seconds": 11.603844883007696
+    },
+    "profile_limit": "Official skill native capture plus official viewer; no init, hook or Dream execution. No commits."
+  }
+}

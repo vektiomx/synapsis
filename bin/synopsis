@@ -1,0 +1,600 @@
+#!/usr/bin/env python3
+"""synopsis install [claude|codex|antigravity|opencode|cursor] [--dry-run]
+
+Sin argumento de herramienta, instala en todo lo que detecte en esta máquina. Con uno,
+instala solo ahí. Es seguro de correr de nuevo cuando instales una herramienta nueva.
+"""
+import argparse
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+BASE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE))
+import comun
+from installer_ui import InstallerUI
+INSTALADORES = {
+    'claude': ('Claude Code', BASE / 'claude-code' / 'install_claude_code.py', lambda: (Path.home() / '.claude').is_dir() or shutil.which('claude') is not None),
+    'codex': ('Codex', BASE / 'codex' / 'install_codex.py', lambda: (Path.home() / '.codex').is_dir() or shutil.which('codex') is not None),
+    'antigravity': ('Antigravity', BASE / 'antigravity' / 'install_antigravity.py',
+                    lambda: (Path.home() / '.gemini').is_dir() or shutil.which('antigravity') is not None),
+    'opencode': ('OpenCode', BASE / 'opencode/install_opencode.py', lambda: (Path(os.environ.get('XDG_CONFIG_HOME', str(Path.home() / '.config'))) / 'opencode').is_dir() or shutil.which('opencode') is not None),
+    'cursor': ('Cursor', BASE / 'cursor/install_cursor.py', lambda: (Path.home() / '.cursor').is_dir() or shutil.which('cursor') is not None or shutil.which('cursor-agent') is not None),
+}
+
+
+def diagnosticar(clave):
+    """Devuelve (se_puede, motivo) corriendo el instalador real en --dry-run: así el
+    estado que mostramos es el mismo chequeo que se va a usar al instalar, no una
+    suposición aparte que se pueda desincronizar."""
+    nombre, script, detectada = INSTALADORES[clave]
+    if not detectada():
+        return False, 'no está instalado en esta máquina'
+    resultado = subprocess.run([sys.executable,*(['-X','utf8'] if sys.platform=='win32' else []), str(script), '--dry-run'], capture_output=True, text=True)
+    if resultado.returncode == 0:
+        return True, None
+    ultima = next((l for l in reversed(resultado.stderr.splitlines()) if l.strip()), 'error desconocido')
+    return False, ultima.strip()
+
+
+def elegir_interactivo(ui=None):
+    ui = ui or InstallerUI()
+    states = {key: diagnosticar(key) for key in INSTALADORES}
+    keys = list(INSTALADORES)
+    for number, key in enumerate(keys, 1):
+        available, reason = states[key]
+        ui.choice(number, INSTALADORES[key][0], available, reason or 'Hooks y memoria del mismo proyecto')
+    available = [key for key in keys if states[key][0]]
+    if not available:
+        ui.line('  No hay integraciones disponibles. Instala primero un asistente compatible.')
+        return []
+    ui.line('  a. Todas las disponibles     q. Salir')
+    if not sys.stdin.isatty():
+        ui.line('  Sin terminal interactiva: usa install --all o install codex --dry-run.')
+        return []
+    while True:
+        try:
+            answer = input('  Selecciona números separados por coma, a o q: ').strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            ui.line('  Instalación cancelada.')
+            return []
+        if answer == 'q':
+            return []
+        if answer == 'a':
+            return available
+        parts = answer.split(',')
+        if all(part.strip().isdigit() and 1 <= int(part.strip()) <= len(keys) for part in parts):
+            selected = list(dict.fromkeys(keys[int(part.strip()) - 1] for part in parts))
+            if all(key in available for key in selected):
+                return selected
+        ui.line('  Selección inválida: elige solo integraciones disponibles, por ejemplo 1,2.')
+
+
+def main():
+    engine_args = sys.argv[1:]
+    if engine_args and (engine_args[0] == 'abrir' or
+                        (engine_args[0].startswith('--') and engine_args[0] != '--help')):
+        command=([sys.executable,'-I','-S','-X','utf8',str(comun.raiz_motor()/'synopsis.py')] if sys.platform=='win32' else ['/bin/sh',str(comun.raiz_motor()/'bin/synopsis')])
+        return subprocess.run([*command,*engine_args],
+            env={**os.environ, 'CLAUDE_PLUGIN_DATA': str(comun.carpeta_datos())}).returncode
+    parser = argparse.ArgumentParser(prog='synopsis')
+    sub = parser.add_subparsers(dest='accion')
+    sub.add_parser('abrir', help='Abre el mapa autenticado en el navegador')
+    service=sub.add_parser('service',help='Arranque del mapa al iniciar sesión: instalar, consultar o quitar')
+    service.add_argument('operation',choices=['install','status','remove'])
+    service.add_argument('--dry-run',action='store_true')
+    instalar = sub.add_parser('install', help='Instala los hooks de Synopsis')
+    instalar.add_argument('herramienta', nargs='?', choices=list(INSTALADORES))
+    instalar.add_argument('--dry-run', action='store_true')
+    instalar.add_argument('--interactive', action='store_true', help='Elegir manualmente las integraciones')
+    instalar.add_argument('--all', action='store_true', help='Instala todas las integraciones detectadas')
+    instalar.add_argument('--no-color', action='store_true', help='Desactiva los colores de terminal')
+    instalar.add_argument('--verbose', action='store_true', help='Muestra los detalles técnicos de cada paso')
+    instalar.add_argument('--no-service', action='store_true', help='Instala sin activar el mapa como servicio')
+    instalar.add_argument('--no-semantic',action='store_true',help='Instala sin descargar el motor semántico local')
+    semantic=sub.add_parser('semantic',help='Estado y preparación de semántica multilingüe local')
+    semantic.add_argument('operation',choices=['status','setup'])
+    memory = sub.add_parser('memory', help='Guardar o consultar versiones de memoria')
+    memory.add_argument('operation', choices=['save', 'history'])
+    memory.add_argument('--project', required=True)
+    memory.add_argument('--file', required=True)
+    memory.add_argument('--description', default='')
+    memory.add_argument('--type', choices=['user', 'feedback', 'project', 'reference'], default='project')
+    memory.add_argument('--source', default='cli')
+    memory.add_argument('--cue', action='append', default=[], help='Sinónimo o pregunta para recuperar esta memoria')
+    memory.add_argument('--state', choices=['confirmed', 'inferred', 'archived'], default='inferred')
+    memory.add_argument('--expires-at')
+    memory.add_argument('--overwrite', action='store_true')
+    memory.add_argument('--expected-revision', type=int)
+    context = sub.add_parser('context',help='Contexto unificado y acotado: notas, decisiones y experiencias')
+    context.add_argument('query')
+    context.add_argument('--project',required=True)
+    context.add_argument('--budget',type=int,default=9000)
+    recall = sub.add_parser('recall', help='Recupera evidencia del proyecto en JSON')
+    recall.add_argument('query')
+    recall.add_argument('--project', required=True)
+    recall.add_argument('--budget', type=int, default=6000)
+    evaluate = sub.add_parser('feedback', help='Evalúa la utilidad de un paquete de contexto')
+    evaluate.add_argument('packet')
+    evaluate.add_argument('--project', required=True)
+    evaluate.add_argument('--outcome', choices=['useful', 'irrelevant', 'incorrect'], required=True)
+    evaluate.add_argument('--source', required=True)
+    migrate = sub.add_parser('migrate-data', help='Copia configuración e historial sin sesiones ni claves')
+    migrate.add_argument('source')
+    migrate.add_argument('--apply', action='store_true', help='Aplica la migración; por defecto solo muestra el plan')
+    location = sub.add_parser('memory-location', help='Identidad del proyecto y vinculación de memoria existente sin copias')
+    location.add_argument('--project', required=True)
+    location.add_argument('--bind', help='Carpeta de memoria existente que pertenece al proyecto')
+    location.add_argument('--apply', action='store_true', help='Aplica la vinculación; por defecto solo muestra el plan')
+    cycle = sub.add_parser('cycle', help='Abrir, consultar o cerrar ciclos durables de memoria')
+    cycle.add_argument('operation', choices=['begin', 'status', 'close'])
+    cycle.add_argument('--project', required=True)
+    cycle.add_argument('--session', default='workspace')
+    cycle.add_argument('--query')
+    cycle.add_argument('--turn')
+    cycle.add_argument('--action')
+    cycle.add_argument('--retry', action='store_true')
+    controlled = sub.add_parser('run', help='Consulta un modelo con memoria persistente comprobada')
+    controlled.add_argument('--project', required=True)
+    controlled.add_argument('--session', default='workspace')
+    controlled.add_argument('--prompt', help='Si se omite, lee el pedido desde stdin')
+    controlled.add_argument('--provider', default='auto', choices=['auto','ollama','openai','compatible','codex','claude','opencode'])
+    controlled.add_argument('--model', help='Modelo; por defecto usa el del cliente o el primer modelo local')
+    controlled.add_argument('--event')
+    controlled.add_argument('--timeout', type=int, default=120)
+    controlled.add_argument('command', nargs=argparse.REMAINDER, help='-- ejecutable del adaptador JSON y argumentos')
+    learn = sub.add_parser('learn', help='Guarda una experiencia con resultado y evidencia comprobable; JSON por stdin')
+    learn.add_argument('--project', required=True)
+    learn.add_argument('--file', required=True)
+    learn.add_argument('--source', required=True)
+    reconcile = sub.add_parser('reconcile', help='Revisa duplicados y contradicciones; aplicar requiere un plan guardado')
+    reconcile.add_argument('--project', required=True)
+    reconcile.add_argument('--provider', default='auto')
+    reconcile.add_argument('--model')
+    reconcile.add_argument('--output', help='Guarda el plan JSON para revisarlo')
+    reconcile.add_argument('--apply', metavar='PLAN', help='Aplica un plan previamente revisado')
+    reconcile.add_argument('--timeout', type=int, default=120)
+    verify=sub.add_parser('verify', help='Construye una respuesta extractiva con citas comprobadas; JSON por stdin')
+    verify.add_argument('--project',required=True)
+    experiences=sub.add_parser('experience',help='Experiencias con condiciones, evidencia y comprobaciones')
+    experiences.add_argument('operation',choices=['record','recall','verify','history','feedback','decide','outcome','explore','timeline','retire','activate','investigate','research-history','witnesses','capture-witness','verify-witness','retire-witness'])
+    experiences.add_argument('--symbol',help='Función Python pública del testigo')
+    experiences.add_argument('--witness',help='ID íntegro de un testigo de comportamiento')
+    experiences.add_argument('--project',required=True)
+    experiences.add_argument('--name')
+    experiences.add_argument('--query')
+    experiences.add_argument('--path')
+    experiences.add_argument('--source',default='user:cli')
+    experiences.add_argument('--revision',type=int,default=0)
+    experiences.add_argument('--execute',action='store_true',help='Reejecuta pruebas Python solo si hay aislamiento disponible')
+    experiences.add_argument('--outcome',choices=['useful','irrelevant','harmful'])
+    experiences.add_argument('--event')
+    experiences.add_argument('--plan',help='Recibo de una decisión para registrar su utilidad')
+    experiences.add_argument('--budget',type=int,default=6000)
+    experiences.add_argument('--max-probes',type=int,default=2)
+    experiences.add_argument('--state-revision',type=int,default=0)
+    experiences.add_argument('--reason')
+    experiences.add_argument('--provider',default='auto')
+    experiences.add_argument('--model')
+    experiences.add_argument('--proposal',help='Archivo JSON de candidatos ya preparados; nunca se aplica al checkout')
+    reviews = sub.add_parser('reviews', help='Estado de revisión automática por proyecto')
+    reviews.add_argument('--project',required=True)
+    reviews.add_argument('--retry',action='store_true',help='Reintenta los trabajos recuperables sin bloquear la terminal')
+    doctor = sub.add_parser('doctor', help='Comprueba transporte, adaptadores y actividad real')
+    doctor.add_argument('--json', action='store_true')
+    sub.add_parser('providers', help='Detecta modelos locales y conectores disponibles sin inferencia')
+    sub.add_parser('mcp', help='Servidor MCP por stdio para cualquier cliente compatible')
+    args = parser.parse_args()
+    sys.path.insert(0, str(comun.raiz_motor()))
+    os.environ.setdefault('CLAUDE_PLUGIN_DATA', str(comun.carpeta_datos()))
+    if args.accion=='semantic':
+        import json
+        try:
+            if args.operation=='setup':
+                from semantic_setup import setup
+                result=setup()
+            else:
+                from local_semantics import status
+                result=status()
+            print(json.dumps(result,ensure_ascii=False,indent=2));return 0
+        except (ValueError,OSError,RuntimeError,subprocess.SubprocessError) as error:
+            print(str(error),file=sys.stderr);return 2
+    if args.accion=='context':
+        import json
+        from conector_mcp import recordar,carpeta_memoria_de
+        from experience_engine import ExperienceStore
+        from task_context import build
+        try:
+            notes=recordar(dict(proyecto=args.project,consulta=args.query,presupuesto=min(12000,args.budget),limite=10))
+            print(json.dumps(build(ExperienceStore(carpeta_memoria_de(args.project),args.project),args.query,notes,budget=args.budget),ensure_ascii=False,indent=2));return 0
+        except (ValueError,OSError) as error:
+            print(str(error),file=sys.stderr);return 2
+    if args.accion == 'experience':
+        import json
+        from experience_engine import ExperienceStore
+        from project_identity import resolve_memory
+        try:
+            store=ExperienceStore(resolve_memory(args.project),args.project)
+            if args.operation in ('witnesses','capture-witness','verify-witness','retire-witness'):
+                from behavior_memory import BehaviorMemory
+                memory=BehaviorMemory(store)
+                if args.operation=='witnesses':
+                    descriptor=dict(path=args.path,symbol=args.symbol) if args.path and args.symbol else None
+                    rows=memory.rows(descriptor)
+                    report=dict(total=memory.count(descriptor),witnesses=[dict(id=r['id'],state=memory.assess(r),sequence=r['sequence'],data=r['data']) for r in rows])
+                elif args.operation=='capture-witness':
+                    if not args.execute:raise ValueError('witness_capture_requires_execute')
+                    data=json.loads(sys.stdin.read(24001))
+                    if not isinstance(data,dict) or set(data)-{'checks','scopes'} or 'checks' not in data:raise ValueError('invalid_witness_capture')
+                    report=memory.capture(dict(path=args.path,symbol=args.symbol),data['checks'],args.source,data.get('scopes'))
+                elif args.operation=='verify-witness':
+                    if args.execute:report=memory.verify(args.witness)
+                    else:
+                        rows=memory.rows(identity=args.witness)
+                        if not rows:raise ValueError('unknown_behavior_witness')
+                        report=dict(id=args.witness,state=memory.assess(rows[0]),executed=False)
+                else:report=memory.retire(args.witness,args.reason,args.source,args.state_revision)
+            elif args.operation=='record':report=store.save(args.name,json.loads(sys.stdin.read(24001)),args.source,args.revision)
+            elif args.operation=='recall':report=store.recall(args.query or '',args.path)
+            elif args.operation=='verify':report=store.verify(args.name,execute=args.execute)
+            elif args.operation=='history':report=store.versions(args.name)
+            elif args.operation=='decide':
+                from decision_rag import DecisionRAG
+                report=DecisionRAG(store).plan(args.query or '',args.path,budget=args.budget,persist=True,execute=args.execute,max_probes=args.max_probes)
+            elif args.operation=='outcome':
+                from decision_rag import DecisionRAG
+                report=DecisionRAG(store).outcome(args.plan,args.name,args.outcome,args.source,args.event)
+            elif args.operation=='timeline':
+                from experience_timeline import ExperienceTimeline
+                report=ExperienceTimeline(store).history(args.name)
+            elif args.operation in ('retire','activate'):
+                from experience_timeline import ExperienceTimeline
+                report=ExperienceTimeline(store).change(args.name,'retired' if args.operation=='retire' else 'active',args.reason,args.source,args.revision,args.state_revision,args.event)
+            elif args.operation=='investigate':
+                from research_workbench import ResearchWorkbench
+                from model_provider import ModelTransport
+                proposal=json.loads(Path(args.proposal).read_text()) if args.proposal else None
+                transport=ModelTransport(args.provider,args.model,timeout=120) if args.execute and proposal is None else None
+                report=ResearchWorkbench(store).run(args.query or '',transport=transport,execute=args.execute,proposal=proposal)
+            elif args.operation=='research-history':
+                from research_workbench import ResearchWorkbench
+                report=ResearchWorkbench(store).history()
+            elif args.operation=='explore':
+                from experience_lab import ExperienceLab
+                report=ExperienceLab(store).explore(args.name,execute=args.execute,max_runs=args.max_probes)
+            else:report=store.feedback(args.name,args.outcome,args.source,args.revision,args.event)
+            print(json.dumps(report,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError) as error:
+            print(str(error),file=sys.stderr)
+            return 2
+    if args.accion == 'reviews':
+        import json
+        from project_identity import _registered, canonical_project
+        from auto_review import ReviewQueue, kick
+        project=canonical_project(args.project)
+        folder=_registered(project)
+        if not folder:
+            print(json.dumps(dict(project=project,reviews=[])))
+            return 0
+        queue=ReviewQueue(folder,project)
+        if args.retry:
+            queue.retry()
+            kick(folder,project)
+        print(json.dumps(dict(project=project,reviews=queue.status()),ensure_ascii=False,indent=2))
+        return 0
+    if args.accion == 'memory-location':
+        import json
+        from project_identity import describe, bind
+        try:
+            report = describe(args.project, args.bind)
+            if args.apply:
+                if not args.bind or not Path(args.bind).is_dir():
+                    raise ValueError('--apply requiere --bind con una carpeta de memoria existente.')
+                bind(args.project, args.bind)
+                report = describe(args.project)
+            report['applied'] = args.apply
+            print(json.dumps(report, ensure_ascii=False))
+            return 0
+        except (ValueError, OSError) as error:
+            print(json.dumps(dict(error=str(error)), ensure_ascii=False))
+            return 2
+    if args.accion == 'verify':
+        import json
+        from conector_mcp import responder_con_evidencia
+        try:
+            raw=sys.stdin.read(24001)
+            if len(raw)>24000:raise ValueError('Paquete demasiado grande.')
+            payload=json.loads(raw)
+            if not isinstance(payload,dict) or set(payload)!={'fuentes'}:raise ValueError('Envía {fuentes:[...]} por stdin.')
+            result=responder_con_evidencia(dict(proyecto=args.project,fuentes=payload['fuentes']))
+            print(json.dumps(result,ensure_ascii=False))
+            return 0
+        except (ValueError,OSError) as error:
+            print(json.dumps(dict(error=str(error)),ensure_ascii=False))
+            return 2
+    if args.accion == 'learn':
+        import json
+        from experience_memory import learn
+        from conector_mcp import carpeta_memoria_de
+        try:
+            raw=sys.stdin.read(30001)
+            if len(raw)>30000:
+                raise ValueError('Experiencia demasiado grande.')
+            result=learn(args.project, carpeta_memoria_de(args.project), args.file, json.loads(raw), args.source)
+            print(json.dumps(result, ensure_ascii=False))
+            return 0
+        except (ValueError,OSError) as error:
+            print(json.dumps(dict(error=str(error)), ensure_ascii=False))
+            return 2
+    if args.accion == 'reconcile':
+        import json
+        from conector_mcp import carpeta_memoria_de
+        from reconciliation import review, apply_plan
+        from model_provider import ModelTransport
+        try:
+            if not Path(args.project).is_absolute() or not Path(args.project).is_dir():
+                raise ValueError('El proyecto debe ser una carpeta absoluta existente.')
+            folder = carpeta_memoria_de(args.project)
+            if args.apply:
+                plan_path = Path(args.apply)
+                if plan_path.stat().st_size > 256000:
+                    raise ValueError('Plan demasiado grande.')
+                result = apply_plan(json.loads(plan_path.read_text()), args.project, folder)
+            else:
+                result = review(args.project, folder, ModelTransport(args.provider, args.model, args.timeout))
+                if args.output:
+                    target = Path(args.output)
+                    with target.open('x', encoding='utf-8') as stream:
+                        target.chmod(0o600)
+                        json.dump(result, stream, ensure_ascii=False, indent=2)
+            print(json.dumps(result, ensure_ascii=False))
+            return 0
+        except (ValueError, OSError) as error:
+            print(json.dumps(dict(error=str(error)), ensure_ascii=False))
+            return 2
+    if args.accion == 'providers':
+        import json
+        from model_provider import detect
+        print(json.dumps(detect(), ensure_ascii=False))
+        return 0
+    if args.accion == 'run':
+        import json
+        from controlled_run import run, RunError
+        from project_identity import ProjectIdentityConflict
+        command = args.command[1:] if args.command[:1] == ['--'] else args.command
+        try:
+            from model_provider import ModelTransport
+            transport = None if command else ModelTransport(args.provider, args.model, args.timeout)
+            result = run(project=args.project, session=args.session, prompt=args.prompt if args.prompt is not None else sys.stdin.read(20001),
+                         event_key=args.event, command=command, transport=transport, timeout=args.timeout)
+            print(json.dumps(result, ensure_ascii=False))
+            return 0
+        except ProjectIdentityConflict as error:
+            print(json.dumps(dict(error='project_identity_conflict', detail=str(error),
+                                  next_step='synopsis memory-location --project ' + args.project), ensure_ascii=False))
+            return 2
+        except RunError as error:
+            print(json.dumps(dict(error=error.code, turn=error.turn, pending=error.status), ensure_ascii=False))
+            return 2
+        except (ValueError, OSError) as error:
+            print(json.dumps(dict(error=type(error).__name__)))
+            return 2
+    if args.accion == 'cycle':
+        import json
+        import conector_mcp
+        try:
+            arguments = dict(proyecto=args.project)
+            if args.operation == 'begin':
+                if not args.query:
+                    raise ValueError('begin requiere --query.')
+                arguments.update(sesion=args.session, consulta=args.query)
+                result = conector_mcp.iniciar_turno_memoria(arguments)
+            elif args.operation == 'status':
+                arguments.update(turno=args.turn, operacion=args.action, reanudar=args.retry)
+                result = conector_mcp.estado_memoria(arguments)
+            else:
+                if not args.turn:
+                    raise ValueError('close requiere --turn.')
+                raw = sys.stdin.read(256001)
+                if len(raw) > 256000:
+                    raise ValueError('El paquete supera el tamaño permitido.')
+                payload = json.loads(raw)
+                if not isinstance(payload, dict):
+                    raise ValueError('Envía un objeto JSON por stdin.')
+                payload.update(proyecto=args.project, turno=args.turn)
+                result = conector_mcp.cerrar_turno_memoria(payload)
+            print(json.dumps(result, ensure_ascii=False))
+            return 0 if result.get('closed', True) else 2
+        except (ValueError, OSError) as error:
+            print(json.dumps(dict(error=str(error)), ensure_ascii=False))
+            return 2
+    if args.accion == 'migrate-data':
+        import json
+        from migrate_data import migrate
+        try:
+            print(json.dumps(migrate(args.source, comun.carpeta_datos(), apply=args.apply), ensure_ascii=False, indent=2))
+            return 0
+        except (ValueError, OSError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+    if args.accion == 'doctor':
+        import json
+        from integration_health import check
+        report = check()
+        if args.json:
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+        else:
+            print('Synopsis · diagnóstico')
+            print('Motor MCP: ' + ('OK' if report['mcp_ready'] else 'PENDIENTE'))
+            for key, client in report['clients'].items():
+                state = 'configurado' if client.get('configured') else 'sin configurar'
+                event = 'recibió eventos' if client['activity'] == 'observed' else 'eventos con errores' if client['activity'] == 'observed_with_errors' else 'esperando al IDE'
+                print(f'  {key}: {state}; {event}')
+            print('Recuperación semántica: ' + report.get('semantic', 'lexical_fallback'))
+            print('Vinculación de proyectos: automática al primer uso')
+            if report.get('pending_bindings'):
+                print('Memorias por elegir en el mapa: ' + str(report['pending_bindings']) + '. Abre synopsis.')
+            print('Revisión automática: ' + ('activa' if report.get('automatic_review',{}).get('enabled') else 'desactivada'))
+            print('Recibos de revisión: synopsis reviews --project /ruta/proyecto')
+            print('Modelos y cuentas: synopsis providers')
+            print(report['note'])
+        return 0 if report['ready'] else 1
+    if args.accion == 'mcp':
+        import conector_mcp
+        conector_mcp.main()
+        return 0
+    if args.accion in ('memory', 'recall', 'feedback'):
+        import json
+        try:
+            if args.accion == 'feedback':
+                from recall_feedback import RecallFeedback
+                if not Path(args.project).is_absolute():
+                    raise ValueError('El proyecto debe ser una ruta absoluta.')
+                result = RecallFeedback(comun.carpeta_datos() / 'recall-feedback').report(
+                    args.packet, args.project, args.outcome, args.source)
+            elif args.accion == 'recall':
+                import buscador
+                from context_memory import recall
+                from memory_sources import prepare_project
+                prepare_project(args.project)
+                from recall_feedback import RecallFeedback
+                result = recall(buscador.desde_disco(), args.query, args.project, budget=args.budget,
+                                feedback=RecallFeedback(comun.carpeta_datos() / 'recall-feedback'))
+            else:
+                from conector_mcp import carpeta_memoria_de
+                from memory_store import MemoryStore
+                if not Path(args.project).is_absolute():
+                    raise ValueError('El proyecto debe ser una ruta absoluta.')
+                store = MemoryStore(carpeta_memoria_de(args.project))
+                if args.operation == 'history':
+                    result = store.history(args.file)
+                else:
+                    name = args.file.removesuffix('.md')
+                    result = store.save(filename=name, name=name, description=args.description, kind=args.type,
+                        content=sys.stdin.read(20001), index_line=f'- [{name}]({name}.md)',
+                        overwrite=args.overwrite, expected_revision=args.expected_revision, source=args.source,
+                        state=args.state, expires_at=args.expires_at, cues=args.cue)
+            print(json.dumps(result, ensure_ascii=False))
+            return 0
+        except (ValueError, OSError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+
+    if args.accion=='service':
+        from desktop_service import manage
+        try:print(__import__('json').dumps(manage(args.operation,args.dry_run),ensure_ascii=False));return 0
+        except (ValueError,OSError,subprocess.SubprocessError) as error:print('No pude administrar el arranque del mapa: '+str(error),file=sys.stderr);return 1
+    if args.accion in (None, 'abrir'):
+        command=([sys.executable,'-I','-S','-X','utf8',str(comun.raiz_motor()/'synopsis.py')] if sys.platform=='win32' else ['/bin/sh',str(comun.raiz_motor()/'bin/synopsis')])
+        return subprocess.run([
+            *command, 'abrir',
+        ], env={**os.environ, 'CLAUDE_PLUGIN_DATA': str(comun.carpeta_datos())}).returncode
+
+    if args.accion != 'install':
+        parser.print_help()
+        return 1
+
+    if args.no_color:
+        os.environ['NO_COLOR'] = '1'
+    ui = InstallerUI()
+    ui.banner(args.dry_run)
+    if args.herramienta and args.all:
+        parser.error('Elige una herramienta o --all, no ambas opciones.')
+    if args.herramienta:
+        objetivo = [args.herramienta]
+    elif args.interactive:
+        objetivo = elegir_interactivo(ui)
+        if not objetivo:
+            return 1
+    else:
+        objetivo = []
+        for number, key in enumerate(INSTALADORES, 1):
+            available, reason = diagnosticar(key)
+            ui.choice(number, INSTALADORES[key][0], available, reason or 'Conexión automática')
+            if available:
+                objetivo.append(key)
+        if not objetivo:
+            ui.line('  No hay asistentes disponibles. Instala uno y vuelve a ejecutar Synopsis.')
+            return 1
+
+    extra = ['--dry-run'] if args.dry_run else []
+    fallo = False
+    results = []
+    for number, clave in enumerate(objetivo, 1):
+        nombre, script, _ = INSTALADORES[clave]
+        ui.step(number, len(objetivo), nombre)
+        resultado = subprocess.run([sys.executable,*(['-X','utf8'] if sys.platform=='win32' else []), str(script)] + extra, capture_output=True, text=True)
+        ui.line('  OK · Configuración validada' if args.dry_run and resultado.returncode == 0 else
+                '  OK · Integración instalada' if resultado.returncode == 0 else '  PENDIENTE · Revisa el detalle',
+                '32' if resultado.returncode == 0 else '33')
+        if args.verbose or args.dry_run or resultado.returncode != 0:
+            for line in ((resultado.stdout or '') + (resultado.stderr or '')).splitlines():
+                ui.line('    ' + line)
+        results.append((nombre, resultado.returncode == 0))
+        if resultado.returncode != 0:
+            fallo = True
+    if not fallo:
+        try:
+            comun.instalar_comando(dry_run=args.dry_run)
+            results.append(('Comando synopsis y PATH', True))
+        except (OSError, RuntimeError, ValueError) as error:
+            print(f'No pude instalar el comando: {error}', file=sys.stderr)
+            results.append(('Comando synopsis y PATH', False))
+            fallo = True
+    if not fallo and not args.no_semantic:
+        ui.step(1,1,'Semántica multilingüe local · descarga inicial aproximada 220 MB')
+        try:
+            from semantic_setup import setup
+            semantic_result=setup(dry_run=args.dry_run)
+            ui.line('  '+('Preparación prevista' if args.dry_run else semantic_result['state']))
+            results.append(('Semántica local',bool(semantic_result.get('ready') or args.dry_run)))
+        except (ValueError,OSError,RuntimeError,subprocess.SubprocessError):
+            ui.line('  Semántica pendiente. La búsqueda léxica sigue disponible; reintenta con synopsis semantic setup.')
+            results.append(('Semántica local',False))
+    if not fallo and not args.no_service and sys.platform.startswith('linux'):
+        if shutil.which('systemctl'):
+            ui.step(1, 1, 'Mapa en segundo plano (systemd de usuario)')
+            resultado = subprocess.run([
+                sys.executable, str(BASE / 'linux' / 'instalar_servicio_mapa.py'),
+                *extra,
+            ], capture_output=True, text=True)
+            if args.verbose or args.dry_run or resultado.returncode != 0:
+                for line in ((resultado.stdout or '') + (resultado.stderr or '')).splitlines():
+                    ui.line('    ' + line)
+            results.append(('Servicio del mapa', resultado.returncode == 0))
+            if resultado.returncode != 0:
+                print('Las integraciones quedaron instaladas, pero falló el servicio del mapa.',
+                      file=sys.stderr)
+                fallo = True
+        else:
+            print('No hay systemctl: abrí el mapa manualmente con synopsis abrir.')
+    elif not fallo and not args.no_service and sys.platform in ('darwin','win32'):
+        ui.step(1,1,'Mapa al iniciar sesión · '+('launchd' if sys.platform=='darwin' else 'usuario de Windows'))
+        from desktop_service import manage
+        try:
+            manage('install',args.dry_run)
+            results.append(('Arranque del mapa',True))
+        except (ValueError,OSError,subprocess.SubprocessError) as error:
+            ui.line('  No pude configurar el arranque: '+str(error))
+            results.append(('Arranque del mapa',False));fallo=True
+    if not fallo and not args.dry_run:
+        from integration_health import check
+        report = check(expected_clients=objetivo)
+        verified = report['ready']
+        results.append(('Prueba de conexión MCP y adaptadores', verified))
+        fallo = not verified
+        if not verified:
+            ui.line('  Ejecuta synopsis doctor para revisar la conexión.')
+    ui.summary(results, preview=args.dry_run)
+    return 1 if fallo else 0
+
+
+if __name__ == '__main__':
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        print('\nInstalación interrumpida; puedes repetir el comando.', file=sys.stderr)
+        raise SystemExit(130)

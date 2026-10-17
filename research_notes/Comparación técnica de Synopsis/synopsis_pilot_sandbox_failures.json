@@ -1,0 +1,517 @@
+{
+  "protocol": "synopsis.independent-holdout-pilot.v1",
+  "source_sha256": {
+    "engine/decision_rag.py": "fd9f322e1c5c9f89ee6b3b0b7466c097dba4aafc7c2ab283e9914878f5f32f74",
+    "engine/auto_review.py": "31d740b690f6d5fe2938fad5ce5dd0bc2e7e5a54d03b4ecbc381e377172afe4f",
+    "engine/experience_engine.py": "3239792cf73297aa15251976ca7ab2cf0c1a69ca3d67f7d365806c47971b20c4",
+    "engine/model_provider.py": "3f3f54b368465cb5035ad5b8a76df632eb5a73761649401a0fc931b29f18abd8"
+  },
+  "domains": [
+    {
+      "key": "artifact-storage",
+      "field": "immutable_source",
+      "positive": "hardlink",
+      "negative": "copy",
+      "query": "How should we archive build artifacts?",
+      "contract": "Archive must preserve the bytes at archive time. A hard link shares writes with the original inode. It is acceptable when the source remains immutable; otherwise make an independent copy.",
+      "history": [
+        "We archived an immutable build artifact using a hard link. It retained the expected bytes and saved disk space. This successful attempt was limited to immutable sources.",
+        "We archived a mutable artifact using a hard link. A later writer changed the archived bytes too. We replaced it with an independent copy; later source writes no longer changed the archived artifact."
+      ]
+    },
+    {
+      "key": "event-workers",
+      "field": "operations_commute",
+      "positive": "parallel",
+      "negative": "ordered",
+      "query": "How should we schedule this event stream?",
+      "contract": "Concurrent workers may reorder events. Reordering preserves the result only when the operations commute. A stream of commuting independent set additions can use parallel workers; a stream containing multiply and add on one accumulator must preserve input order.",
+      "history": [
+        "Parallel workers processed independent set additions. The operations commute, and every tested execution order produced the same resulting set.",
+        "Parallel workers processed multiply then add on a shared accumulator. Reversed scheduling produced a different result. We moved this noncommuting stream to an ordered worker and recovered the expected result."
+      ]
+    },
+    {
+      "key": "unicode-identity",
+      "field": "canonical_equivalence_allowed",
+      "positive": "normalize-nfc",
+      "negative": "preserve-bytes",
+      "query": "How should we compare Unicode resource identifiers?",
+      "contract": "NFC normalization merges canonically equivalent Unicode strings. This is correct for identifiers whose identity contract allows canonical equivalence. Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature.",
+      "history": [
+        "We normalized canonically equivalent display identifiers to NFC before comparing them. They correctly resolved to the same resource under the identity contract that allows canonical equivalence.",
+        "We normalized a signed byte-sensitive identifier to NFC. Signature validation failed because the bytes changed. Preserving original bytes fixed validation; canonical equivalence was not permitted for this endpoint."
+      ]
+    }
+  ],
+  "captures": [
+    {
+      "domain": "artifact-storage",
+      "episode": 0,
+      "calls": 1,
+      "seconds": 0.22162013199704234,
+      "status": {
+        "turn": "c328e7b7c5714885ade1be8b0da1b169",
+        "state": "retry",
+        "attempts": 1,
+        "error": "review_failed",
+        "result": null
+      },
+      "experiences": []
+    },
+    {
+      "domain": "artifact-storage",
+      "episode": 1,
+      "calls": 1,
+      "seconds": 0.2860212070081616,
+      "status": {
+        "turn": "d773c08b662f4d1bac57b1548e616544",
+        "state": "retry",
+        "attempts": 1,
+        "error": "review_failed",
+        "result": null
+      },
+      "experiences": []
+    },
+    {
+      "domain": "event-workers",
+      "episode": 0,
+      "calls": 1,
+      "seconds": 0.22327628299535718,
+      "status": {
+        "turn": "e1ec9b95dd8c40a3bd840c2098f28aab",
+        "state": "retry",
+        "attempts": 1,
+        "error": "review_failed",
+        "result": null
+      },
+      "experiences": []
+    },
+    {
+      "domain": "event-workers",
+      "episode": 1,
+      "calls": 1,
+      "seconds": 0.2211937199899694,
+      "status": {
+        "turn": "a424d901dc6a4e7d8b646781a08d0781",
+        "state": "retry",
+        "attempts": 1,
+        "error": "review_failed",
+        "result": null
+      },
+      "experiences": []
+    },
+    {
+      "domain": "unicode-identity",
+      "episode": 0,
+      "calls": 1,
+      "seconds": 0.27542362100211903,
+      "status": {
+        "turn": "0d0a44ac16764652ae1601cc8e2d5741",
+        "state": "retry",
+        "attempts": 1,
+        "error": "review_failed",
+        "result": null
+      },
+      "experiences": []
+    },
+    {
+      "domain": "unicode-identity",
+      "episode": 1,
+      "calls": 1,
+      "seconds": 0.22315491500194184,
+      "status": {
+        "turn": "de15c03c6481464b9aa02bb66aac3c4b",
+        "state": "retry",
+        "attempts": 1,
+        "error": "review_failed",
+        "result": null
+      },
+      "experiences": []
+    }
+  ],
+  "retrieval": [
+    {
+      "domain": "artifact-storage",
+      "scenario": "positive",
+      "expected": "hardlink",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/artifact-storage",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0002035710058407858
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "negative",
+      "expected": "copy",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/artifact-storage",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 9.064999176189303e-05
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "unknown",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/artifact-storage",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 8.924301073420793e-05
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "changed-contract",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/artifact-storage",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 4.457599425222725e-05
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "positive",
+      "expected": "parallel",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/event-workers",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 8.541300485376269e-05
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "negative",
+      "expected": "ordered",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/event-workers",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.00010191999899689108
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "unknown",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/event-workers",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0002684860082808882
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "changed-contract",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/event-workers",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.00018063001334667206
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "positive",
+      "expected": "normalize-nfc",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/unicode-identity",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 6.799200491514057e-05
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "negative",
+      "expected": "preserve-bytes",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/unicode-identity",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.00011260899191256613
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "unknown",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/unicode-identity",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0001203540014103055
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "changed-contract",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/unicode-identity",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.00010907999239861965
+    }
+  ],
+  "live": [
+    {
+      "domain": "artifact-storage",
+      "scenario": "positive",
+      "arm": "no-memory",
+      "expected": "hardlink",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 373,
+      "seconds": 0.21654856999521144
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "positive",
+      "arm": "file-memory-all-relevant",
+      "expected": "hardlink",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 812,
+      "seconds": 0.2175458800047636
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "positive",
+      "arm": "synopsis",
+      "expected": "hardlink",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 599,
+      "seconds": 0.217437642000732
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "negative",
+      "arm": "no-memory",
+      "expected": "copy",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 374,
+      "seconds": 0.21617961100128014
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "negative",
+      "arm": "file-memory-all-relevant",
+      "expected": "copy",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 813,
+      "seconds": 0.16644440600066446
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "negative",
+      "arm": "synopsis",
+      "expected": "copy",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 600,
+      "seconds": 0.2170159930101363
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "positive",
+      "arm": "no-memory",
+      "expected": "parallel",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 455,
+      "seconds": 0.21718914801022038
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "positive",
+      "arm": "file-memory-all-relevant",
+      "expected": "parallel",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 878,
+      "seconds": 0.21694281901000068
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "positive",
+      "arm": "synopsis",
+      "expected": "parallel",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 678,
+      "seconds": 0.16549856899655424
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "negative",
+      "arm": "no-memory",
+      "expected": "ordered",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 456,
+      "seconds": 0.21634821499173995
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "negative",
+      "arm": "file-memory-all-relevant",
+      "expected": "ordered",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 879,
+      "seconds": 0.2178112599940505
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "negative",
+      "arm": "synopsis",
+      "expected": "ordered",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 679,
+      "seconds": 0.21618048500386067
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "positive",
+      "arm": "no-memory",
+      "expected": "normalize-nfc",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 489,
+      "seconds": 0.21613108900783118
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "positive",
+      "arm": "file-memory-all-relevant",
+      "expected": "normalize-nfc",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 969,
+      "seconds": 0.16660192399285734
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "positive",
+      "arm": "synopsis",
+      "expected": "normalize-nfc",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 715,
+      "seconds": 0.1659406529943226
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "negative",
+      "arm": "no-memory",
+      "expected": "preserve-bytes",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 490,
+      "seconds": 0.21597280500282068
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "negative",
+      "arm": "file-memory-all-relevant",
+      "expected": "preserve-bytes",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 970,
+      "seconds": 0.21623241899942514
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "negative",
+      "arm": "synopsis",
+      "expected": "preserve-bytes",
+      "response": {},
+      "correct": false,
+      "error": "RunError",
+      "request_chars": 716,
+      "seconds": 0.26775926900154445
+    }
+  ],
+  "limitations": [
+    "Synthetic held-out domains, not real repository patch tasks or external product benchmark.",
+    "Current code contract available in every inference arm, including no-memory.",
+    "No token billing instrumented; request chars and wall time reported.",
+    "Single default Codex model, one repetition; no statistical superiority claim."
+  ],
+  "calls": 24,
+  "scores": {
+    "file-memory-all-relevant": {
+      "correct": 0,
+      "total": 6
+    },
+    "no-memory": {
+      "correct": 0,
+      "total": 6
+    },
+    "synopsis": {
+      "correct": 0,
+      "total": 6
+    }
+  },
+  "capture_summary": {
+    "episodes": 6,
+    "experiences": 0,
+    "decision_cases": 0
+  }
+}

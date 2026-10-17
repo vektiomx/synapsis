@@ -1,0 +1,1216 @@
+[
+  {
+    "task": "numeric_mode_policy-2901-applicable_history",
+    "profile": "synopsis-behavior-memory",
+    "repetition": 0,
+    "synthetic": true,
+    "retrieval_seconds": 0.005692246995749883,
+    "retrieved_source_ids": [
+      "numeric_mode_policy-2901-history"
+    ],
+    "resolved_source_ids": [
+      "numeric_mode_policy-2901-history"
+    ],
+    "raw_retrieval": [
+      {
+        "id": "cc4ac47cee81ef628bd1568ca8c3374b3344374649af80e5086d8517eb4c8237",
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "state": "needs_replay",
+        "sequence": 0,
+        "created": "2026-10-17T07:55:15.220738+00:00",
+        "source_sha256": "fd507773d100c1c45b98ee1b7430805ae33770f9c755cd38011ece3eb24bd26d",
+        "origin": "benchmark:historical-source-and-real-test",
+        "record_count": 2
+      }
+    ],
+    "proposal": {
+      "candidates": [
+        {
+          "title": "Restaurar la política histórica con prioridad de emergencia",
+          "hypothesis": "Para la interfaz activa policy(context), conservar la comprobación actual de emergencia y restaurar después la expresión histórica devuelve 137 si context[\"flag\"] es verdadero y 791 si es falso. Mantiene el comportamiento histórico ante una clave flag ausente fuera de emergencia. La prueba suministrada no verifica por sí sola toda la compatibilidad histórica; no se ha ejecutado.",
+          "patches": [
+            {
+              "path": "policy.py",
+              "symbol": "policy",
+              "sha256": "fd4d926bbe5ae3bcb22abea2e0a97e84ebd98bc206e36d45be486721bd24b6db",
+              "source": "def policy(context):\n    if context.get(\"emergency\"):\n        return -1\n    return 137 if context[\"flag\"] else 791\n"
+            }
+          ],
+          "tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ]
+        }
+      ]
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "de9409b3a72746c083383b45e2af1c12",
+      "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-2901-applicable_history",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+      "created": "2026-10-17T07:59:44.755334+00:00",
+      "candidates": [
+        {
+          "title": "Restaurar la política histórica con prioridad de emergencia",
+          "hypothesis": "Para la interfaz activa policy(context), conservar la comprobación actual de emergencia y restaurar después la expresión histórica devuelve 137 si context[\"flag\"] es verdadero y 791 si es falso. Mantiene el comportamiento histórico ante una clave flag ausente fuera de emergencia. La prueba suministrada no verifica por sí sola toda la compatibilidad histórica; no se ha ejecutado.",
+          "patches": [
+            {
+              "path": "policy.py",
+              "symbol": "policy",
+              "sha256": "fd4d926bbe5ae3bcb22abea2e0a97e84ebd98bc206e36d45be486721bd24b6db",
+              "source": "def policy(context):\n    if context.get(\"emergency\"):\n        return -1\n    return 137 if context[\"flag\"] else 791\n"
+            }
+          ],
+          "tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ],
+          "requested_tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ],
+          "state": "observed_improvement",
+          "observations": [
+            {
+              "check": {
+                "kind": "python_unittest",
+                "path": "tests/test_policy.py",
+                "case": "Policy.test_extension"
+              },
+              "baseline": {
+                "status": "observed_support",
+                "runner": "python_unittest",
+                "tests": 1,
+                "snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "assurance": "Only named test outcome in isolated snapshot; no causal claim."
+              },
+              "candidate": {
+                "status": "observed_support",
+                "runner": "python_unittest",
+                "tests": 1,
+                "snapshot_sha256": "45426d58f13c0a91f6f1864153f675b6f8b9ec42c51595641e1d6a8475ebcd84",
+                "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "assurance": "Only named test outcome in isolated snapshot; no causal claim."
+              }
+            }
+          ],
+          "behavior_observations": [
+            {
+              "id": "cc4ac47cee81ef628bd1568ca8c3374b3344374649af80e5086d8517eb4c8237",
+              "baseline": {
+                "id": "cc4ac47cee81ef628bd1568ca8c3374b3344374649af80e5086d8517eb4c8237",
+                "state": "contradicted",
+                "executed": true,
+                "matches": [
+                  false,
+                  false
+                ],
+                "observed": [
+                  {
+                    "value": 0
+                  },
+                  {
+                    "value": 0
+                  }
+                ],
+                "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "assurance": "Only historical declared inputs compared by the controller; not general correctness."
+              },
+              "candidate": {
+                "id": "cc4ac47cee81ef628bd1568ca8c3374b3344374649af80e5086d8517eb4c8237",
+                "state": "observed_support",
+                "executed": true,
+                "matches": [
+                  true,
+                  true
+                ],
+                "observed": [
+                  {
+                    "value": 137
+                  },
+                  {
+                    "value": 791
+                  }
+                ],
+                "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "assurance": "Only historical declared inputs compared by the controller; not general correctness."
+              }
+            }
+          ],
+          "behavior_omitted": [],
+          "captured_witnesses": [
+            {
+              "id": "09277f7209cec0d88992ac95e24c95339dac560b5cf3351f6081073a7ec3851f",
+              "captured": true,
+              "replayed": false,
+              "records": 1,
+              "state": "observed_witness"
+            }
+          ]
+        }
+      ],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-2901-applicable_history",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 4304,
+    "candidates": [
+      {
+        "state": "observed_improvement",
+        "hidden_correct": true,
+        "hidden_observation": {
+          "status": "observed",
+          "results": [
+            {
+              "value": 137
+            },
+            {
+              "value": 791
+            },
+            {
+              "value": -1
+            }
+          ],
+          "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+          "source_sha256": "e845e87673b9b497b48cc3001691f17879e15d9d219cd303dfa704c3ad3362be",
+          "assurance": "Only observed return values/exceptions for these inputs; not normative truth."
+        }
+      }
+    ],
+    "expected_action": "patch",
+    "abstained": false,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 9.12469477900595
+  },
+  {
+    "task": "stable_sequence_processing-2902-irrelevant_distractors",
+    "profile": "synopsis-behavior-memory",
+    "repetition": 0,
+    "synthetic": true,
+    "retrieval_seconds": 0.002417936993879266,
+    "retrieved_source_ids": [
+      "stable_sequence_processing-2902-history"
+    ],
+    "resolved_source_ids": [
+      "stable_sequence_processing-2902-history"
+    ],
+    "raw_retrieval": [
+      {
+        "id": "ca2c6a5a3ed8a9e6f256a882d82a7ccecde8dca6bc72b273627f63b0270f9854",
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "state": "needs_replay",
+        "sequence": 0,
+        "created": "2026-10-17T07:55:15.257028+00:00",
+        "source_sha256": "0828778cd754a61111cdee0ede8e2130f1b3e5851f6477ece78f4e67d0c90cda",
+        "origin": "benchmark:historical-source-and-real-test",
+        "record_count": 2
+      }
+    ],
+    "proposal": {
+      "candidates": [
+        {
+          "title": "Deduplicación estable con extensión de emergencia",
+          "hypothesis": "Para la interfaz activa policy(context), deduplicar por igualdad preserva el orden de primera aparición y admite elementos JSON no hashables, conforme al contrato histórico y sus dos observaciones. Se conserva el retorno vacío cuando emergency es verdadero; no se afirma que las pruebas hayan pasado.",
+          "patches": [
+            {
+              "path": "policy.py",
+              "symbol": "policy",
+              "sha256": "513cc9b335a3d0a3b4f820aa9c40c92c7b08115a2fa32b0dbcc55da275db6471",
+              "source": "def policy(context):\n if context.get(\"emergency\"): return []\n result = []\n for item in context[\"items\"]:\n  if item not in result:\n   result.append(item)\n return result\n"
+            }
+          ],
+          "tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ]
+        }
+      ]
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "f9de675542c646c4a8048be84db4edef",
+      "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-2902-irrelevant_distractors",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+      "created": "2026-10-17T07:59:52.918756+00:00",
+      "candidates": [
+        {
+          "title": "Deduplicación estable con extensión de emergencia",
+          "hypothesis": "Para la interfaz activa policy(context), deduplicar por igualdad preserva el orden de primera aparición y admite elementos JSON no hashables, conforme al contrato histórico y sus dos observaciones. Se conserva el retorno vacío cuando emergency es verdadero; no se afirma que las pruebas hayan pasado.",
+          "patches": [
+            {
+              "path": "policy.py",
+              "symbol": "policy",
+              "sha256": "513cc9b335a3d0a3b4f820aa9c40c92c7b08115a2fa32b0dbcc55da275db6471",
+              "source": "def policy(context):\n if context.get(\"emergency\"): return []\n result = []\n for item in context[\"items\"]:\n  if item not in result:\n   result.append(item)\n return result\n"
+            }
+          ],
+          "tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ],
+          "requested_tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ],
+          "state": "observed_improvement",
+          "observations": [
+            {
+              "check": {
+                "kind": "python_unittest",
+                "path": "tests/test_policy.py",
+                "case": "Policy.test_extension"
+              },
+              "baseline": {
+                "status": "observed_support",
+                "runner": "python_unittest",
+                "tests": 1,
+                "snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "assurance": "Only named test outcome in isolated snapshot; no causal claim."
+              },
+              "candidate": {
+                "status": "observed_support",
+                "runner": "python_unittest",
+                "tests": 1,
+                "snapshot_sha256": "93fa79c56a0fc41170313e34ba0cebc2d37e85953dfdd8039939062ac7d9b159",
+                "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "assurance": "Only named test outcome in isolated snapshot; no causal claim."
+              }
+            }
+          ],
+          "behavior_observations": [
+            {
+              "id": "ca2c6a5a3ed8a9e6f256a882d82a7ccecde8dca6bc72b273627f63b0270f9854",
+              "baseline": {
+                "id": "ca2c6a5a3ed8a9e6f256a882d82a7ccecde8dca6bc72b273627f63b0270f9854",
+                "state": "contradicted",
+                "executed": true,
+                "matches": [
+                  false,
+                  false
+                ],
+                "observed": [
+                  {
+                    "value": [
+                      1,
+                      2,
+                      3
+                    ]
+                  },
+                  {
+                    "raises": "TypeError"
+                  }
+                ],
+                "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "assurance": "Only historical declared inputs compared by the controller; not general correctness."
+              },
+              "candidate": {
+                "id": "ca2c6a5a3ed8a9e6f256a882d82a7ccecde8dca6bc72b273627f63b0270f9854",
+                "state": "observed_support",
+                "executed": true,
+                "matches": [
+                  true,
+                  true
+                ],
+                "observed": [
+                  {
+                    "value": [
+                      3,
+                      1,
+                      2
+                    ]
+                  },
+                  {
+                    "value": [
+                      [
+                        2
+                      ],
+                      [
+                        1
+                      ]
+                    ]
+                  }
+                ],
+                "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "assurance": "Only historical declared inputs compared by the controller; not general correctness."
+              }
+            }
+          ],
+          "behavior_omitted": [],
+          "captured_witnesses": [
+            {
+              "id": "793419b377fbbd45d4651de3b9dc5f15e48c6f35342e327fd8862e39eabed02a",
+              "captured": true,
+              "replayed": false,
+              "records": 1,
+              "state": "observed_witness"
+            }
+          ]
+        }
+      ],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-2902-irrelevant_distractors",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 4526,
+    "candidates": [
+      {
+        "state": "observed_improvement",
+        "hidden_correct": true,
+        "hidden_observation": {
+          "status": "observed",
+          "results": [
+            {
+              "value": [
+                "b",
+                "a",
+                null,
+                false
+              ]
+            },
+            {
+              "value": [
+                {
+                  "a": 1
+                },
+                {
+                  "b": 2
+                }
+              ]
+            },
+            {
+              "value": []
+            }
+          ],
+          "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+          "source_sha256": "b93e15724ef6b0db4f49998cf91662a89e107615b7cdc88d77cfe4806d02010f",
+          "assurance": "Only observed return values/exceptions for these inputs; not normative truth."
+        }
+      }
+    ],
+    "expected_action": "patch",
+    "abstained": false,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 8.191618263008422
+  },
+  {
+    "task": "text_identity_boundaries-2903-withdrawn_policy",
+    "profile": "synopsis-behavior-memory",
+    "repetition": 0,
+    "synthetic": true,
+    "retrieval_seconds": 0.0016800440062070265,
+    "retrieved_source_ids": [
+      "text_identity_boundaries-2903-history"
+    ],
+    "resolved_source_ids": [
+      "text_identity_boundaries-2903-history"
+    ],
+    "raw_retrieval": [
+      {
+        "id": "a551fc084112b0d9bd5002faef334c2bb31a0d8f9b70cec79469a79ffcd63f1f",
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "state": "retired",
+        "sequence": 1,
+        "created": "2026-10-17T07:55:15.294700+00:00",
+        "source_sha256": "363df903d64585351af982457f6c998ca73f7e126ca5469120c775dd1e5ce813",
+        "origin": "benchmark:historical-source-and-real-test",
+        "record_count": 2
+      }
+    ],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "df031b28b24a46e08ef7f9f8720579c7",
+      "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-2903-withdrawn_policy",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "760f6e37e7afa0e5bd80e7dbedfe028e3b59e347234284ab249786b795a25772",
+      "created": "2026-10-17T07:59:57.262328+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-2903-withdrawn_policy",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3654,
+    "candidates": [],
+    "expected_action": "abstain",
+    "abstained": true,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 4.24058007900021
+  },
+  {
+    "task": "sparse_payload_merge-2904-changed_interface",
+    "profile": "synopsis-behavior-memory",
+    "repetition": 0,
+    "synthetic": true,
+    "retrieval_seconds": 0.0008645740017527714,
+    "retrieved_source_ids": [
+      "sparse_payload_merge-2904-history"
+    ],
+    "resolved_source_ids": [
+      "sparse_payload_merge-2904-history"
+    ],
+    "raw_retrieval": [
+      {
+        "id": "72b4e5ea2337f0b1a09810fc0af4f5a2e241b4b9aa97192ddef3765bc9b09d40",
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "state": "incompatible_interface",
+        "sequence": 0,
+        "created": "2026-10-17T07:55:15.334861+00:00",
+        "source_sha256": "c3e5f32c58070f9b9ba6e0918985819ba4f7d815cb13e1fbe3ff62a55d1e293c",
+        "origin": "benchmark:historical-source-and-real-test",
+        "record_count": 2
+      }
+    ],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "03f1ceaa198542388ebc4f8a1f2b4bd1",
+      "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-2904-changed_interface",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "e6e239a16946fce1cdf972cc96bd488a07442d5cc8d0cec39ebbb99d4737059d",
+      "created": "2026-10-17T08:00:02.049194+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-2904-changed_interface",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3877,
+    "candidates": [],
+    "expected_action": "abstain",
+    "abstained": true,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 4.7866726070060395
+  },
+  {
+    "task": "numeric_mode_policy-2901-applicable_history",
+    "profile": "synopsis-behavior-memory",
+    "repetition": 1,
+    "synthetic": true,
+    "retrieval_seconds": 0.0019451830012258142,
+    "retrieved_source_ids": [
+      "numeric_mode_policy-2901-history"
+    ],
+    "resolved_source_ids": [
+      "numeric_mode_policy-2901-history"
+    ],
+    "raw_retrieval": [
+      {
+        "id": "cc4ac47cee81ef628bd1568ca8c3374b3344374649af80e5086d8517eb4c8237",
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "state": "needs_replay",
+        "sequence": 0,
+        "created": "2026-10-17T07:55:15.220738+00:00",
+        "source_sha256": "fd507773d100c1c45b98ee1b7430805ae33770f9c755cd38011ece3eb24bd26d",
+        "origin": "benchmark:historical-source-and-real-test",
+        "record_count": 2
+      }
+    ],
+    "proposal": {
+      "candidates": [
+        {
+          "title": "Restaurar la política histórica conservando la emergencia",
+          "hypothesis": "Para contextos sin emergencia activa, recuperar la regla histórica vigente: 137 si context[\"flag\"] es verdadero y 791 si es falso. Conservar el retorno -1 cuando context.get(\"emergency\") sea verdadero. La regla histórica requiere la clave flag; no se propone un valor predeterminado ausente del contrato.",
+          "patches": [
+            {
+              "path": "policy.py",
+              "symbol": "policy",
+              "sha256": "fd4d926bbe5ae3bcb22abea2e0a97e84ebd98bc206e36d45be486721bd24b6db",
+              "source": "def policy(context):\n if context.get(\"emergency\"): return -1\n return 137 if context[\"flag\"] else 791\n"
+            }
+          ],
+          "tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ]
+        }
+      ]
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "ac6076c311bf4eefb359f5a9d9d85901",
+      "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-2901-applicable_history",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+      "created": "2026-10-17T08:00:10.997683+00:00",
+      "candidates": [
+        {
+          "title": "Restaurar la política histórica conservando la emergencia",
+          "hypothesis": "Para contextos sin emergencia activa, recuperar la regla histórica vigente: 137 si context[\"flag\"] es verdadero y 791 si es falso. Conservar el retorno -1 cuando context.get(\"emergency\") sea verdadero. La regla histórica requiere la clave flag; no se propone un valor predeterminado ausente del contrato.",
+          "patches": [
+            {
+              "path": "policy.py",
+              "symbol": "policy",
+              "sha256": "fd4d926bbe5ae3bcb22abea2e0a97e84ebd98bc206e36d45be486721bd24b6db",
+              "source": "def policy(context):\n if context.get(\"emergency\"): return -1\n return 137 if context[\"flag\"] else 791\n"
+            }
+          ],
+          "tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ],
+          "requested_tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ],
+          "state": "observed_improvement",
+          "observations": [
+            {
+              "check": {
+                "kind": "python_unittest",
+                "path": "tests/test_policy.py",
+                "case": "Policy.test_extension"
+              },
+              "baseline": {
+                "status": "observed_support",
+                "runner": "python_unittest",
+                "tests": 1,
+                "snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "assurance": "Only named test outcome in isolated snapshot; no causal claim."
+              },
+              "candidate": {
+                "status": "observed_support",
+                "runner": "python_unittest",
+                "tests": 1,
+                "snapshot_sha256": "d4a6a5c45c717bc59a69618457e911023e9c1578df181cb1489aedee1c11d071",
+                "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "assurance": "Only named test outcome in isolated snapshot; no causal claim."
+              }
+            }
+          ],
+          "behavior_observations": [
+            {
+              "id": "cc4ac47cee81ef628bd1568ca8c3374b3344374649af80e5086d8517eb4c8237",
+              "baseline": {
+                "id": "cc4ac47cee81ef628bd1568ca8c3374b3344374649af80e5086d8517eb4c8237",
+                "state": "contradicted",
+                "executed": true,
+                "matches": [
+                  false,
+                  false
+                ],
+                "observed": [
+                  {
+                    "value": 0
+                  },
+                  {
+                    "value": 0
+                  }
+                ],
+                "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "assurance": "Only historical declared inputs compared by the controller; not general correctness."
+              },
+              "candidate": {
+                "id": "cc4ac47cee81ef628bd1568ca8c3374b3344374649af80e5086d8517eb4c8237",
+                "state": "observed_support",
+                "executed": true,
+                "matches": [
+                  true,
+                  true
+                ],
+                "observed": [
+                  {
+                    "value": 137
+                  },
+                  {
+                    "value": 791
+                  }
+                ],
+                "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+                "assurance": "Only historical declared inputs compared by the controller; not general correctness."
+              }
+            }
+          ],
+          "behavior_omitted": [],
+          "captured_witnesses": [
+            {
+              "id": "2dcfd9b11799cc8cee45abfafb8ddc0d55028dd12f0d51f7e8f0eb3c82d91b23",
+              "captured": true,
+              "replayed": false,
+              "records": 1,
+              "state": "observed_witness"
+            }
+          ]
+        }
+      ],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-2901-applicable_history",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 4304,
+    "candidates": [
+      {
+        "state": "observed_improvement",
+        "hidden_correct": true,
+        "hidden_observation": {
+          "status": "observed",
+          "results": [
+            {
+              "value": 137
+            },
+            {
+              "value": 791
+            },
+            {
+              "value": -1
+            }
+          ],
+          "source_snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+          "source_sha256": "c4163827d52abf152b1559b35c264379dfcc4449920c165e776c3c676f86250a",
+          "assurance": "Only observed return values/exceptions for these inputs; not normative truth."
+        }
+      }
+    ],
+    "expected_action": "patch",
+    "abstained": false,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 9.019739391995245
+  },
+  {
+    "task": "stable_sequence_processing-2902-irrelevant_distractors",
+    "profile": "synopsis-behavior-memory",
+    "repetition": 1,
+    "synthetic": true,
+    "retrieval_seconds": 0.0023730170069029555,
+    "retrieved_source_ids": [
+      "stable_sequence_processing-2902-history"
+    ],
+    "resolved_source_ids": [
+      "stable_sequence_processing-2902-history"
+    ],
+    "raw_retrieval": [
+      {
+        "id": "ca2c6a5a3ed8a9e6f256a882d82a7ccecde8dca6bc72b273627f63b0270f9854",
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "state": "needs_replay",
+        "sequence": 0,
+        "created": "2026-10-17T07:55:15.257028+00:00",
+        "source_sha256": "0828778cd754a61111cdee0ede8e2130f1b3e5851f6477ece78f4e67d0c90cda",
+        "origin": "benchmark:historical-source-and-real-test",
+        "record_count": 2
+      }
+    ],
+    "proposal": {
+      "candidates": [
+        {
+          "title": "Deduplicación estable con soporte de emergencia",
+          "hypothesis": "Para la interfaz activa policy(context), deduplicar por igualdad conserva la primera aparición y admite elementos JSON no hashables, conforme al contrato histórico y los ejemplos registrados. La condición de emergencia mantiene su comportamiento actual. No se afirma que las pruebas hayan pasado.",
+          "patches": [
+            {
+              "path": "policy.py",
+              "symbol": "policy",
+              "sha256": "513cc9b335a3d0a3b4f820aa9c40c92c7b08115a2fa32b0dbcc55da275db6471",
+              "source": "def policy(context):\n if context.get(\"emergency\"): return []\n result = []\n for item in context[\"items\"]:\n  if item not in result:\n   result.append(item)\n return result\n"
+            }
+          ],
+          "tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ]
+        }
+      ]
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "be304b9d05de4654808263abde63d60a",
+      "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-2902-irrelevant_distractors",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+      "created": "2026-10-17T08:00:20.678714+00:00",
+      "candidates": [
+        {
+          "title": "Deduplicación estable con soporte de emergencia",
+          "hypothesis": "Para la interfaz activa policy(context), deduplicar por igualdad conserva la primera aparición y admite elementos JSON no hashables, conforme al contrato histórico y los ejemplos registrados. La condición de emergencia mantiene su comportamiento actual. No se afirma que las pruebas hayan pasado.",
+          "patches": [
+            {
+              "path": "policy.py",
+              "symbol": "policy",
+              "sha256": "513cc9b335a3d0a3b4f820aa9c40c92c7b08115a2fa32b0dbcc55da275db6471",
+              "source": "def policy(context):\n if context.get(\"emergency\"): return []\n result = []\n for item in context[\"items\"]:\n  if item not in result:\n   result.append(item)\n return result\n"
+            }
+          ],
+          "tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ],
+          "requested_tests": [
+            {
+              "kind": "python_unittest",
+              "path": "tests/test_policy.py",
+              "case": "Policy.test_extension"
+            }
+          ],
+          "state": "observed_improvement",
+          "observations": [
+            {
+              "check": {
+                "kind": "python_unittest",
+                "path": "tests/test_policy.py",
+                "case": "Policy.test_extension"
+              },
+              "baseline": {
+                "status": "observed_support",
+                "runner": "python_unittest",
+                "tests": 1,
+                "snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "assurance": "Only named test outcome in isolated snapshot; no causal claim."
+              },
+              "candidate": {
+                "status": "observed_support",
+                "runner": "python_unittest",
+                "tests": 1,
+                "snapshot_sha256": "93fa79c56a0fc41170313e34ba0cebc2d37e85953dfdd8039939062ac7d9b159",
+                "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "assurance": "Only named test outcome in isolated snapshot; no causal claim."
+              }
+            }
+          ],
+          "behavior_observations": [
+            {
+              "id": "ca2c6a5a3ed8a9e6f256a882d82a7ccecde8dca6bc72b273627f63b0270f9854",
+              "baseline": {
+                "id": "ca2c6a5a3ed8a9e6f256a882d82a7ccecde8dca6bc72b273627f63b0270f9854",
+                "state": "contradicted",
+                "executed": true,
+                "matches": [
+                  false,
+                  false
+                ],
+                "observed": [
+                  {
+                    "value": [
+                      1,
+                      2,
+                      3
+                    ]
+                  },
+                  {
+                    "raises": "TypeError"
+                  }
+                ],
+                "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "assurance": "Only historical declared inputs compared by the controller; not general correctness."
+              },
+              "candidate": {
+                "id": "ca2c6a5a3ed8a9e6f256a882d82a7ccecde8dca6bc72b273627f63b0270f9854",
+                "state": "observed_support",
+                "executed": true,
+                "matches": [
+                  true,
+                  true
+                ],
+                "observed": [
+                  {
+                    "value": [
+                      3,
+                      1,
+                      2
+                    ]
+                  },
+                  {
+                    "value": [
+                      [
+                        2
+                      ],
+                      [
+                        1
+                      ]
+                    ]
+                  }
+                ],
+                "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+                "assurance": "Only historical declared inputs compared by the controller; not general correctness."
+              }
+            }
+          ],
+          "behavior_omitted": [],
+          "captured_witnesses": [
+            {
+              "id": "793419b377fbbd45d4651de3b9dc5f15e48c6f35342e327fd8862e39eabed02a",
+              "captured": true,
+              "replayed": false,
+              "records": 1,
+              "state": "observed_witness"
+            }
+          ]
+        }
+      ],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-2902-irrelevant_distractors",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 4526,
+    "candidates": [
+      {
+        "state": "observed_improvement",
+        "hidden_correct": true,
+        "hidden_observation": {
+          "status": "observed",
+          "results": [
+            {
+              "value": [
+                "b",
+                "a",
+                null,
+                false
+              ]
+            },
+            {
+              "value": [
+                {
+                  "a": 1
+                },
+                {
+                  "b": 2
+                }
+              ]
+            },
+            {
+              "value": []
+            }
+          ],
+          "source_snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+          "source_sha256": "b93e15724ef6b0db4f49998cf91662a89e107615b7cdc88d77cfe4806d02010f",
+          "assurance": "Only observed return values/exceptions for these inputs; not normative truth."
+        }
+      }
+    ],
+    "expected_action": "patch",
+    "abstained": false,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 9.679816160001792
+  },
+  {
+    "task": "text_identity_boundaries-2903-withdrawn_policy",
+    "profile": "synopsis-behavior-memory",
+    "repetition": 1,
+    "synthetic": true,
+    "retrieval_seconds": 0.001623185002245009,
+    "retrieved_source_ids": [
+      "text_identity_boundaries-2903-history"
+    ],
+    "resolved_source_ids": [
+      "text_identity_boundaries-2903-history"
+    ],
+    "raw_retrieval": [
+      {
+        "id": "a551fc084112b0d9bd5002faef334c2bb31a0d8f9b70cec79469a79ffcd63f1f",
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "state": "retired",
+        "sequence": 1,
+        "created": "2026-10-17T07:55:15.294700+00:00",
+        "source_sha256": "363df903d64585351af982457f6c998ca73f7e126ca5469120c775dd1e5ce813",
+        "origin": "benchmark:historical-source-and-real-test",
+        "record_count": 2
+      }
+    ],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "9a2fd06f599041fda1bd59c8e9785861",
+      "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-2903-withdrawn_policy",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "760f6e37e7afa0e5bd80e7dbedfe028e3b59e347234284ab249786b795a25772",
+      "created": "2026-10-17T08:00:27.204222+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-2903-withdrawn_policy",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3654,
+    "candidates": [],
+    "expected_action": "abstain",
+    "abstained": true,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 6.45553249301156
+  },
+  {
+    "task": "sparse_payload_merge-2904-changed_interface",
+    "profile": "synopsis-behavior-memory",
+    "repetition": 1,
+    "synthetic": true,
+    "retrieval_seconds": 0.002753168999333866,
+    "retrieved_source_ids": [
+      "sparse_payload_merge-2904-history"
+    ],
+    "resolved_source_ids": [
+      "sparse_payload_merge-2904-history"
+    ],
+    "raw_retrieval": [
+      {
+        "id": "72b4e5ea2337f0b1a09810fc0af4f5a2e241b4b9aa97192ddef3765bc9b09d40",
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "state": "incompatible_interface",
+        "sequence": 0,
+        "created": "2026-10-17T07:55:15.334861+00:00",
+        "source_sha256": "c3e5f32c58070f9b9ba6e0918985819ba4f7d815cb13e1fbe3ff62a55d1e293c",
+        "origin": "benchmark:historical-source-and-real-test",
+        "record_count": 2
+      }
+    ],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "b8f5ed100cc346728b70398fa1829d6d",
+      "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-2904-changed_interface",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "e6e239a16946fce1cdf972cc96bd488a07442d5cc8d0cec39ebbb99d4737059d",
+      "created": "2026-10-17T08:00:33.958954+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-2904-changed_interface",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3877,
+    "candidates": [],
+    "expected_action": "abstain",
+    "abstained": true,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 6.752688465989195
+  }
+]

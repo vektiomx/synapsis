@@ -7,10 +7,10 @@ sys.path.insert(0, CARPETA)
 import hooks_comun
 
 BIENVENIDA = "bienvenida.txt"
-TEXTO_BIENVENIDA = ("Neuromapa quedó instalado. Para ver tu memoria como un cerebro en vivo: /neuromapa:abrir (con notas "
-                    "inventadas: /neuromapa:abrir --demo). Para revisar tus notas: /neuromapa:salud.")
+TEXTO_BIENVENIDA = ("Synopsis quedó instalado. Para ver tu memoria como un cerebro en vivo: /synopsis:abrir (con notas "
+                    "inventadas: /synopsis:abrir --demo). Para revisar tus notas: /synopsis:salud.")
 DOBLE = "doble-avisado.txt"
-TEXTO_DOBLE = ("Neuromapa está instalado dos veces: como plugin y con sus hooks a mano en settings.json, así que todo se "
+TEXTO_DOBLE = ("Synopsis está instalado dos veces: como plugin y con sus hooks a mano en settings.json, así que todo se "
                "anota y se sirve dos veces. Dejá uno: desinstalá el plugin o sacá esos hooks de settings.json.")
 
 

@@ -1,0 +1,483 @@
+{
+  "source_sha256": "56f640a9bf13ba63af4f0ebc140d62ec10aff26ef4f3d0d7b2465f7bdd9ec1cc",
+  "domains": [
+    {
+      "domain": {
+        "key": "artifact-storage",
+        "field": "immutable_source",
+        "positive": "hardlink",
+        "negative": "copy",
+        "query": "How should we archive build artifacts?",
+        "contract": "Archive must preserve the bytes at archive time. A hard link shares writes with the original inode. It is acceptable when the source remains immutable; otherwise make an independent copy.",
+        "history": [
+          "We archived an immutable build artifact using a hard link. It retained the expected bytes and saved disk space. This successful attempt was limited to immutable sources.",
+          "We archived a mutable artifact using a hard link. A later writer changed the archived bytes too. We replaced it with an independent copy; later source writes no longer changed the archived artifact."
+        ]
+      },
+      "experiences": [
+        {
+          "name": "archivo-copia-independiente-fuente-mutable",
+          "experience": {
+            "action": "Según el usuario, se sustituyó el enlace duro por una copia independiente.",
+            "checks": [
+              {
+                "expected": false,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/immutable_source"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Archive must preserve the bytes at archive time. A hard link shares writes with the original inode. It is acceptable when the source remains immutable; otherwise make an independent copy."
+              }
+            ],
+            "counterexamples": [
+              "El contrato admite enlaces duros cuando la fuente permanece inmutable; ese caso no se probó en este intento."
+            ],
+            "decision": {
+              "choice": "copia-independiente-con-fuente-mutable",
+              "key": "preservar-bytes-del-artefacto-archivado",
+              "requires": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "9d6a37fe72c03677838d19b5843030ffa5992f95de84d1ace9dd9881279f8f40"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "5262d20822ebc60db1151a34ad1f9c733ff2d0c43cd87f906dbdf227881e69b4"
+              }
+            ],
+            "limitations": "Ejecución y resultado informados por el usuario, sin verificación independiente. La configuración declara mutabilidad; no se observaron la implementación ni pruebas ejecutadas.",
+            "outcome": "El usuario informó que las escrituras posteriores dejaron de modificar el artefacto archivado.",
+            "rationale": "Preservar los bytes existentes al archivar; el contrato indica que el enlace duro comparte las escrituras del inodo original.",
+            "situation": "El usuario informó que las escrituras posteriores en una fuente mutable también modificaron el artefacto archivado mediante un enlace duro.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ],
+              "keywords": [
+                "archivo",
+                "artefacto",
+                "fuente mutable",
+                "enlace duro",
+                "hard link",
+                "copia independiente",
+                "preservación de bytes"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          }
+        },
+        {
+          "name": "archivo-hard-link-fuente-inmutable",
+          "experience": {
+            "action": "Se utilizó un enlace duro para archivar el artefacto.",
+            "checks": [
+              {
+                "expected": true,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/immutable_source"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Archive must preserve the bytes at archive time. A hard link shares writes with the original inode. It is acceptable when the source remains immutable; otherwise make an independent copy."
+              }
+            ],
+            "counterexamples": [
+              "No se probó una fuente mutable; el contrato indica que un enlace duro comparte las escrituras del inodo original."
+            ],
+            "decision": {
+              "choice": "enlace-duro-con-fuente-inmutable",
+              "key": "preservar-bytes-del-artefacto-archivado",
+              "requires": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "b86fc64164961ca2b0f1716a51f357ce42da84262c80d8d9694e5dc7cc5521fb"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "5262d20822ebc60db1151a34ad1f9c733ff2d0c43cd87f906dbdf227881e69b4"
+              }
+            ],
+            "limitations": "Resultado informado por el usuario, sin verificación independiente de la ejecución. La configuración declara inmutabilidad, pero no garantiza que se mantenga.",
+            "outcome": "Según el usuario, se conservaron los bytes esperados y se ahorró espacio.",
+            "rationale": "Ahorrar espacio conservando los bytes esperados mientras la fuente permanezca inmutable.",
+            "situation": "El usuario informó del archivado de un artefacto de compilación inmutable.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ],
+              "keywords": [
+                "archivo",
+                "artefacto",
+                "enlace duro",
+                "hard link",
+                "inmutable",
+                "immutable",
+                "ahorro de espacio"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": {
+        "key": "event-workers",
+        "field": "operations_commute",
+        "positive": "parallel",
+        "negative": "ordered",
+        "query": "How should we schedule this event stream?",
+        "contract": "Concurrent workers may reorder events. Reordering preserves the result only when the operations commute. A stream of commuting independent set additions can use parallel workers; a stream containing multiply and add on one accumulator must preserve input order.",
+        "history": [
+          "Parallel workers processed independent set additions. The operations commute, and every tested execution order produced the same resulting set.",
+          "Parallel workers processed multiply then add on a shared accumulator. Reversed scheduling produced a different result. We moved this noncommuting stream to an ordered worker and recovered the expected result."
+        ]
+      },
+      "experiences": [
+        {
+          "name": "worker-ordenado-operaciones-no-conmutativas",
+          "experience": {
+            "action": "Se trasladó el flujo a un worker que preserva el orden.",
+            "checks": [
+              {
+                "expected": false,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/operations_commute"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "A stream of commuting independent set additions can use parallel workers; a stream containing multiply and add on one accumulator must preserve input order."
+              }
+            ],
+            "counterexamples": [
+              "El contrato permite workers paralelos para adiciones independientes y conmutativas; ese caso no fue probado en el intento relatado."
+            ],
+            "decision": {
+              "choice": "worker-ordenado-para-operaciones-no-conmutativas",
+              "key": "paralelismo-segun-conmutatividad",
+              "requires": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "538404d7efe38a010814707d1f16dae766b3fcbd21d42e2764d854237e12b8ea"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "ab9a31d003a53f2b4641c1bddd22569e9f10aa7bc6e690cd0781ec369283f1ed"
+              }
+            ],
+            "limitations": "No se aportaron implementación, registros ni pruebas reproducibles. El resultado procede del relato del usuario; los archivos respaldan únicamente la configuración y el contrato.",
+            "outcome": "El usuario reportó que se recuperó el resultado esperado.",
+            "rationale": "El contrato exige preservar el orden para multiplicación y suma sobre un mismo acumulador.",
+            "situation": "Según el relato del usuario, workers paralelos procesaron multiplicación y suma sobre un acumulador compartido; invertir la ejecución cambió el resultado.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ],
+              "keywords": [
+                "workers",
+                "paralelismo",
+                "concurrencia",
+                "orden",
+                "no conmutatividad",
+                "acumulador",
+                "multiplicación",
+                "suma"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          }
+        },
+        {
+          "name": "workers-paralelos-adiciones-conmutativas",
+          "experience": {
+            "action": "Se probaron distintos órdenes de ejecución.",
+            "checks": [
+              {
+                "expected": true,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/operations_commute"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "A stream of commuting independent set additions can use parallel workers; a stream containing multiply and add on one accumulator must preserve input order."
+              }
+            ],
+            "counterexamples": [
+              "El contrato exige preservar el orden cuando se combinan multiplicación y suma sobre un acumulador; ese caso no fue probado en el intento descrito."
+            ],
+            "decision": {
+              "choice": "workers-paralelos-para-adiciones-independientes",
+              "key": "paralelismo-segun-conmutatividad",
+              "requires": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "a7628a5502f89e1e3d0a0ce5c1e3efec2562b1a064823c756df1042c9b3ff1c8"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "ab9a31d003a53f2b4641c1bddd22569e9f10aa7bc6e690cd0781ec369283f1ed"
+              }
+            ],
+            "limitations": "No se aportaron implementación, registros ni pruebas reproducibles. La experiencia se limita a adiciones independientes y conmutativas.",
+            "outcome": "Según el relato aportado, todos los órdenes probados produjeron el mismo conjunto.",
+            "rationale": "Las operaciones conmutativas permiten reordenar eventos conservando el resultado, según el contrato.",
+            "situation": "Se informó de una ejecución con workers paralelos que procesaron adiciones independientes a un conjunto.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ],
+              "keywords": [
+                "workers",
+                "paralelismo",
+                "parallel workers",
+                "conmutatividad",
+                "commutativity",
+                "conjuntos",
+                "set additions",
+                "orden de eventos"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": {
+        "key": "unicode-identity",
+        "field": "canonical_equivalence_allowed",
+        "positive": "normalize-nfc",
+        "negative": "preserve-bytes",
+        "query": "How should we compare Unicode resource identifiers?",
+        "contract": "NFC normalization merges canonically equivalent Unicode strings. This is correct for identifiers whose identity contract allows canonical equivalence. Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature.",
+        "history": [
+          "We normalized canonically equivalent display identifiers to NFC before comparing them. They correctly resolved to the same resource under the identity contract that allows canonical equivalence.",
+          "We normalized a signed byte-sensitive identifier to NFC. Signature validation failed because the bytes changed. Preserving original bytes fixed validation; canonical equivalence was not permitted for this endpoint."
+        ]
+      },
+      "experiences": [
+        {
+          "name": "nfc-identificadores-equivalentes",
+          "experience": {
+            "action": "Se normalizaron los identificadores a NFC antes de compararlos.",
+            "checks": [
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "This is correct for identifiers whose identity contract allows canonical equivalence."
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+              }
+            ],
+            "counterexamples": [
+              "Hipótesis no probada en este intento: normalizar identificadores firmados sensibles a bytes puede invalidar su firma, según el contrato."
+            ],
+            "decision": {
+              "choice": "normalizar-a-nfc",
+              "key": "comparacion-identificadores-unicode",
+              "requires": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+              }
+            ],
+            "limitations": "El resultado procede del relato del usuario; no se aportaron pruebas ejecutadas ni implementación. No se observó un intento con identificadores firmados sensibles a bytes.",
+            "outcome": "Según el usuario, ambos identificadores resolvieron al mismo recurso.",
+            "rationale": "El contrato permite equivalencia canónica para esos identificadores.",
+            "situation": "El usuario informó una comparación de identificadores Unicode canónicamente equivalentes.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ],
+              "keywords": [
+                "Unicode",
+                "NFC",
+                "normalización",
+                "normalization",
+                "identificadores",
+                "identifiers",
+                "equivalencia canónica",
+                "canonical equivalence"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          }
+        },
+        {
+          "name": "preservar-bytes-identificadores-firmados",
+          "experience": {
+            "action": "Se conservaron los bytes originales del identificador.",
+            "checks": [
+              {
+                "expected": false,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/canonical_equivalence_allowed"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+              }
+            ],
+            "counterexamples": [
+              "Límite observado en el contrato: NFC es correcto para identificadores cuyo contrato permite equivalencia canónica; ese caso no se probó en este intento."
+            ],
+            "decision": {
+              "choice": "preservar-bytes-originales",
+              "key": "comparacion-identificadores-unicode",
+              "requires": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "2511b96770b0a5d7399ba673777f66653dce921196433fb37466e511ca1488ec"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+              }
+            ],
+            "limitations": "El resultado procede del relato del usuario; no se observaron implementación ni pruebas ejecutadas. El alcance corresponde a identificadores firmados sensibles a bytes.",
+            "outcome": "El usuario informó que conservar los bytes originales corrigió la validación.",
+            "rationale": "El endpoint no permitía equivalencia canónica y el contrato exige conservar los bytes originales de identificadores firmados sensibles a bytes.",
+            "situation": "Según el usuario, normalizar a NFC un identificador firmado sensible a bytes provocó un fallo de validación.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ],
+              "keywords": [
+                "Unicode",
+                "NFC",
+                "normalización",
+                "normalization",
+                "identificadores",
+                "firma",
+                "signature",
+                "bytes",
+                "equivalencia canónica"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Instala los hooks de Synapsis para Claude Code directo en ~/.claude/settings.json,
+"""Instala los hooks de Synopsis para Claude Code directo en ~/.claude/settings.json,
 en vez de depender del plugin del marketplace. No pide contraseña ni sudo.
 
-Si el plugin "neuromapa" del marketplace ya está activo, lo desactiva para que no se
+Si el plugin "synopsis" del marketplace ya está activo, lo desactiva para que no se
 dupliquen los eventos (los dos llamarían al mismo motor por cada acción).
 """
 import argparse
+import shlex
 import datetime
 import json
 import os
@@ -15,41 +16,23 @@ import sys
 BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE.parent))
 import comun
+import integration_setup
 
 ROOT = comun.raiz_motor()
 DATA = comun.carpeta_datos()
 
 # (evento, matcher_o_None, script, timeout)
-HOOKS = (
-    ('SessionStart', None, 'hook_inicio.py', 10),
-    ('SessionStart', None, 'hook_cerebro.py', 5),
-    ('SessionStart', 'compact', 'hook_guardar.py', 10),
-    ('PreToolUse', '*', 'hook_cerebro.py', 5),
-    ('PreToolUse', 'Agent|Task|Workflow', 'hook_freno.py', 10),
-    ('PostToolUse', '*', 'hook_cerebro.py', 5),
-    ('PostToolUse', 'Write', 'hook_parecidas.py', 10),
-    ('PostToolUse', 'Edit|Write|MultiEdit|NotebookEdit', 'hook_choques.py', 5),
-    ('PostToolUseFailure', '*', 'hook_cerebro.py', 5),
-    ('UserPromptSubmit', None, 'hook_cerebro.py', 5),
-    ('UserPromptSubmit', None, 'hook_servir.py', 10),
-    ('Stop', None, 'hook_cerebro.py', 5),
-    ('Stop', None, 'hook_guardar.py', 10),
-    ('SubagentStop', None, 'hook_cerebro.py', 5),
-    ('Notification', None, 'hook_cerebro.py', 5),
-    ('PreCompact', None, 'hook_cerebro.py', 5),
-    ('SessionEnd', None, 'hook_cerebro.py', 5),
-)
-# Nombres de script estables (no cambian aunque se mueva el repo o cambie de nombre):
-# son la forma confiable de reconocer "esto lo instalamos nosotros" al reinstalar.
-SCRIPTS_PROPIOS = {script for _, _, script, _ in HOOKS}
+EVENTS = ('SessionStart', 'PreToolUse', 'PostToolUse', 'PostToolUseFailure', 'UserPromptSubmit',
+          'Stop', 'SubagentStop', 'Notification', 'PreCompact', 'SessionEnd')
+HOOKS = tuple((event, '*' if event in ('PreToolUse', 'PostToolUse', 'PostToolUseFailure') else None,
+               'bridge.py', 30) for event in EVENTS)
+SCRIPTS_PROPIOS = {'bridge.py', 'hook_inicio.py', 'hook_cerebro.py', 'hook_guardar.py', 'hook_freno.py',
+                  'hook_parecidas.py', 'hook_choques.py', 'hook_servir.py'}
 
 
 def comando(script, timeout):
-    script_ruta = BASE.parent / 'engine' / script
-    partes = [f'CLAUDE_PLUGIN_ROOT={ROOT}', f'CLAUDE_PLUGIN_DATA={DATA}',
-              'CLAUDE_PLUGIN_OPTION_SERVIR_CONTEXTO=true',
-              '/usr/bin/python3', '-I', '-S', str(script_ruta)]
-    return {'type': 'command', 'command': ' '.join(partes), 'timeout': timeout}
+    from desktop_runtime import hook_command
+    return dict(type='command',command=hook_command(BASE/script,environment=dict(SYNOPSIS_ROOT=ROOT,SYNOPSIS_DATA=DATA,CLAUDE_PLUGIN_OPTION_SERVIR_CONTEXTO='true')),timeout=timeout)
 
 
 def hooks_nuevos():
@@ -67,7 +50,8 @@ def grupo_es_nuestro(grupo):
     el repo se haya movido: mira el nombre del hook_*.py en el comando, no una marca
     efímera (la ruta completa puede cambiar de un reinstall al otro)."""
     for h in grupo.get('hooks', []):
-        comando_texto = h.get('command', '')
+        from desktop_runtime import hook_text
+        comando_texto = hook_text(h.get('command', ''))
         if 'CLAUDE_PLUGIN_OPTION_SERVIR_CONTEXTO=' in comando_texto and \
                 any(script in comando_texto for script in SCRIPTS_PROPIOS):
             return True
@@ -83,7 +67,7 @@ def preparar(ruta_settings):
         datos['hooks'][evento] = [g for g in existentes if not grupo_es_nuestro(g)] + grupos
     desactivados = []
     for clave in list(datos.get('enabledPlugins', {})):
-        if clave.startswith('neuromapa@') and datos['enabledPlugins'][clave]:
+        if clave.startswith('synopsis@') and datos['enabledPlugins'][clave]:
             datos['enabledPlugins'][clave] = False
             desactivados.append(clave)
     return json.dumps(datos, indent=2) + '\n', desactivados
@@ -95,37 +79,21 @@ def main():
     parser.add_argument('--settings', type=Path, default=Path.home() / '.claude' / 'settings.json')
     args = parser.parse_args()
     if not (ROOT / 'hook_cerebro.py').is_file():
-        raise SystemExit(f'No encontré el motor de Synapsis en {ROOT}.')
+        raise SystemExit(f'No encontré el motor de Synopsis en {ROOT}.')
     contenido, desactivados = preparar(args.settings)
+    files = {args.settings: contenido}
+    user_config = args.settings.parent.parent / '.claude.json'
+    files[user_config] = integration_setup.json_mcp(user_config)
+    files.update(integration_setup.skill_files(args.settings.parent / 'skills'))
+    backup = integration_setup.install_files(files, args.settings.parent / 'synopsis-backups', args.dry_run)
     if args.dry_run:
-        extra = f' (desactivaría el plugin del marketplace: {", ".join(desactivados)})' if desactivados else ''
-        print(f'Configuración válida: {len(HOOKS)} hooks.{extra} No se cambió ningún archivo.')
+        print(f'Plan válido: {len(HOOKS)} eventos, MCP y memoria compartida. Sin cambios.')
         return
-    args.settings.parent.mkdir(parents=True, exist_ok=True)
-    backup = args.settings.parent / 'neuromapa-backups' / datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')
-    backup.mkdir(parents=True, mode=0o700)
-    original = args.settings.read_bytes() if args.settings.exists() else None
-    if original is not None:
-        (backup / 'settings.json').write_bytes(original)
-        (backup / 'settings.json').chmod(0o600)
-    try:
-        temporal = args.settings.with_name(args.settings.name + '.neuromapa.tmp')
-        temporal.write_text(contenido, encoding='utf-8')
-        temporal.chmod(0o600)
-        os.replace(temporal, args.settings)
-    except Exception:
-        if original is not None:
-            args.settings.write_bytes(original)
-        elif args.settings.exists():
-            args.settings.unlink()
-        raise
-    print('Synapsis instalado para Claude Code. Copia de seguridad en: ' + str(backup))
-    if desactivados:
-        print('Desactivé el plugin del marketplace para evitar eventos duplicados: ' + ', '.join(desactivados))
-        print('Perdés /neuromapa:abrir, /neuromapa:salud y /neuromapa:sobre (son del plugin); '
-              'usá los scripts de engine/ directo si los necesitás.')
+    print('Synopsis instalado para Claude Code: hooks, MCP y memoria compartida.')
+    if backup:
+        print('Respaldo en: ' + str(backup))
     comun.anotar_ubicacion()
-    print('Reiniciá Claude Code para que cargue los hooks nuevos.')
+    print('Reinicia Claude Code para cargar la integración.')
 
 
 if __name__ == '__main__':

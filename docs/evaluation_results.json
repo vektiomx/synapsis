@@ -1,0 +1,846 @@
+{
+  "date": "2026-10-16",
+  "scope": "Synthetic data and isolated state; no personal project contents or live IDE configuration modified.",
+  "continuity": {
+    "passed": true,
+    "provider": "codex",
+    "model": null,
+    "recall_model": null,
+    "scenario": "synthetic private fact, correction, independent inference, blind baseline",
+    "checks": {
+      "corrected_value": true,
+      "private_code": true,
+      "baseline_has_no_private_code": true,
+      "revisions": 2,
+      "single_note": true
+    },
+    "stages": [
+      {
+        "stage": "save",
+        "receipt": {
+          "turn": "4718795146b24bc098172ce57e5b148f",
+          "status": "saved",
+          "verified_writes": 1
+        },
+        "answer": "Propongo guardar ambos datos en una sola nota «iris-policy»: retención de 127 segundos y código operativo iris-a52db5365b. Pendiente de validación y aplicación."
+      },
+      {
+        "stage": "correct",
+        "receipt": {
+          "turn": "68c0ae311e144cff8ff54aa5fc80ce14",
+          "status": "saved",
+          "verified_writes": 1
+        },
+        "answer": "Propongo actualizar la misma nota a 389 segundos de retención, conservando el código operativo iris-a52db5365b. La aplicación está pendiente de validación."
+      },
+      {
+        "stage": "recall",
+        "receipt": {
+          "turn": "b83c991638894ef288d66ae02ca7534a",
+          "status": "no_change",
+          "verified_writes": 0
+        },
+        "answer": "389 segundos; iris-a52db5365b."
+      }
+    ],
+    "baseline": {
+      "answer": "Retención: desconocida. Código operativo: desconocido.",
+      "memory": {
+        "outcome": "no_change",
+        "reason": "No hay evidencia disponible sobre los valores de este proyecto y el usuario pidió no crear otra nota.",
+        "actions": []
+      }
+    },
+    "limitation": "One synthetic scenario, not a broad model intelligence benchmark."
+  },
+  "reconciliation": {
+    "passed": true,
+    "provider": "codex",
+    "model": null,
+    "checks": {
+      "semantic_duplicate": true,
+      "contradiction": true,
+      "read_only": true,
+      "no_invented_winner": true
+    },
+    "findings": [
+      {
+        "relation": "duplicate",
+        "files": [
+          "deployment-rule",
+          "release-policy"
+        ],
+        "reason": "\"Deployment is not allowed unless every automated test has passed.\" and \"Deploy only if all automated tests pass.\" express the same deployment prerequisite, with no unique information to preserve separately."
+      },
+      {
+        "relation": "contradiction",
+        "files": [
+          "iris-rule-a",
+          "iris-rule-b"
+        ],
+        "reason": "\"At present the retention of queue Iris is 389 seconds.\" conflicts with \"At present the retention of queue Iris is 127 seconds.\" Both describe the current retention, and neither explicitly supersedes the other."
+      }
+    ],
+    "actions": 2,
+    "limitation": "One synthetic review; not a broad semantic benchmark."
+  },
+  "embeddings": {
+    "passed": true,
+    "model": "BAAI/bge-small-en-v1.5",
+    "dimensions": 384,
+    "cases": [
+      {
+        "query": "The device has malfunctioned. What now?",
+        "expected": 0,
+        "returned": [
+          0,
+          1
+        ],
+        "scores": {
+          "0": 0.7403,
+          "1": 0.6118
+        },
+        "status": "ready",
+        "passed": true
+      },
+      {
+        "query": "How can lost records be recovered?",
+        "expected": 1,
+        "returned": [
+          1
+        ],
+        "scores": {
+          "1": 0.6978
+        },
+        "status": "ready",
+        "passed": true
+      },
+      {
+        "query": "Tell me about seasonal fruit.",
+        "expected": 2,
+        "returned": [
+          2
+        ],
+        "scores": {
+          "2": 0.6578
+        },
+        "status": "ready",
+        "passed": true
+      },
+      {
+        "query": "What is the mass of a neutrino?",
+        "expected": null,
+        "returned": [],
+        "scores": {},
+        "status": "ready",
+        "passed": true
+      }
+    ],
+    "transport": "actual HTTP compatible embeddings, SQLite cache",
+    "embedding_batch_sizes": [
+      3,
+      1,
+      1,
+      1,
+      1
+    ],
+    "threshold": 0.6,
+    "limitation": "Four synthetic English queries with one calibrated model; not multilingual or broad recall quality."
+  },
+  "native_opencode": {
+    "install_code": 0,
+    "run_code": 0,
+    "heartbeat": {
+      "time": 1792184000.336791,
+      "event": "UserPromptSubmit",
+      "ok": true
+    },
+    "event_types": [
+      "step_start",
+      "text",
+      "step_finish"
+    ],
+    "answer": "prueba correcta",
+    "stderr_tail": ""
+  },
+  "retrieval": {
+    "dataset": "synthetic-regression-v1",
+    "cases": 13,
+    "positive_cases": 10,
+    "recall_at_5": 1.0,
+    "mrr": 1.0,
+    "negative_cases": 3,
+    "abstention_accuracy": 1.0,
+    "project_leaks": 0,
+    "superseded_leaks": 0,
+    "passed": true,
+    "results": [
+      {
+        "query": "trayectos OSRM privado",
+        "expected": "routing",
+        "returned": [
+          "routing"
+        ],
+        "ms": 19.29
+      },
+      {
+        "query": "route planning directions provider",
+        "expected": "routing",
+        "returned": [
+          "routing"
+        ],
+        "ms": 1.4
+      },
+      {
+        "query": "cómo calcula el camino del camión",
+        "expected": "routing",
+        "returned": [
+          "routing"
+        ],
+        "ms": 1.22
+      },
+      {
+        "query": "Redis caché segundos",
+        "expected": "cache",
+        "returned": [
+          "cache"
+        ],
+        "ms": 1.21
+      },
+      {
+        "query": "redis cache ttl retention",
+        "expected": "cache",
+        "returned": [
+          "cache"
+        ],
+        "ms": 1.21
+      },
+      {
+        "query": "rollback release deployment recovery",
+        "expected": "deployment",
+        "returned": [
+          "deployment"
+        ],
+        "ms": 1.2
+      },
+      {
+        "query": "volver a la versión anterior",
+        "expected": "deployment",
+        "returned": [
+          "deployment"
+        ],
+        "ms": 1.22
+      },
+      {
+        "query": "how should you explain things",
+        "expected": "communication",
+        "returned": [
+          "communication"
+        ],
+        "ms": 1.19
+      },
+      {
+        "query": "invoice notification recipient",
+        "expected": "billing",
+        "returned": [
+          "billing"
+        ],
+        "ms": 1.19
+      },
+      {
+        "query": "a quién avisar una factura vencida",
+        "expected": "billing",
+        "returned": [
+          "billing"
+        ],
+        "ms": 1.18
+      },
+      {
+        "query": "NEBULA ROJA campaña temporal",
+        "expected": null,
+        "returned": [],
+        "ms": 1.09
+      },
+      {
+        "query": "quásares neutrinos astrofísica",
+        "expected": null,
+        "returned": [],
+        "ms": 1.11
+      },
+      {
+        "query": "acuario peces arrecife",
+        "expected": null,
+        "returned": [],
+        "ms": 1.15
+      }
+    ],
+    "limitation": "Retrieval regressions only; does not measure model intelligence or real-world accuracy."
+  },
+  "limitations": [
+    "No Windows PowerShell validation on this Linux host.",
+    "Cursor, Antigravity and Claude host loading tested through native contract fixtures, not interactive applications.",
+    "Codex used its authenticated client default model; two different inference models were not evaluated.",
+    "OpenCode Go requires subscription and free inference provider rejects controlled connector usage; neither counted as a passed inference evaluation.",
+    "Semantic cosine threshold is model/corpus dependent; real English embedding test used 0.60 rather than default 0.72."
+  ],
+  "unit_tests": {
+    "passed": 146,
+    "total": 146,
+    "seconds": 7.22,
+    "location": "final feature worktree"
+  },
+  "engine_smoke": {
+    "passed": 767,
+    "total": 767,
+    "seconds": 41.9,
+    "skipped": [
+      "Windows PowerShell"
+    ]
+  },
+  "release_check": {
+    "reproducible": true,
+    "sha256_manifest_verified": true,
+    "extracted_five_client_install": true,
+    "dry_run_writes": false
+  },
+  "strict_guard_v03": {
+    "unit_tests": {
+      "passed": 173,
+      "total": 173,
+      "seconds": 10.721,
+      "location": "final feature worktree"
+    },
+    "engine_smoke": {
+      "passed": 767,
+      "total": 767,
+      "seconds": 55.2,
+      "skipped": [
+        "Windows PowerShell"
+      ]
+    },
+    "adversarial": {
+      "passed": true,
+      "cases": 10,
+      "results": [
+        {
+          "scenario": "no_evidence",
+          "expected": "abstained",
+          "actual": "abstained",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        },
+        {
+          "scenario": "forged_citation",
+          "expected": "unknown_evidence_id",
+          "actual": "unknown_evidence_id",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        },
+        {
+          "scenario": "unsupported_write",
+          "expected": "unknown_evidence_id",
+          "actual": "unknown_evidence_id",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        },
+        {
+          "scenario": "file",
+          "expected": "evidence_bound",
+          "actual": "evidence_bound",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        },
+        {
+          "scenario": "stale",
+          "expected": "evidence_changed",
+          "actual": "evidence_changed",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        },
+        {
+          "scenario": "quarantine",
+          "expected": "abstained",
+          "actual": "abstained",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        },
+        {
+          "scenario": "calculate",
+          "expected": "evidence_bound",
+          "actual": "evidence_bound",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        },
+        {
+          "scenario": "forbidden",
+          "expected": "abstained",
+          "actual": "abstained",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        },
+        {
+          "scenario": "endless",
+          "expected": "evidence_round_limit",
+          "actual": "evidence_round_limit",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        },
+        {
+          "scenario": "json",
+          "expected": "evidence_bound",
+          "actual": "evidence_bound",
+          "passed": true,
+          "draft_leak": false,
+          "unsupported_write": false
+        }
+      ],
+      "limitation": "Scripted adversarial adapters test enforcement. This does not measure real-model hallucination rates, relevance or source truth."
+    },
+    "continuity_real": {
+      "passed": true,
+      "provider": "codex",
+      "model": null,
+      "recall_model": null,
+      "scenario": "synthetic private fact, correction, independent inference, blind baseline",
+      "checks": {
+        "corrected_value": true,
+        "private_code": true,
+        "baseline_has_no_private_code": true,
+        "baseline_abstained": true,
+        "revisions": 2,
+        "single_note": true
+      },
+      "stages": [
+        {
+          "stage": "save",
+          "receipt": {
+            "turn": "432c2a3c9f824f56a31738ddaaa100f6",
+            "status": "saved",
+            "verified_writes": 1
+          },
+          "answer": "Memoria actualizada: 1 escritura(s) comprobada(s). No se publica el borrador del modelo como hecho."
+        },
+        {
+          "stage": "correct",
+          "receipt": {
+            "turn": "9a115acce03d4c88a506e2bcf8af88d4",
+            "status": "saved",
+            "verified_writes": 1
+          },
+          "answer": "Memoria actualizada: 1 escritura(s) comprobada(s). No se publica el borrador del modelo como hecho."
+        },
+        {
+          "stage": "recall",
+          "receipt": {
+            "turn": "108e966351bf4fd7876608196e8b3916",
+            "status": "no_change",
+            "verified_writes": 0
+          },
+          "answer": "Registro de memoria — declaración histórica, sin corroboración externa [ev-4583dc33de188313ef5300dc]\niris-policy.md\n> \n> La retención de la cola Iris es 389 segundos.\n> \n> El código operativo de Iris es iris-73df2ce4a6."
+        }
+      ],
+      "baseline": {
+        "protocol": "synopsis.run.v2",
+        "turn": "6f8d333df61443a698dd39c27d2d67b6",
+        "answer": "No hay evidencia suficiente para responder con respaldo comprobable.",
+        "verification": {
+          "status": "abstained",
+          "policy": "strict-extractive-v1",
+          "sources": [],
+          "scope": "source_fidelity_only"
+        },
+        "receipt": {
+          "turn": "6f8d333df61443a698dd39c27d2d67b6",
+          "status": "no_change",
+          "verified_writes": 0
+        },
+        "working": {
+          "revision": null,
+          "state": null,
+          "source": null
+        }
+      },
+      "trace": [
+        {
+          "evidence": [
+            {
+              "id": "ev-b6a481ee578bc0b13db131ae",
+              "kind": "user_input",
+              "text": "Recuerda estas dos decisiones explícitas del usuario para este proyecto ficticio, en una sola nota iris-policy:\n\nLa retención de la cola Iris es 127 segundos.\n\nEl código operativo de Iris es iris-73df2ce4a6."
+            }
+          ],
+          "failures": [],
+          "proposal": {
+            "answer": "Propuesta de nota iris-policy con las dos decisiones explícitas del usuario, pendiente de guardado.",
+            "grounding": {
+              "sources": [
+                "ev-b6a481ee578bc0b13db131ae"
+              ],
+              "abstain": false
+            },
+            "memory": {
+              "outcome": "saved",
+              "actions": [
+                {
+                  "filename": "iris-policy",
+                  "name": "iris-policy",
+                  "description": "Decisiones del usuario sobre Iris para el proyecto ficticio.",
+                  "kind": "project",
+                  "content": "La retención de la cola Iris es 127 segundos.\n\nEl código operativo de Iris es iris-73df2ce4a6.",
+                  "index_line": "[iris-policy](iris-policy.md)",
+                  "source": "ev-b6a481ee578bc0b13db131ae",
+                  "support": [
+                    {
+                      "source": "ev-b6a481ee578bc0b13db131ae",
+                      "quote": "La retención de la cola Iris es 127 segundos.\n\nEl código operativo de Iris es iris-73df2ce4a6."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "evidence": [
+            {
+              "id": "ev-add446df79ce8dce4b5ffd66",
+              "kind": "user_input",
+              "text": "Corrección explícita: actualiza la misma nota iris-policy y conserva el código operativo vigente.\n\nLa retención de la cola Iris es 389 segundos."
+            },
+            {
+              "id": "ev-5b1f0fe324b0333885bec4db",
+              "kind": "memory_record",
+              "text": "\nLa retención de la cola Iris es 127 segundos.\n\nEl código operativo de Iris es iris-73df2ce4a6."
+            }
+          ],
+          "failures": [],
+          "proposal": {
+            "answer": "Propuesta para iris-policy: retención de 389 segundos y conservación del código operativo iris-73df2ce4a6. Escritura pendiente de recibo.",
+            "grounding": {
+              "sources": [
+                "ev-add446df79ce8dce4b5ffd66",
+                "ev-5b1f0fe324b0333885bec4db"
+              ],
+              "abstain": false
+            },
+            "memory": {
+              "outcome": "saved",
+              "actions": [
+                {
+                  "filename": "iris-policy",
+                  "name": "iris-policy",
+                  "description": "Política de Iris",
+                  "kind": "project",
+                  "content": "La retención de la cola Iris es 389 segundos.\n\nEl código operativo de Iris es iris-73df2ce4a6.",
+                  "index_line": "- [iris-policy](iris-policy.md)",
+                  "source": "ev-add446df79ce8dce4b5ffd66",
+                  "support": [
+                    {
+                      "source": "ev-add446df79ce8dce4b5ffd66",
+                      "quote": "La retención de la cola Iris es 389 segundos."
+                    },
+                    {
+                      "source": "ev-5b1f0fe324b0333885bec4db",
+                      "quote": "El código operativo de Iris es iris-73df2ce4a6."
+                    }
+                  ],
+                  "overwrite": true,
+                  "expected_revision": 1
+                }
+              ]
+            }
+          }
+        },
+        {
+          "evidence": [
+            {
+              "id": "ev-0a7ab5c1527d9e4cbdf1e305",
+              "kind": "user_input",
+              "text": "¿Cuántos segundos dura la retención de la cola Iris y cuál es su código operativo? No crees otra nota."
+            },
+            {
+              "id": "ev-4583dc33de188313ef5300dc",
+              "kind": "memory_record",
+              "text": "\nLa retención de la cola Iris es 389 segundos.\n\nEl código operativo de Iris es iris-73df2ce4a6."
+            }
+          ],
+          "failures": [],
+          "proposal": {
+            "answer": "Según el registro recordado, la retención de la cola Iris es 389 segundos y su código operativo es iris-73df2ce4a6.",
+            "grounding": {
+              "sources": [
+                "ev-4583dc33de188313ef5300dc"
+              ],
+              "abstain": false
+            },
+            "memory": {
+              "outcome": "no_change",
+              "reason": "No durable change",
+              "actions": []
+            }
+          }
+        },
+        {
+          "evidence": [
+            {
+              "id": "ev-0a7ab5c1527d9e4cbdf1e305",
+              "kind": "user_input",
+              "text": "¿Cuántos segundos dura la retención de la cola Iris y cuál es su código operativo? No crees otra nota."
+            }
+          ],
+          "failures": [],
+          "proposal": {
+            "answer": "No hay evidencia suficiente para determinar la retención de Iris ni su código operativo.",
+            "grounding": {
+              "sources": [],
+              "abstain": true
+            },
+            "memory": {
+              "outcome": "no_change",
+              "reason": "No se solicitó ningún cambio durable.",
+              "actions": []
+            },
+            "evidence_requests": [
+              {
+                "tool": "read_file",
+                "path": "README.md",
+                "start": 1,
+                "end": 160
+              },
+              {
+                "tool": "read_file",
+                "path": "settings.json",
+                "start": 1,
+                "end": 160
+              }
+            ]
+          }
+        },
+        {
+          "evidence": [
+            {
+              "id": "ev-0a7ab5c1527d9e4cbdf1e305",
+              "kind": "user_input",
+              "text": "¿Cuántos segundos dura la retención de la cola Iris y cuál es su código operativo? No crees otra nota."
+            }
+          ],
+          "failures": [
+            "unsafe_evidence_file",
+            "unsafe_evidence_file"
+          ],
+          "proposal": {
+            "answer": "No hay evidencia disponible para determinar la retención en segundos ni el código operativo de la cola Iris.",
+            "grounding": {
+              "sources": [],
+              "abstain": true
+            },
+            "memory": {
+              "outcome": "no_change",
+              "reason": "No durable change; no se solicitó crear otra nota.",
+              "actions": []
+            }
+          }
+        }
+      ],
+      "limitation": "One synthetic scenario, not a broad model intelligence benchmark."
+    },
+    "scope": "Strict extractive source fidelity and literal memory admission; not a universal truth or hallucination-rate guarantee.",
+    "release_check": {
+      "manifest_matches_branch": true,
+      "dry_run_read_only": true,
+      "five_client_install": true,
+      "mcp_tools": 14,
+      "verify_command": true,
+      "environment": "isolated temporary HOME; no live IDE configuration changes"
+    }
+  },
+  "automatic_project_binding_v04": {
+    "version": "0.4.0",
+    "unit_tests": {
+      "passed": 197,
+      "seconds": 11.8,
+      "checkout": "feat/reliable-project-memory"
+    },
+    "engine_map_checks": {
+      "passed": 767,
+      "seconds": 44.6,
+      "omitted": [
+        "Windows PowerShell unavailable"
+      ]
+    },
+    "new_regressions": {
+      "workspace": 20,
+      "http_and_dom": 2
+    },
+    "native_bridges": [
+      "claude",
+      "codex",
+      "antigravity",
+      "opencode",
+      "cursor"
+    ],
+    "live_check": {
+      "project": "Meximova",
+      "existing_memory_reused": true,
+      "root_and_subfolder_same_uuid": true,
+      "unchanged_markdown_notes": 12
+    },
+    "limits": [
+      "Local registry, no cross-machine synchronization",
+      "Ambiguous ownership requires a map choice",
+      "Worktree memories remain separate; no automatic shared fact library",
+      "Root without Git, marker, IDE root or manifest cannot be inferred reliably",
+      "Cursor prompt injection contract unchanged",
+      "DOM and HTTP UI checks do not constitute interactive validation in all IDEs"
+    ],
+    "published": false
+  },
+  "review_reminders_v041": {
+    "version": "0.4.1",
+    "unit_tests": 204,
+    "unit_seconds": 11.606,
+    "engine_map_checks": 767,
+    "engine_map_seconds": 42.6,
+    "new_regressions": 7,
+    "scope": [
+      "review_cutoff_for_saved_and_no_change",
+      "full_session_and_project_isolation",
+      "new_changes_still_count",
+      "read_only_database_lookup",
+      "foreign_project_edits_excluded"
+    ],
+    "autonomous_memory_extractor_implemented": false,
+    "omitted": [
+      "Windows PowerShell unavailable"
+    ]
+  },
+  "automatic_review_v050": {
+    "version": "0.5.0",
+    "unit_tests": 227,
+    "unit_seconds": 15.46,
+    "new_reviewer_tests": 23,
+    "engine_checks": {
+      "passed": 767,
+      "total": 767,
+      "seconds": 48.7,
+      "omitted": [
+        "Windows PowerShell unavailable"
+      ]
+    },
+    "native_bridge_contracts": {
+      "clients": [
+        "claude",
+        "codex",
+        "opencode",
+        "cursor",
+        "antigravity"
+      ],
+      "provider": "scripted subprocess fixture",
+      "interactive_hosts_tested": false
+    },
+    "real_provider": {
+      "client": "codex",
+      "seconds": 8.07,
+      "verified_writes": 1,
+      "user_decision_days": 47,
+      "unverified_assistant_days": 999,
+      "assistant_claim_stored": false,
+      "project": "temporary fixture"
+    },
+    "limitations": [
+      "Source fidelity is not universal truth",
+      "Native primary-model output remains cooperative",
+      "Closed primary cycles are respected",
+      "Cursor/Antigravity need accessible provider or local Ollama",
+      "Recovery wakes on next lifecycle event; no periodic daemon",
+      "Temporary input expires on next queue access after 24h",
+      "Automatic replacement of old facts requires reconciliation"
+    ]
+  },
+  "situated_experiences_v060": {
+    "version": "0.6.0",
+    "unit_tests": 260,
+    "unit_seconds": 16.308,
+    "engine_checks": {
+      "passed": 767,
+      "total": 767,
+      "seconds": 44.9,
+      "omitted": [
+        "Windows PowerShell unavailable"
+      ]
+    },
+    "experience_engine_contracts": 26,
+    "review_contracts": 29,
+    "mcp_tools": 15,
+    "deterministic_lifecycle": {
+      "protocol": "synopsis.experience-evaluation.v1",
+      "mode": "deterministic_fixture",
+      "passed": true,
+      "checks": {
+        "experience_captured": true,
+        "scoped_observation": true,
+        "unrelated_path_abstains": true,
+        "changed_evidence_stale": true,
+        "reported_limits_respected": null
+      },
+      "answer": null,
+      "seconds": 0.01,
+      "limitation": "One synthetic development/configuration episode; not a comparative coding benchmark or proof of causal benefit."
+    },
+    "real_provider_lifecycle": {
+      "protocol": "synopsis.experience-evaluation.v1",
+      "mode": "real_provider",
+      "passed": true,
+      "checks": {
+        "experience_captured": true,
+        "scoped_observation": true,
+        "unrelated_path_abstains": true,
+        "changed_evidence_stale": true,
+        "reported_limits_respected": true
+      },
+      "answer": {
+        "ttl_hours": 19,
+        "decision": "keep_until_expiry",
+        "recovery_proven": false
+      },
+      "seconds": 19.93,
+      "limitation": "One synthetic development/configuration episode; not a comparative coding benchmark or proof of causal benefit."
+    },
+    "isolated_runner": {
+      "platform": "Linux bubblewrap",
+      "positive_control": "observed_support",
+      "negative_control": "contradicted",
+      "private_environment_absent": true,
+      "real_home_credentials_inaccessible": true
+    },
+    "scope": [
+      "Source-bound automatic experience proposals with one schema repair",
+      "Situation/action/rationale/outcome/limits/counterexamples",
+      "Versioned records and revision-bound feedback",
+      "Prompt/pretool and MCP/CLI context delivery",
+      "Declared condition checks and stale evidence",
+      "Independent review of primary closures",
+      "Retained recoverable inputs after attempt exhaustion",
+      "Authenticated map status/retry and periodic maintenance"
+    ],
+    "limitations": [
+      "Narrative and causality remain inferred",
+      "One real synthetic configuration episode, not a comparative programming benchmark",
+      "Executable replay requires functional Linux isolation and supported Python unittest layout",
+      "No interactive validation across all five IDE hosts or Windows",
+      "Native model adherence is cooperative",
+      "Retried exhausted failures require explicit reset within retention",
+      "Cross-machine synchronization not implemented",
+      "No claim of worldwide novelty"
+    ]
+  }
+}

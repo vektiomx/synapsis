@@ -153,7 +153,7 @@ def linea_salud(hoy=None):
         guardado = leer_objeto_json(en_vivo() / ARCHIVO)
         if guardado and guardado.get("version") != VERSION:
             return ("Aprendizaje: aprendido.json es de otra versión (lo sigue escribiendo un mapa abierto con el código "
-                    "anterior): reinicialo (con el plugin, /neuromapa:abrir --reiniciar) y se rearma solo en un minuto.")
+                    "anterior): reinicialo (con el plugin, /synopsis:abrir --reiniciar) y se rearma solo en un minuto.")
         return ("Aprendizaje: todavía sin datos (se rearma solo: cada minuto con el mapa abierto y, si no, al terminar "
                 "una respuesta, cada 10 minutos como mucho).")
     suma = resumen_dias(aprendido.dias, 7, hoy)

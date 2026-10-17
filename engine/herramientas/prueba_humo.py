@@ -284,14 +284,14 @@ def revisar_hook(t):
                                            "trigger_file_path": str(t / "datos" / f"{SECRETO}.txt")}),
         ("un nombre de herramienta enorme", {"hook_event_name": "PostToolUse", "tool_name": f'mcp__otro__{"a" * 3000}'}),
         ("una consulta desde el plugin", {"hook_event_name": "PostToolUse", "tool_name": "Bash",
-                                          "tool_input": {"command": f"neuromapa --sobre \"tema {SECRETO}\""},
+                                          "tool_input": {"command": f"synopsis --sobre \"tema {SECRETO}\""},
                                           "tool_response": {"stdout": recomendada}}),
         ("una consulta por el lanzador", {"hook_event_name": "PostToolUse", "tool_name": "Bash",
-                                          "tool_input": {"command": "sh \"C:/x/plugin/bin/neuromapa\" --salud"}}),
-        ("un comando en una carpeta llamada Neuromapa", {"hook_event_name": "PostToolUse", "tool_name": "Bash",
-                                                         "tool_input": {"command": "cd D:/Neuromapa && ls"}}),
+                                          "tool_input": {"command": "sh \"C:/x/plugin/bin/synopsis\" --salud"}}),
+        ("un comando en una carpeta llamada Synopsis", {"hook_event_name": "PostToolUse", "tool_name": "Bash",
+                                                         "tool_input": {"command": "cd D:/Synopsis && ls"}}),
         ("una consulta del gasto", {"hook_event_name": "PostToolUse", "tool_name": "Bash",
-                                    "tool_input": {"command": "neuromapa --gasto 3"}}),
+                                    "tool_input": {"command": "synopsis --gasto 3"}}),
         ("un echo con una palabra terminada en .md", {"hook_event_name": "PostToolUse", "tool_name": "Bash",
                                                       "tool_input": {"command": f"echo 'mi nota {SECRETO}.md'"}}),
         ("un mensaje de commit que nombra un .md", {"hook_event_name": "PostToolUse", "tool_name": "Bash",
@@ -412,8 +412,8 @@ def revisar_hook(t):
     probar("y con la nota que el cerebro recomendó",
            any(str(r).endswith("perfil-ana.md") for r in consulta.get("fs") or []), consulta)
     plugin, lanzador, carpeta = (eventos["una consulta desde el plugin"], eventos["una consulta por el lanzador"],
-                                 eventos["un comando en una carpeta llamada Neuromapa"])
-    probar("en el plugin, «neuromapa --sobre» y el lanzador también cuentan como consultas; una carpeta llamada así, no",
+                                 eventos["un comando en una carpeta llamada Synopsis"])
+    probar("en el plugin, «synopsis --sobre» y el lanzador también cuentan como consultas; una carpeta llamada así, no",
            plugin.get("k") == "consulta" and plugin.get("p") == "sobre"
            and any(str(r).endswith("perfil-ana.md") for r in plugin.get("fs") or [])
            and lanzador.get("k") == "consulta" and lanzador.get("p") == "salud" and carpeta.get("k") != "consulta",
@@ -447,12 +447,12 @@ def revisar_hook(t):
            ultimo.get("k") == "leer" and str(ultimo.get("f", "")).endswith("arreglo-login.md")
            and ultimo.get("r") == [1, 9, 9], ultimo)
     probar("main() no imprime nada (lo impreso entra al contexto de Claude)", salida.getvalue() == "", salida.getvalue())
-    os.environ["NEUROMAPA_PRUEBA"] = "1"
+    os.environ["SYNOPSIS_PRUEBA"] = "1"
     try:
         de_prueba = evento_de({"hook_event_name": "UserPromptSubmit", "prompt": "hola"})
     finally:
-        del os.environ["NEUROMAPA_PRUEBA"]
-    probar("con NEUROMAPA_PRUEBA=1 (las corridas de medir) cada evento queda marcado como prueba; sin eso, no",
+        del os.environ["SYNOPSIS_PRUEBA"]
+    probar("con SYNOPSIS_PRUEBA=1 (las corridas de medir) cada evento queda marcado como prueba; sin eso, no",
            de_prueba.get("z") == 1 and "z" not in evento_de({"hook_event_name": "UserPromptSubmit", "prompt": "hola"}),
            de_prueba)
     pista = hook_evento.aviso(SESION, str(t), [str(t / "memoria" / "arreglo-login.md"), f"https://x.invalid/{SECRETO}"],
@@ -479,9 +479,9 @@ def revisar_hook(t):
     paso_roto = ("import sys; sys.path.insert(0, sys.argv[1]); import hooks_comun; "
                  "hooks_comun.contexto('PostToolUse', (lambda: 1 / 0, lambda: 'sigue'))")
     callado, depurado = [subprocess.run([sys.executable, "-c", paso_roto, str(CARPETA)], capture_output=True, text=True,
-                                        timeout=30, env=dict(os.environ, NEUROMAPA_DEPURAR=valor))
+                                        timeout=30, env=dict(os.environ, SYNOPSIS_DEPURAR=valor))
                          for valor in ("", "1")]
-    probar("si un paso de un hook falla, los demás siguen; el error se ve solo con NEUROMAPA_DEPURAR=1",
+    probar("si un paso de un hook falla, los demás siguen; el error se ve solo con SYNOPSIS_DEPURAR=1",
            "sigue" in callado.stdout and not callado.stderr
            and "ZeroDivisionError" in depurado.stderr and "sigue" in depurado.stdout,
            (callado.stdout[-120:], callado.stderr[-120:], depurado.stderr[-120:]))
@@ -609,7 +609,7 @@ def revisar_permisos(t):
     (adentro / "clave.txt").write_text("x", encoding="utf-8")
     probar("ve cuando otra cuenta puede escribir en una carpeta",
            bool(permisos.ajenos(abierta)), permisos.ajenos(abierta))
-    probar("lo que crea Neuromapa nace cerrado aunque la carpeta de arriba esté abierta (y lo de adentro hereda)",
+    probar("lo que crea Synopsis nace cerrado aunque la carpeta de arriba esté abierta (y lo de adentro hereda)",
            permisos.ajenos(abierta / "datos") == [] and permisos.ajenos(adentro) == []
            and (os.name != "nt" or permisos.ajenos(adentro / "clave.txt") == []),
            (permisos.ajenos(abierta / "datos"), permisos.ajenos(adentro)))
@@ -651,7 +651,7 @@ def revisar_exportar(t):
     vacia.mkdir()
     anterior = t / "exportar-anterior"
     (anterior / ".claude-plugin").mkdir(parents=True)
-    (anterior / ".claude-plugin" / "plugin.json").write_text('{"name": "neuromapa"}', encoding="utf-8")
+    (anterior / ".claude-plugin" / "plugin.json").write_text('{"name": "synopsis"}', encoding="utf-8")
     (anterior / "cerebro.py").write_text("", encoding="utf-8")
     prohibidas = [Path(t.anchor), Path.home(), CARPETA.parent, CARPETA, CARPETA / "demo", ajena, ajena / "mio.txt"]
     permitidas = [t / "exportar-nueva", vacia, anterior]
@@ -666,7 +666,7 @@ def revisar_exportar(t):
            r.stdout[-300:])
     copia = t / "exportar-copia"
     r = correr([str(CARPETA / "herramientas" / "exportar.py"), "--destino", str(copia), "--autor", "Prueba", "--repo",
-                "prueba/neuromapa"], espera=300)
+                "prueba/synopsis"], espera=300)
     raiz = {p.name for p in copia.iterdir()} if copia.is_dir() else set()
     privados = sorted(raiz & {"config.json", "CLAUDE.md", "RETOMAR.md", "RETOMAR-historia.md", "en-vivo", "ideas",
                               "medicion", "hechos.json", "sugerencias.json", "publico"})
@@ -832,8 +832,8 @@ def revisar_config_rota(t):
         mensaje = ""
     except configuracion.ConfigInvalida as error:
         mensaje = str(error)
-    comando = correr([str(CARPETA / "neuromapa.py"), "--salud"], CEREBRO_CONFIG=str(rota / "config.json"))
-    probar("con un config.json roto, el error dice en castellano dónde se rompe, y neuromapa lo muestra sin traza y sale "
+    comando = correr([str(CARPETA / "synopsis.py"), "--salud"], CEREBRO_CONFIG=str(rota / "config.json"))
+    probar("con un config.json roto, el error dice en castellano dónde se rompe, y synopsis lo muestra sin traza y sale "
            "con 1 (antes, 30 renglones en inglés)",
            "no es un JSON válido" in mensaje and "renglón 1" in mensaje and comando.returncode == 1
            and "no pudo leer su configuración" in comando.stderr and "Traceback" not in comando.stderr + comando.stdout,
@@ -944,7 +944,7 @@ def revisar_configuracion(t):
     salidas = {}
     for nombre, argv in (("tipeo", [str(CARPETA / "servidor.py"), "--dmeo", "--sin-navegador", "--puerto", "0"]),
                          ("ayuda", [str(CARPETA / "servidor.py"), "--help"]),
-                         ("plugin", [str(CARPETA / "neuromapa.py"), "abrir", "--dmeo", "--sin-navegador", "--puerto", "0"])):
+                         ("plugin", [str(CARPETA / "synopsis.py"), "abrir", "--dmeo", "--sin-navegador", "--puerto", "0"])):
         try:
             r = correr(argv, espera=30)
             salidas[nombre] = (r.returncode, r.stdout + r.stderr)
@@ -973,8 +973,8 @@ def revisar_configuracion(t):
            dos_modos.returncode == 2 and "no va junto" in dos_modos.stderr, (dos_modos.returncode, dos_modos.stderr[-160:]))
     permisos = {s: re.findall(r"^\s+- (\S+\(.*\))$", (CARPETA / "skills" / s / "SKILL.md").read_text(encoding="utf-8"), re.M)
                 for s in ("abrir", "salud", "sobre")}
-    probar("cada comando del plugin preaprueba solo su propio modo (nunca «neuromapa *», que dejaría escribir donde sea)",
-           all(permisos.values()) and all(re.search(r"neuromapa(\.cmd\")?\"? (--)?" + s, p)
+    probar("cada comando del plugin preaprueba solo su propio modo (nunca «synopsis *», que dejaría escribir donde sea)",
+           all(permisos.values()) and all(re.search(r"synopsis(\.cmd\")?\"? (--)?" + s, p)
                                           for s, lista in permisos.items() for p in lista),
            permisos)
 
@@ -1016,7 +1016,7 @@ def revisar_configuracion(t):
         primero.wait(10)
     probar("abrir-cerebro.bat dos veces reinicia: el segundo le pide al primero que se apague y arranca en su lugar "
            "(antes quedaban dos sobre los mismos datos, pisándose lo aprendido)",
-           se_fue and any("lo apagué" in v for v in segundo) and any("Neuromapa en vivo" in v for v in segundo),
+           se_fue and any("lo apagué" in v for v in segundo) and any("Synopsis en vivo" in v for v in segundo),
            (se_fue, segundo[-4:]))
     import archivos
     candado = servidor.EN_VIVO / getattr(servidor, "CANDADO_ARRANQUE", "")
@@ -1044,12 +1044,12 @@ def revisar_configuracion(t):
         apurado.wait(10)
     probar("dos arranques casi a la vez dejan uno solo: el segundo espera a que el primero termine de arrancar y lo "
            "reemplaza (antes, con menos de ~4 s de diferencia, quedaban dos y uno no se veía)",
-           reemplazado and any("lo apagué" in v for v in pegado) and any("Neuromapa en vivo" in v for v in pegado),
+           reemplazado and any("lo apagué" in v for v in pegado) and any("Synopsis en vivo" in v for v in pegado),
            (reemplazado, f"{tardo} s", pegado[-4:]))
     visto = arrancar()
     probar("servidor.py arranca entero como programa (el camino de abrir-cerebro.bat), hasta «en vivo», y nunca imprime "
            "la clave (antes la mostraba en la dirección; si lo arranca Claude queda en la charla)",
-           any("Neuromapa en vivo" in v for v in visto) and not any(servidor.clave() in v for v in visto)
+           any("Synopsis en vivo" in v for v in visto) and not any(servidor.clave() in v for v in visto)
            and any("clave.txt" in v for v in visto) and any("Para entrar" in v for v in visto), visto[-6:])
     del_plugin = arrancar("--apagar-solo")
     probar("desde el plugin, la dirección sale sin la clave (queda en la transcripción de la charla) y dice dónde está",
@@ -1089,13 +1089,13 @@ def revisar_configuracion(t):
     probar("una opción mal escrita o --help no arman ni sirven nada (con «--dmeo» antes se servían las notas reales)",
            salidas["tipeo"][0] == 2 and "No conozco --dmeo" in salidas["tipeo"][1] and "en vivo" not in salidas["tipeo"][1]
            and salidas["ayuda"][0] == 0 and "Uso: servidor.py" in salidas["ayuda"][1]
-           and salidas["plugin"][0] == 2 and "Uso: neuromapa abrir" in salidas["plugin"][1], salidas)
+           and salidas["plugin"][0] == 2 and "Uso: synopsis abrir" in salidas["plugin"][1], salidas)
     plantilla_texto = (CARPETA / "plantilla.html").read_text(encoding="utf-8")
     probar("la página de «falta la clave» dice dónde está la clave, y ella y el mapa vacío mandan a los lanzadores que "
            "andan en todos lados (no a «python servidor.py» ni a abrir-cerebro.bat, que necesitan «python»)",
-           b"en-vivo/clave.txt" in servidor.SIN_CLAVE and b"bin/neuromapa abrir" in servidor.SIN_CLAVE
+           b"en-vivo/clave.txt" in servidor.SIN_CLAVE and b"bin/synopsis abrir" in servidor.SIN_CLAVE
            and b"python servidor.py" not in servidor.SIN_CLAVE and "abrir-cerebro.bat" not in plantilla_texto
-           and "bin/neuromapa abrir" in plantilla_texto, servidor.SIN_CLAVE[-200:])
+           and "bin/synopsis abrir" in plantilla_texto, servidor.SIN_CLAVE[-200:])
     nombres_pagina = {}
     for bloque, desde, hasta in (("clases", "const CLASES =", "const TIPOS ="), ("tipos", "const TIPOS =", "const TIPOS_MEMORIA")):
         trozo = plantilla_texto.split(desde, 1)[1].split(hasta, 1)[0]
@@ -1109,7 +1109,7 @@ def revisar_configuracion(t):
     except configuracion.ConfigInvalida as error:
         dijo = str(error)
     probar("un config elegido que no existe avisa, en vez de armar el de fábrica", "no encontré" in dijo, dijo)
-    r = correr([str(CARPETA / "neuromapa.py"), "--salud"], CEREBRO_CONFIG=str(t / "no-existe" / "config.json"))
+    r = correr([str(CARPETA / "synopsis.py"), "--salud"], CEREBRO_CONFIG=str(t / "no-existe" / "config.json"))
     probar("si CEREBRO_CONFIG apunta a un archivo que no existe, la consola dice que la corrijas (no «arreglá ese "
            "archivo o borralo», que no existe)", r.returncode == 1 and "CEREBRO_CONFIG" in r.stderr
            and "Arreglá ese archivo" not in r.stderr, r.stderr[-300:])
@@ -1518,11 +1518,13 @@ def revisar_indice_guardado(t):
     try:
         nota.write_bytes(original + b"\npalabraguardadaunica\n")
         tercero = buscador.desde_disco()
+        tiene_palabra_nueva = bool(tercero.buscar("palabraguardadaunica")["resultados"])
     finally:
         nota.write_bytes(original)
     probar("el índice se guarda en en-vivo, se reusa mientras nada cambie y se rehace si cambia una nota",
            guardado and segundo.notas == primero.notas and not primero.buscar("palabraguardadaunica")["resultados"]
-           and bool(tercero.buscar("palabraguardadaunica")["resultados"]), (guardado, ruta))
+           and tiene_palabra_nueva
+           and not tercero.buscar("palabraguardadaunica")["resultados"], (guardado, ruta))
     llamadas = []
     rearmar = buscador.rearmar_de_fondo
     buscador.rearmar_de_fondo = lambda r: llamadas.append(r) or True
@@ -1533,6 +1535,7 @@ def revisar_indice_guardado(t):
         nota.write_bytes(original + b"\notrapalabraunica\n")
         rapido = buscador.desde_disco(esperar=False)
         esperado = buscador.desde_disco()
+        tiene_palabra_nueva = bool(esperado.buscar("otrapalabraunica")["resultados"])
     finally:
         nota.write_bytes(original)
         buscador.rearmar_de_fondo = rearmar
@@ -1540,7 +1543,8 @@ def revisar_indice_guardado(t):
            "esperaba ~2,6 s); la consola espera el nuevo",
            sin_cambios == 0 and len(llamadas) == 1 and isinstance(fresco, buscador.Indice)
            and not rapido.buscar("otrapalabraunica")["resultados"]
-           and bool(esperado.buscar("otrapalabraunica")["resultados"]), (sin_cambios, len(llamadas)))
+           and tiene_palabra_nueva
+           and not esperado.buscar("otrapalabraunica")["resultados"], (sin_cambios, len(llamadas)))
     buscador.desde_disco()
     probar("el índice reusado busca igual que el recién armado",
            segundo.segundos == primero.segundos and segundo.vecinos == primero.vecinos
@@ -1955,10 +1959,10 @@ def revisar_conector(t):
     texto = lambda i: ((por_id.get(i) or {}).get("result") or {}).get("content", [{}])[0].get("text", "")
     error = lambda i: ((por_id.get(i) or {}).get("result") or {}).get("isError") is True
     herramientas = [h["name"] for h in ((por_id.get(2) or {}).get("result") or {}).get("tools", [])]
-    probar("el conector habla MCP: se presenta, lista sus cuatro herramientas, contesta solo lo que tiene id y dice "
+    probar("el conector habla MCP: se presenta, lista sus catorce herramientas, contesta solo lo que tiene id y dice "
            "«método desconocido» a lo que no conoce",
            len(respuestas) == 7 and (por_id.get(1) or {}).get("result", {}).get("protocolVersion") == "2025-06-18"
-           and herramientas == ["sobre", "buscar", "leer_nota", "avisar_charla"]
+           and herramientas == ["sobre", "buscar", "leer_nota", "avisar_charla", "guardar", "abrir_mapa", "salud", "evaluar_recuerdo", "recordar", "historial_memoria", "iniciar_turno_memoria", "estado_memoria", "cerrar_turno_memoria", "responder_con_evidencia", "experiencias"]
            and (por_id.get(6) or {}).get("error", {}).get("code") == -32601, (respuestas[:2], r.stderr[-300:]))
     probar("«sobre» devuelve la pista avisando que es texto citado, y «leer_nota» lee solo notas del índice (un .py no)",
            not error(3) and "texto citado" in texto(3) and error(4) and not error(5) and "líneas 1 a 3" in texto(5),
@@ -1979,7 +1983,7 @@ def revisar_conector(t):
            and aviso_charla[0]["s"] not in otras, (texto(7), aviso_charla, otras))
     antes = registro.stat().st_size if registro.exists() else 0
     with open(registro, "ab") as f:
-        for herramienta in ("mcp__neuromapa__avisar_charla", "mcp__neuromapa__sobre"):
+        for herramienta in ("mcp__synopsis__avisar_charla", "mcp__synopsis__sobre"):
             f.write(json.dumps({"t": round(time.time(), 3), "s": "cccc1234", "e": "pre", "h": herramienta, "k": "otro"},
                                separators=(",", ":")).encode("utf-8") + b"\r\n")
     marca = registro.stat().st_size
@@ -1998,7 +2002,7 @@ def revisar_conector(t):
     with open(registro, "r+b") as f:
         f.truncate(antes)
     de_app = [json.loads(l) for l in nuevo.decode("utf-8", "replace").splitlines() if '"o":"app"' in l]
-    probar("si la llamada vino de Claude Code (su hook anotó «mcp__neuromapa__…» un instante antes), el conector no la "
+    probar("si la llamada vino de Claude Code (su hook anotó «mcp__synopsis__…» un instante antes), el conector no la "
            "anota como «Chat de la app»: Code ya anota su charla; lo que no vino de Code, sí",
            not any(e.get("e") == "usuario" or e.get("p") == "sobre" for e in de_app)
            and any(e.get("p") == "buscar" for e in de_app), (de_app, r.stderr[-300:]))
@@ -2715,7 +2719,7 @@ def revisar_servidor(t):
                 except Exception:
                     servidor.Servidor.handle_error(None, None, ("127.0.0.1", 1))
         probar("cerrar una pestaña no llena la ventana del servidor de errores en inglés; un error de verdad se avisa en "
-               "castellano", cortes.getvalue() == "" and otros.getvalue().startswith("Neuromapa: falló un pedido")
+               "castellano", cortes.getvalue() == "" and otros.getvalue().startswith("Synopsis: falló un pedido")
                and "ValueError" in otros.getvalue(), (cortes.getvalue()[:200], otros.getvalue()[:200]))
         anotado = servidor.EN_VIVO / "servidor.json"
         anotado.parent.mkdir(parents=True, exist_ok=True)
@@ -2986,7 +2990,7 @@ def revisar_firmas(puerto, anotado):
         impostor.server_close()
     filtrado = [r for r in recibidos if "secretisimo" in r[0] or servidor.clave() in json.dumps(r[1])
                 or not r[0].startswith("/hola?n=")]
-    probar("si otro programa ocupa el puerto anotado (el proceso existe pero no es Neuromapa), no recibe el pedido ni la "
+    probar("si otro programa ocupa el puerto anotado (el proceso existe pero no es Synopsis), no recibe el pedido ni la "
            "clave: primero tiene que demostrar que sabe la clave",
            engaño == (None, None) and len(recibidos) == 2 and not filtrado, (engaño, recibidos))
     desafio = firmas.numero()
@@ -3071,14 +3075,14 @@ def revisar_dormir(t):
                and not repetida and linea["memoria"] and not cifra["memoria"], lista)
         probar("la pasada no toca ninguna nota", login.read_bytes() == originales[login]
                and claude_md.read_bytes() == dormir.BOM + originales[claude_md].replace(b"\n", b"\r\n"))
-        lineas = dormir.texto_lista(datos, "neuromapa", "Ana")
+        lineas = dormir.texto_lista(datos, "synopsis", "Ana")
         probar("--propuestas muestra cada arreglo con el antes y el después, y cómo aplicarlo (lo decide Ana)",
                any("antes:" in x and "Login.cs:30" in x for x in lineas)
                and any("después:" in x and "Login.cs:7" in x for x in lineas)
                and any("--aplicar" in x and "Ana" in x for x in lineas), lineas)
-        primero = dormir.aviso(carpeta, "sesion01", "neuromapa", "Ana", 1000)
-        segundo = dormir.aviso(carpeta, "sesion02", "neuromapa", "Ana", 1001)
-        probar("el aviso sale una sola vez por pasada, dice cómo verlos y que Neuromapa no toca las notas solo",
+        primero = dormir.aviso(carpeta, "sesion01", "synopsis", "Ana", 1000)
+        segundo = dormir.aviso(carpeta, "sesion02", "synopsis", "Ana", 1001)
+        probar("el aviso sale una sola vez por pasada, dice cómo verlos y que Synopsis no toca las notas solo",
                bool(primero) and "--propuestas" in primero and "no toca las notas solo" in primero and segundo is None,
                (primero, segundo))
         probar("--salud cuenta las propuestas pendientes", "--propuestas" in (dormir.linea_salud(carpeta) or ""),
@@ -3322,11 +3326,11 @@ def revisar_dormir_claude(t):
         for version in ("2.1.9", "2.1.10"):
             (appdata / "Claude" / "claude-code" / version / "abc123").mkdir(parents=True)
             (appdata / "Claude" / "claude-code" / version / "abc123" / "claude.exe").write_bytes(b"")
-        guardado = {k: os.environ.get(k) for k in ("APPDATA", "NEUROMAPA_CLAUDE")}
+        guardado = {k: os.environ.get(k) for k in ("APPDATA", "SYNOPSIS_CLAUDE")}
         quien = dormir_claude.shutil.which
         try:
             os.environ["APPDATA"] = str(appdata)
-            os.environ.pop("NEUROMAPA_CLAUDE", None)
+            os.environ.pop("SYNOPSIS_CLAUDE", None)
             dormir_claude.shutil.which = lambda nombre: None
             hallado = dormir_claude.buscar_claude()
         finally:
@@ -3339,9 +3343,9 @@ def revisar_dormir_claude(t):
         probar("encuentra el claude.exe de la app de escritorio (en una subcarpeta) y elige la versión más nueva",
                hallado is not None and Path(hallado).parts[-3] == "2.1.10", hallado)
         dormir.guardar_pasada(carpeta, [dict(item)], time.time(), 0.1, True)
-        mientras = dormir.aviso(carpeta, "sesion11", "neuromapa", "Ana")
+        mientras = dormir.aviso(carpeta, "sesion11", "synopsis", "Ana")
         datos = dormir.guardar_sueno(carpeta, r1)
-        despues = dormir.aviso(carpeta, "sesion12", "neuromapa", "Ana")
+        despues = dormir.aviso(carpeta, "sesion12", "synopsis", "Ana")
         lista = datos["propuestas"]
         memo = dormir.memo_de(carpeta)
         probar("lo ya revisado se guarda aparte (el aviso de cada pedido lee un archivo chico) y se vuelve a leer igual",
@@ -3352,7 +3356,7 @@ def revisar_dormir_claude(t):
                mientras is None and bool(despues) and "los encontró Claude" in despues
                and [(p["numero"], p["tipo"]) for p in lista] == [(1, "marca"), (2, "mirar")] and "sonando" not in datos,
                (mientras, despues, [(p["numero"], p["tipo"]) for p in lista]))
-        lineas = dormir.texto_lista(datos, "neuromapa", "Ana")
+        lineas = dormir.texto_lista(datos, "synopsis", "Ana")
         probar("--propuestas muestra la marca con el antes y el después, el choque con los dos renglones y lo gastado",
                any("después:" in x and "✅ Resuelto el" in x for x in lineas) and any("acá:" in x and "USD 4" in x for x in lineas)
                and any("allá:" in x and "USD 10" in x for x in lineas) and any("Revisión con Claude" in x for x in lineas),
@@ -3606,7 +3610,7 @@ def revisar_servir(t):
     dicho = hook_servir.contexto("vamos hacer lo que te dije", str(t / "proyecto")) or ""
     probar("si el pedido nombra algo dicho antes («lo que te dije») y la memoria no tiene nada seguro, sugiere buscar en "
            "las charlas viejas y en el historial (antes no decía nada)",
-           dicho.startswith("Neuromapa") and '--charlas "palabras"' in dicho and '--historial "texto"' in dicho
+           dicho.startswith("Synopsis") and '--charlas "palabras"' in dicho and '--historial "texto"' in dicho
            and "Ana" in dicho, dicho)
     con_pista = hook_servir.contexto("¿Te acordás qué pasaba con la validación de la clave del login?",
                                      str(t / "proyecto")) or ""
@@ -5023,9 +5027,15 @@ def revisar_partir_siempre(t):
            and "Lo último que partió sola" in que_haria and "sinfechas-parte-2.md" in que_haria
            and "frescas-historia-1.md" in aviso and "sinfechas-parte-2.md" in aviso and "releela" in aviso,
            (anotado, que_haria[-400:], aviso))
+    parte_ahora = "--partir-llenas lo hace ahora" in del_renglon(salud, "bloque.md:1")
+    nombres_nuevos = [linea for linea in salud.splitlines()
+                     if "sinfechas-parte-2.md" in linea or "frescas-historia-1.md" in linea]
+    if not parte_ahora or nombres_nuevos:
+        (mundo / "salud-fallo.txt").write_text(salud, encoding="utf-8")
     probar("el médico dice que la que quedó casi llena se parte sola o con --partir-llenas, y no se queja de las notas nuevas",
-           "--partir-llenas lo hace ahora" in del_renglon(salud, "bloque.md:1")
-           and "sinfechas-parte-2.md" not in salud and "frescas-historia-1.md" not in salud, salud[-900:])
+           parte_ahora and not nombres_nuevos,
+           dict(parte_ahora=parte_ahora, nombres_nuevos=nombres_nuevos,
+                detalle=str(mundo / "salud-fallo.txt")))
     partidas = {p.name: p.read_bytes() for p in memoria.glob("*.md")}
     codigo, salida = cerebro_en(mundo, "--partir-llenas")
     probar("volver a correrla no parte nada más: lo que ya quedó por debajo del tope no se toca",
@@ -5102,8 +5112,8 @@ def revisar_pendientes(t):
                   ("probar", "a", None, None, True), ("hacer", "b", datetime.date(2026, 10, 9), 1, False)]
                  + [("hacer", "a", datetime.date(2026, 10, 1), 9, False)] * 10)]
     de_nodo = {"a": "vivero", "b": "taller"}
-    propio = pendientes.texto(lista, grupos, de_nodo, grupos[0], False, 1, "neuromapa")
-    todos = pendientes.texto(lista, grupos, de_nodo, None, True, 1, "neuromapa")
+    propio = pendientes.texto(lista, grupos, de_nodo, grupos[0], False, 1, "synopsis")
+    todos = pendientes.texto(lista, grupos, de_nodo, None, True, 1, "synopsis")
     probar("el tablero de un proyecto cuenta los suyos, avisa los de más de 14 días y los que quizás ya están resueltos, "
            "pone primero lo más viejo y al final lo que no tiene fecha, corta cada clase en 8 y dice cuántos hay en los "
            "otros proyectos",
@@ -5224,7 +5234,7 @@ def revisar_reglas(t):
     clave = re.search(r"--confirmar ([0-9a-f]{8})", vista)
     probar("--regla muestra el texto de la regla, con la carpeta en paths y de qué memoria sale, y el código para "
            "escribirla; no cambia nada",
-           codigo == 0 and clave and "    - 'datos/semillas/**/*'" in vista and "  neuromapa: 'semillas-latin1.md'" in vista
+           codigo == 0 and clave and "    - 'datos/semillas/**/*'" in vista and "  synopsis: 'semillas-latin1.md'" in vista
            and "semillas-latin1.md (no existe todavía)" in vista and "viaja con él" in vista and not destino.exists(), vista)
     _, vista_corta = cerebro_en(mundo, "--regla", "bombas.md")
     _, vista_larga = cerebro_en(mundo, "--regla", "riego-largo")
@@ -5243,7 +5253,7 @@ def revisar_reglas(t):
            "proyecto, en LF, con el texto de la memoria y sin tocar la memoria",
            codigo_malo == 2 and "ese código ya no vale" in salida_mala and sin_escribir and codigo == 0
            and f"Regla escrita: {destino}" in escrita
-           and texto.startswith("---\npaths:\n  - 'datos/semillas/**/*'\nneuromapa: 'semillas-latin1.md'\n---\n\n# ")
+           and texto.startswith("---\npaths:\n  - 'datos/semillas/**/*'\nsynopsis: 'semillas-latin1.md'\n---\n\n# ")
            and de_semillas in texto and "\r" not in texto
            and texto.endswith("Esta regla es una copia de la memoria `semillas-latin1.md`: si no coinciden, vale la memoria.\n")
            and {p.name: p.read_bytes() for p in memoria.glob("*.md")} == antes, (salida_mala, escrita, texto))
@@ -5296,7 +5306,7 @@ def revisar_reglas(t):
                  "carpetas": [{"nombre": "riego/bombas", "carpeta": "riego/bombas", "usados": 3, "de": 3, "dichas": 0,
                                "ancho": None}]}
     negada = reglas.escribir(candidata, mundo)
-    probar("una regla con ese nombre que no escribió Neuromapa no se pisa: lo dice, no da código y, aunque se le pida "
+    probar("una regla con ese nombre que no escribió Synopsis no se pisa: lo dice, no da código y, aunque se le pida "
            "escribir, la deja como estaba",
            "no se toca" in vista_ajena and "--confirmar" not in vista_ajena and negada[0] is None
            and "no la toco" in (negada[2] or "") and ajena.read_text(encoding="utf-8") == "# Mi regla, escrita a mano\n",
@@ -5304,8 +5314,8 @@ def revisar_reglas(t):
     del_taller = dict(candidata, nodo=dict(candidata["nodo"], ruta=str(memoria / "torno.md"), titulo="El torno"),
                       raiz="d:/taller", donde=mundo / "taller")
     grupos = [{"clave": "r", "id": "vivero", "nombre": "El vivero"}, {"clave": "d:/taller", "id": "taller", "nombre": "El taller"}]
-    de_uno = reglas.texto([candidata, del_taller], 0, grupos, grupos[1], "neuromapa", False)
-    de_todos = reglas.texto([candidata, del_taller], 2, grupos, None, "neuromapa")
+    de_uno = reglas.texto([candidata, del_taller], 0, grupos, grupos[1], "synopsis", False)
+    de_todos = reglas.texto([candidata, del_taller], 2, grupos, None, "synopsis")
     probar("la lista de un proyecto trae solo las suyas y cuenta aparte las de los otros; la de todos las agrupa por "
            "proyecto; sin nada aprendido lo dice",
            de_uno[0] == "Memorias que pueden ser una regla por carpeta para «El taller»: 1."
@@ -5355,8 +5365,8 @@ def revisar_recetas(t):
     con_uso = [dict(halladas[0], raiz="d:/vivero", donde=t / "no-existe", veces=7.5, nota_titulo="Vivero"),
                dict(halladas[1], raiz="", donde=t / "no-existe", veces=0.0, nota_titulo="Vivero")]
     grupos = [{"clave": "d:/vivero", "id": "vivero", "nombre": "El vivero"}]
-    todas = recetas.texto(con_uso, grupos, None, "neuromapa")
-    propias = recetas.texto(con_uso, grupos, grupos[0], "neuromapa", False)
+    todas = recetas.texto(con_uso, grupos, None, "synopsis")
+    propias = recetas.texto(con_uso, grupos, grupos[0], "synopsis", False)
     probar("la lista marca las de notas que se leen seguido, las agrupa por proyecto y, si se pide un proyecto, cuenta "
            "aparte las de los otros; sin nada aprendido lo dice",
            todas[0] == "Recetas en las memorias: 2 (1 de una nota que se usa seguido)." and "El vivero:" in todas
@@ -5405,7 +5415,7 @@ def revisar_recetas(t):
     probar("--receta muestra cómo quedaría como skill y dónde iría: en .claude/skills/ del proyecto de la nota, o en la "
            "carpeta personal de skills si la nota no es de ningún proyecto; no cambia nada",
            codigo == 0 and clave and f"iría en: {destino} (no existe todavía)" in vista
-           and "  name: riego-vivero-como-regar-el-invernadero" in vista and "    neuromapa: 'riego-vivero.md'" in vista
+           and "  name: riego-vivero-como-regar-el-invernadero" in vista and "    synopsis: 'riego-vivero.md'" in vista
            and f"iría en: {personal} (no existe todavía)" in vista_personal and not destino.exists()
            and not personal.exists(), (vista, vista_personal[:400]))
     codigo_malo, _ = cerebro_en(mundo, "--receta", "riego-vivero:1", "--confirmar", "0" * 8)
@@ -5418,7 +5428,7 @@ def revisar_recetas(t):
            codigo_malo == 2 and sin_escribir and codigo == 0 and f"Skill escrita: {destino}" in escrita
            and texto.startswith("---\nname: riego-vivero-como-regar-el-invernadero\ndescription: 'Cómo regar el invernadero "
                                 "(Riego del vivero). Usar cuando haya que hacer eso; los pasos salen de la memoria "
-                                "riego-vivero.md.'\nmetadata:\n  neuromapa: 'riego-vivero.md'\n---\n\n"
+                                "riego-vivero.md.'\nmetadata:\n  synopsis: 'riego-vivero.md'\n---\n\n"
                                 "## Cómo regar el invernadero\n\n1. Abrir la llave.\n")
            and "3. Cerrar la llave. Ver `bombas`.\n" in texto and "\r" not in texto
            and texto.endswith("de la memoria `riego-vivero.md`: si no coinciden, vale la memoria.\n")
@@ -5445,7 +5455,7 @@ def revisar_recetas(t):
                                    donde=proyecto, raiz="r", veces=0.0), mundo)
     codigo_numero, salida_numero = cerebro_en(mundo, "--receta", "riego-vivero:9")
     codigo_nada, salida_nada = cerebro_en(mundo, "--receta", "no-existe")
-    probar("una skill con ese nombre que no escribió Neuromapa no se pisa, y pedir una receta que no existe lo dice sin "
+    probar("una skill con ese nombre que no escribió Synopsis no se pisa, y pedir una receta que no existe lo dice sin "
            "romperse",
            "no se toca" in vista_ajena and "--confirmar" not in vista_ajena and negada[0] is None
            and "Escrita a mano." in destino.read_text(encoding="utf-8") and codigo_numero == 2
@@ -5639,7 +5649,7 @@ def revisar_historial(t):
                and "arranca a las 05:40" in sobre_ese_dia and "07:10" not in sobre_ese_dia and "arranca a las 07:10" in de_hoy
                and "09:15" in de_hoy and "09:15" not in de_ese_dia + sobre_ese_dia
                and de_ese_dia.startswith(f"La memoria de {carpeta} como estaba el ")
-               and str(Path(carpeta) / "historial-prueba.md") in de_ese_dia and "neuromapa-al-" not in de_ese_dia + sobre_ese_dia
+               and str(Path(carpeta) / "historial-prueba.md") in de_ese_dia and "synopsis-al-" not in de_ese_dia + sobre_ese_dia
                and version and "05:40" in historial.contenido(carpeta, version.group(1), "historial-prueba.md")
                and "Solo la memoria" in de_ese_dia and sorted(os.listdir(memoria)) == en_disco
                and [list(f["raices"]) for f in historial.nucleo.FUENTES] == raices_antes,
@@ -6281,7 +6291,7 @@ def revisar_dos_consolas(t, sh, base, comandos):
            "python.org" in aviso and "3.10 o más nuevo" in aviso and r.returncode == 0 and callado.returncode == 0
            and callado.stdout == b"", (r.stdout, callado.stdout))
     cmd = os.path.join(sistema, "System32", "cmd.exe")
-    lanzador_cmd = str(CARPETA / "bin" / "neuromapa.cmd")
+    lanzador_cmd = str(CARPETA / "bin" / "synopsis.cmd")
 
     def en_cmd(*argumentos, entorno, lanzador=lanzador_cmd, carpeta=None):
         return subprocess.run(f'"{cmd}" /d /s /c "{subprocess.list2cmdline([lanzador, *argumentos])}"',
@@ -6289,11 +6299,11 @@ def revisar_dos_consolas(t, sh, base, comandos):
 
     con = en_cmd("--mapa", str(CARPETA / "donde.py"), entorno=dict(base))
     sin = en_cmd("--salud", entorno=sin_python)
-    probar("neuromapa.cmd corre con Python 3.10 o más nuevo, y sin él lo dice y sale con 1",
+    probar("synopsis.cmd corre con Python 3.10 o más nuevo, y sin él lo dice y sale con 1",
            con.returncode == 0 and b"donde.py" in con.stdout and sin.returncode == 1 and b"Python 3.10" in sin.stdout,
            (con.returncode, con.stdout[:80], sin.returncode, sin.stdout[:120]))
     mal = en_cmd("--opcion-que-no-existe", entorno=dict(base))
-    probar("si el programa falla, neuromapa.cmd sale con su mismo código (antes salía siempre con 0 y Claude no veía el "
+    probar("si el programa falla, synopsis.cmd sale con su mismo código (antes salía siempre con 0 y Claude no veía el "
            "error)", mal.returncode == 2, (mal.returncode, mal.stderr[:120]))
     trampa = Path(tempfile.mkdtemp(prefix="cerebro-trampa-"))
     marca = trampa / "marca.txt"
@@ -6302,14 +6312,14 @@ def revisar_dos_consolas(t, sh, base, comandos):
     comun = {k: v for k, v in base.items() if k.lower() != "nodefaultcurrentdirectoryinexepath"}
     version = en_cmd("--version", entorno=comun, carpeta=str(trampa))
     en_cmd("hook_freno.py", entorno=comun, carpeta=str(trampa), lanzador=str(CARPETA / "scripts" / "python.cmd"))
-    probar("desde una consola común, neuromapa.cmd y python.cmd no corren un py.bat o python.bat plantado en la carpeta "
-           "donde uno está parado (cmd busca ahí primero)", not marca.exists() and b"Neuromapa" in version.stdout,
+    probar("desde una consola común, synopsis.cmd y python.cmd no corren un py.bat o python.bat plantado en la carpeta "
+           "donde uno está parado (cmd busca ahí primero)", not marca.exists() and b"Synopsis" in version.stdout,
            (marca.read_text(encoding="ascii", errors="replace") if marca.exists() else "", version.stdout[:80]))
     shutil.rmtree(trampa, ignore_errors=True)
 
 
 def revisar_plugin(t):
-    seccion("Plugin neuromapa (carpeta de datos, arranque, Python y hooks)")
+    seccion("Plugin synopsis (carpeta de datos, arranque, Python y hooks)")
     codigo = t / "codigo-plugin"
     codigo.mkdir()
     for nombre in ("donde.py", "archivos.py"):
@@ -6317,8 +6327,8 @@ def revisar_plugin(t):
     casa = t / "casa-plugin"
     apuntada = t / "datos-apuntados"
     apuntada.mkdir()
-    (casa / "plugins" / "data" / "neuromapa-prueba").mkdir(parents=True)
-    (casa / "plugins" / "data" / "neuromapa-prueba" / "donde.txt").write_text(f"{apuntada}\n", encoding="utf-8")
+    (casa / "plugins" / "data" / "synopsis-prueba").mkdir(parents=True)
+    (casa / "plugins" / "data" / "synopsis-prueba" / "donde.txt").write_text(f"{apuntada}\n", encoding="utf-8")
     (casa / "projects" / "C--x-plugin" / "memory").mkdir(parents=True)
     (casa / "projects" / "C--x-plugin" / "memory" / "nota.md").write_text("---\nname: nota\ndescription: una nota\n---\nHola\n",
                                                                           encoding="utf-8")
@@ -6369,7 +6379,7 @@ def revisar_plugin(t):
     probar("el arranque deja el apunte y la carpeta para la consola; la primera vez le dice al usuario que quedó "
            "instalado y cómo abrirlo, y después no imprime nada (antes no había ninguna señal de que anduviera)",
            all(r.returncode == 0 for r in arranques) and "quedó instalado" in primero.get("systemMessage", "")
-           and "/neuromapa:abrir" in primero.get("systemMessage", "") and arranques[1].stdout == b""
+           and "/synopsis:abrir" in primero.get("systemMessage", "") and arranques[1].stdout == b""
            and apunte == str(datos_inicio)
            and "CLAUDE_PLUGIN_OPTION_CARPETA_DATOS" in entorno_bash.read_text(encoding="utf-8"),
            ([r.stdout for r in arranques], apunte))
@@ -6385,7 +6395,7 @@ def revisar_plugin(t):
         probar("el lanzador hace que Python escriba en UTF-8, también los errores",
                "configuración".encode("utf-8") in r.stdout and "Cerrá".encode("utf-8") in r.stderr,
                (r.stdout[-100:], r.stderr[-100:]))
-        sin_python = dict(base, NEUROMAPA_PYTHONS="no-hay-1 no-hay-2")
+        sin_python = dict(base, SYNOPSIS_PYTHONS="no-hay-1 no-hay-2")
         r = subprocess.run([sh, lanzador, "--avisar", "-c", "print(1)"], capture_output=True, text=True, env=sin_python,
                            timeout=60)
         try:
@@ -6396,11 +6406,11 @@ def revisar_plugin(t):
         probar("sin Python, el arranque avisa con el enlace y los demás hooks no hacen nada",
                "python.org" in aviso and r.returncode == 0 and callado.returncode == 0 and callado.stdout == b"",
                (r.stdout, callado.stdout))
-        lanzador_bin = str(CARPETA / "bin" / "neuromapa")
+        lanzador_bin = str(CARPETA / "bin" / "synopsis")
         con = subprocess.run([sh, lanzador_bin, "--mapa", str(CARPETA / "donde.py")], capture_output=True, env=dict(base),
                              timeout=60)
         sin = subprocess.run([sh, lanzador_bin, "--salud"], capture_output=True, env=sin_python, timeout=60)
-        probar("bin/neuromapa (Mac y Linux) corre con Python 3.10 o más nuevo, y sin él lo dice y sale con 1 "
+        probar("bin/synopsis (Mac y Linux) corre con Python 3.10 o más nuevo, y sin él lo dice y sale con 1 "
                "(antes se callaba)",
                con.returncode == 0 and b"donde.py" in con.stdout and sin.returncode == 1 and b"Python 3.10" in sin.stderr
                and b"python.org" in sin.stderr,
@@ -6414,12 +6424,12 @@ def revisar_plugin(t):
             os.chmod(falsos / falso, 0o755)
         camino = str(falsos) + os.pathsep + base.get("PATH", "")
         viejo = subprocess.run([sh, lanzador, "--consola", "-c", "print(1)"], capture_output=True, timeout=60,
-                               env=dict(base, NEUROMAPA_PYTHONS="python-viejo", PATH=camino))
+                               env=dict(base, SYNOPSIS_PYTHONS="python-viejo", PATH=camino))
         probar("con un Python más viejo que 3.10, el lanzador dice que el que encontró es viejo (no que no hay)",
                viejo.returncode == 1 and "python-viejo) es más viejo".encode("utf-8") in viejo.stderr,
                (viejo.returncode, viejo.stderr[-200:]))
         tienda = subprocess.run([sh, lanzador, "--consola", "-c", "print(1)"], capture_output=True, timeout=60,
-                                env=dict(base, NEUROMAPA_PYTHONS="python-tienda", PATH=camino))
+                                env=dict(base, SYNOPSIS_PYTHONS="python-tienda", PATH=camino))
         probar("el «python» de la tienda de Windows (que no es Python) no hace decir «es más viejo», sino que no hay",
                tienda.returncode == 1 and "no lo encontré".encode("utf-8") in tienda.stderr
                and "más viejo".encode("utf-8") not in tienda.stderr, (tienda.returncode, tienda.stderr[-200:]))
@@ -6448,7 +6458,7 @@ def revisar_plugin(t):
         probar("el lanzador usa la ruta del Python que recordó, sin volver a buscar", r.stdout.strip() == "recordado",
                (r.stdout, r.stderr[-200:]))
     else:
-        print("  (sin sh en esta PC: salteo las pruebas del lanzador y de bin/neuromapa)")
+        print("  (sin sh en esta PC: salteo las pruebas del lanzador y de bin/synopsis)")
     import hook_servir
     antes = {k: os.environ.get(k) for k in ("CLAUDE_PLUGIN_DATA", "CLAUDE_PLUGIN_OPTION_SERVIR_CONTEXTO")}
     try:
@@ -6472,8 +6482,8 @@ def revisar_plugin(t):
     nombrados = sorted({m for c in comandos for m in re.findall(r"\$\{CLAUDE_PLUGIN_ROOT\}/([\w./-]+)", c)})
     faltan = [n for n in nombrados if not (CARPETA / n).is_file()]
     manifiesto = json.loads((CARPETA / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
-    probar("el manifiesto se llama neuromapa y existe cada archivo que nombran los hooks",
-           manifiesto.get("name") == "neuromapa" and not faltan and len(nombrados) >= 7, (nombrados, faltan))
+    probar("el manifiesto se llama synopsis y existe cada archivo que nombran los hooks",
+           manifiesto.get("name") == "synopsis" and not faltan and len(nombrados) >= 7, (nombrados, faltan))
     forma = re.compile(r'/bin/sh "\$\{CLAUDE_PLUGIN_ROOT\}/scripts/python\.sh" ((?:--avisar )?)-I -S '
                        r'"\$\{CLAUDE_PLUGIN_ROOT\}/(hook_\w+\.py)"'
                        r' \\; \. "\$\{CLAUDE_PLUGIN_ROOT\}/scripts/python\.cmd" ((?:--avisar )?)(hook_\w+\.py)')
@@ -6504,16 +6514,16 @@ def revisar_plugin(t):
            len(de_windows) >= 3 and not con_lf, (len(de_windows), con_lf))
     if sh:
         revisar_dos_consolas(t, sh, base, comandos)
-    r = correr([str(CARPETA / "neuromapa.py"), "--mapa", str(CARPETA / "donde.py")])
-    probar("neuromapa.py hace de cerebro.py (con --mapa)",
+    r = correr([str(CARPETA / "synopsis.py"), "--mapa", str(CARPETA / "donde.py")])
+    probar("synopsis.py hace de cerebro.py (con --mapa)",
            r.returncode == 0 and "donde.py" in r.stdout and "apuntar" in r.stdout, (r.stdout[-300:], r.stderr[-300:]))
-    r = correr([str(CARPETA / "neuromapa.py"), "--help"])
-    probar("neuromapa --help cuenta cómo abrir el mapa (neuromapa abrir)",
-           r.returncode == 0 and "neuromapa abrir" in r.stdout, (r.stdout[-300:], r.stderr[-300:]))
+    r = correr([str(CARPETA / "synopsis.py"), "--help"])
+    probar("synopsis --help cuenta cómo abrir el mapa (synopsis abrir)",
+           r.returncode == 0 and "synopsis abrir" in r.stdout, (r.stdout[-300:], r.stderr[-300:]))
     manifiesto = json.loads((CARPETA / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
-    r = correr([str(CARPETA / "neuromapa.py"), "--version"])
-    probar("neuromapa --version dice la versión del manifiesto del plugin (un solo lugar para la versión)",
-           r.returncode == 0 and r.stdout.strip() == f'Neuromapa {manifiesto["version"]}', (r.stdout, r.stderr[-200:]))
+    r = correr([str(CARPETA / "synopsis.py"), "--version"])
+    probar("synopsis --version dice la versión del manifiesto del plugin (un solo lugar para la versión)",
+           r.returncode == 0 and r.stdout.strip() == f'Synopsis {manifiesto["version"]}', (r.stdout, r.stderr[-200:]))
     raiz_antes = os.environ.pop("CLAUDE_PLUGIN_ROOT", None)
     viejo = sys.argv
     try:
@@ -6521,9 +6531,9 @@ def revisar_plugin(t):
         os.environ["CLAUDE_PLUGIN_ROOT"] = str(t)
         desde_hook = configuracion.comando()
         os.environ.pop("CLAUDE_PLUGIN_ROOT")
-        sys.argv = ["neuromapa"]
+        sys.argv = ["synopsis"]
         desde_consola = configuracion.comando()
-        sys.argv = ["neuromapa", "--demo", "--proponer-hechos"]
+        sys.argv = ["synopsis", "--demo", "--proponer-hechos"]
         en_demo = configuracion.comando()
     finally:
         sys.argv = viejo
@@ -6542,12 +6552,12 @@ def revisar_plugin(t):
                r.stdout.split() == ["0o600", "0o700"], (r.stdout, r.stderr[-200:]))
     else:
         saltear("permisos de Mac y Linux: en Windows no aplica, salteado")
-    probar("los mensajes nombran el comando que existe (neuromapa en el plugin, python …/cerebro.py si no); ninguno escribe "
+    probar("los mensajes nombran el comando que existe (synopsis en el plugin, python …/cerebro.py si no); ninguno escribe "
            "«cerebro.py --» a mano ni «El cerebro:»",
-           normal.startswith("python ") and normal.endswith("/cerebro.py") and desde_hook == "neuromapa"
-           and desde_consola == "neuromapa" and not sueltos, (normal, desde_hook, desde_consola, sueltos))
+           normal.startswith("python ") and normal.endswith("/cerebro.py") and desde_hook == "synopsis"
+           and desde_consola == "synopsis" and not sueltos, (normal, desde_hook, desde_consola, sueltos))
     probar("en la demo, los comandos que sugiere llevan --demo (si no, la pista apuntaba a las notas reales)",
-           en_demo == "neuromapa --demo", en_demo)
+           en_demo == "synopsis --demo", en_demo)
 
 
 def revisar_aprender(t):
@@ -6962,7 +6972,7 @@ def revisar_charlas(t, nota, login, t0):
 def revisar_instalacion_doble(t, base):
     import hooks_comun
     a_mano = {"hooks": {"PostToolUse": [{"hooks": [{"type": "command", "command": "python -I -S C:/x/hook_cerebro.py"}]}]}}
-    del_plugin = {"enabledPlugins": {"neuromapa@neuromapa": True}}
+    del_plugin = {"enabledPlugins": {"synopsis@synopsis": True}}
     casas = {}
     for nombre, ajustes in (("doble", dict(a_mano, **del_plugin)), ("mano", a_mano), ("plugin", del_plugin), ("rota", None)):
         casa = t / f"claude-{nombre}"
@@ -6984,7 +6994,7 @@ def revisar_instalacion_doble(t, base):
         mensaje = json.loads(arranques[0].stdout.decode("utf-8")).get("systemMessage", "")
     except ValueError:
         mensaje = ""
-    probar("si Neuromapa está como plugin y con sus hooks a mano en settings.json, --salud y el arranque del plugin lo "
+    probar("si Synopsis está como plugin y con sus hooks a mano en settings.json, --salud y el arranque del plugin lo "
            "avisan (una vez), junto con la bienvenida (antes todo se anotaba y se servía dos veces sin aviso)",
            casas == {"doble": True, "mano": False, "plugin": False, "rota": False} and aviso.startswith("AVISO")
            and "dos veces" in mensaje and "quedó instalado" in mensaje and arranques[1].stdout == b"",
@@ -7088,7 +7098,7 @@ def revisar_pista_precisa(t):
     pasajes = [x["linea"] for g in r["grupos"] for n in g["notas"] if n["ruta"].endswith("renglon-raro.md") for x in n["pasajes"]]
     probar("entre renglones que juntan la misma cantidad de palabras, la pista cita el de las palabras raras y no el de "
            "más arriba (el renglón justo citado pasa de 23 a 26 de 64 en el banco)", pasajes[:1] == [13], pasajes)
-    juego, propio = t / "pc" / "juego", t / "pc" / "neuromapa"
+    juego, propio = t / "pc" / "juego", t / "pc" / "synopsis"
     for carpeta, archivo in ((juego, "Server.cs"), (propio, "cerebro.py")):
         carpeta.mkdir(parents=True, exist_ok=True)
         (carpeta / archivo).write_text("x\n", encoding="utf-8", newline="\n")
@@ -7115,7 +7125,7 @@ def revisar_pista_precisa(t):
         desde_propio = [c["archivo"] for c in falso.para_comprobar({0: 1.0}, {}, [], Memoria(propio))]
     finally:
         buscador.proyectos_conocidos = viejo
-    probar("«Para comprobar» no manda al código de Neuromapa en un pedido de otro proyecto, ni al revés (en el banco, "
+    probar("«Para comprobar» no manda al código de Synopsis en un pedido de otro proyecto, ni al revés (en el banco, "
            "cerebro.py salía en 10 preguntas de otro proyecto)",
            desde_juego == ["Server.cs:7"] and desde_propio == ["cerebro.py:5"],
            (desde_juego, desde_propio))
@@ -7229,20 +7239,20 @@ def revisar_aprendido_en_el_aviso(t):
            filtrados == ["real.py", "correr.sh"] and sin_indice == ["fantasma.py", "real.py", "correr.sh"],
            (filtrados, sin_indice))
     lista = [("d:/juego", {"alias": "juego"}), ("d:/docs", {"alias": "docs", "remite_a": "neuro"}),
-             ("d:/otro", {"alias": "otro"}), ("d:/neuromapa", {"alias": "neuro", "aparte": True})]
+             ("d:/otro", {"alias": "otro"}), ("d:/synopsis", {"alias": "neuro", "aparte": True})]
     indice_md = "# Memoria\n## Juego: servidor\n- [a](a.md) — x\n## Sueltas\n- [b](b.md) — y\n"
     nodo = lambda texto: {"_cuerpo": texto}
     secciones = (buscador.titulo_de_seccion(indice_md, indice_md.index("[a]")),
                  buscador.titulo_de_seccion(indice_md, indice_md.index("[b]")),
                  buscador.proyecto_de_seccion("Juego: servidor", [nodo("nada")], lista),
-                 buscador.proyecto_de_seccion("Sueltas", [nodo("ver D:\\neuromapa\\x.py " * 5 + "y D:/juego")], lista),
+                 buscador.proyecto_de_seccion("Sueltas", [nodo("ver D:\\synopsis\\x.py " * 5 + "y D:/juego")], lista),
                  buscador.proyecto_de_seccion("Sueltas", [nodo("D:\\juego " * 3 + "D:\\otro " * 3)], lista))
     lejos = buscador.separados(lista)
     probar("cada memoria toma el proyecto de su sección del índice (por las rutas que nombran sus notas o por el título); "
-           "se descuenta solo contra un proyecto aparte, como el Neuromapa, y nunca entre proyectos que se remiten",
-           secciones == ("Juego: servidor", "Sueltas", "d:/juego", "d:/neuromapa", "")
-           and lejos("d:/juego", "d:/neuromapa") and lejos("d:/neuromapa", "d:/otro")
-           and not lejos("d:/juego", "d:/otro") and not lejos("d:/docs", "d:/neuromapa") and not lejos("d:/juego", "d:/juego"),
+           "se descuenta solo contra un proyecto aparte, como el Synopsis, y nunca entre proyectos que se remiten",
+           secciones == ("Juego: servidor", "Sueltas", "d:/juego", "d:/synopsis", "")
+           and lejos("d:/juego", "d:/synopsis") and lejos("d:/synopsis", "d:/otro")
+           and not lejos("d:/juego", "d:/otro") and not lejos("d:/docs", "d:/synopsis") and not lejos("d:/juego", "d:/juego"),
            secciones)
     varios = ("# Memoria\n## Juego: servidor\n- [a](a.md) — x\n- Historias (archivo): [1](a-historia-1.md) uno; "
               "[2](<a-historia-2.md>) dos\n## Sueltas\n- [b](b.md) — y\n")
@@ -7287,7 +7297,7 @@ def revisar_aprendido_en_el_aviso(t):
 
     buscador.proyectos_conocidos = lambda: [("d:/juego", {"alias": "juego", "nombre": "El juego"}),
                                             ("d:/docs", {"alias": "docs", "color": "#123456"}), ("d:/otro", {"alias": "otro"}),
-                                            ("d:/neuromapa", {"aparte": True})] + [(r, p) for r, p in reales if r == marcado]
+                                            ("d:/synopsis", {"aparte": True})] + [(r, p) for r, p in reales if r == marcado]
     try:
         de_cada = buscador.proyecto_de_cada_nota(mundo(""))
         de_compartida = buscador.proyecto_de_cada_nota(mundo("D:\\otro"))
@@ -7334,7 +7344,7 @@ def revisar_aprendido_en_el_aviso(t):
     finally:
         nucleo.DATOS = viejos
     programa = os.path.normpath(str(nucleo.CARPETA))
-    probar("el Neuromapa cuenta como proyecto aparte también desde la carpeta de datos si es una copia del programa (el "
+    probar("el Synopsis cuenta como proyecto aparte también desde la carpeta de datos si es una copia del programa (el "
            "plugin con la carpeta de datos en la copia de siempre); una carpeta de datos cualquiera no cuenta",
            sin_programa == [programa] and con_programa == [programa, os.path.normpath(str(propia))]
            and consultas.clave(propia).rstrip("/") in apartes, (sin_programa, con_programa, apartes))
@@ -7542,7 +7552,7 @@ def main():
         pass
     comienzo = time.perf_counter()
     t = Path(tempfile.mkdtemp(prefix="cerebro-humo-"))
-    print(f"Prueba de humo de Neuromapa · carpeta de prueba: {t}")
+    print(f"Prueba de humo de Synopsis · carpeta de prueba: {t}")
     try:
         armar_carpeta(t)
         con_git = crear_repo(t / "proyecto")

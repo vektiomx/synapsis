@@ -14,7 +14,7 @@ set "recordado=%nombre%"
 :buscar
 if not defined nombre py -3 -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)" >nul 2>nul && set "nombre=py"
 if not defined nombre python -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)" >nul 2>nul && set "nombre=python"
-if not defined nombre if "%avisar%"=="1" echo {"systemMessage": "Neuromapa necesita Python 3.10 o m\u00e1s nuevo y no lo encontr\u00e9 (prob\u00e9 py y python). Instalalo desde https://www.python.org/downloads/ y abr\u00ed Claude Code de nuevo. Mientras tanto, sus hooks no hacen nada."}
+if not defined nombre if "%avisar%"=="1" echo {"systemMessage": "Synopsis necesita Python 3.10 o m\u00e1s nuevo y no lo encontr\u00e9 (prob\u00e9 py y python). Instalalo desde https://www.python.org/downloads/ y abr\u00ed Claude Code de nuevo. Mientras tanto, sus hooks no hacen nada."}
 if not defined nombre exit /b 0
 if not defined recordado if defined CLAUDE_PLUGIN_DATA mkdir "%CLAUDE_PLUGIN_DATA%" >nul 2>nul
 if not defined recordado if defined CLAUDE_PLUGIN_DATA >"%guardado%" echo %nombre%

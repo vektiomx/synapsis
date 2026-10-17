@@ -1,0 +1,2 @@
+*.cmd -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.command text eol=lf

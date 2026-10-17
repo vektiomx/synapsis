@@ -45,15 +45,15 @@ COMANDOS = [
     ("prueba", re.compile(r"\bdotnet\s+test\b|\bpytest\b|--check\b|\bnpm\s+test\b")),
     ("git", re.compile(r"\bgit\b")),
     ("base", re.compile(r"\b(?:mysql|psql|sqlite3|sqlcmd|mongosh?|redis-cli)(\.exe)?\b")),
-    ("cerebro", re.compile(r"(?:^|[\s\"'/\\(])py(?:thon[\d.]*)?(?:\.exe)?[\"']?\s[^|&;\n]*\b(?:cerebro|neuromapa)\.py\b"
-                           r"|(?:^|[\s\"'/\\(&])neuromapa(?:\.cmd)?[\"']?\s+(?:--|abrir\b)")),
+    ("cerebro", re.compile(r"(?:^|[\s\"'/\\(])py(?:thon[\d.]*)?(?:\.exe)?[\"']?\s[^|&;\n]*\b(?:cerebro|synopsis)\.py\b"
+                           r"|(?:^|[\s\"'/\\(&])synopsis(?:\.cmd)?[\"']?\s+(?:--|abrir\b)")),
 ]
 RE_SALIDA = re.compile(r"(?:Error: )?Exit code (\d{1,10})\b")
 EXTENSIONES_SCRIPT = (".ps1", ".sh", ".bat", ".cmd")
 
 MOTIVOS = {"manual", "auto", "startup", "resume", "clear", "compact", "logout", "prompt_input_exit",
            "bypass_permissions_disabled", "other"}
-RE_OPCION_CEREBRO = re.compile(r"\b(?:cerebro\.py|neuromapa(?:\.py|\.cmd)?)\b[\"']?([^|&;\n]*)")
+RE_OPCION_CEREBRO = re.compile(r"\b(?:cerebro\.py|synopsis(?:\.py|\.cmd)?)\b[\"']?([^|&;\n]*)")
 RE_OPCION = re.compile(f'(?:^|\\s)--({"|".join(map(re.escape, OPCIONES_CONSULTA))})(?=[\\s=]|$)')
 RE_RUTA_SALIDA = re.compile(r"((?:[A-Za-z]:[\\/]|~[\\/]|/(?!/))[^\t\r\n]*?\.md)(?::\d+(?:-\d+)?)?(?=\s|$)", re.I)
 RE_PARECIDA = re.compile(r"^  \d+,\d+  (.+)$")

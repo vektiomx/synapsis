@@ -1,0 +1,956 @@
+{
+  "version": "0.7.0",
+  "recorded_at": "2026-10-17T04:55:18.335817+00:00",
+  "commands": [
+    "python3 -B tools/evaluate_decision_rag.py --execute",
+    "python3 -B tools/evaluate_decision_rag.py --live --provider codex"
+  ],
+  "deterministic": {
+    "scores": {
+      "decision_rag": {
+        "correct": 18,
+        "total": 18
+      },
+      "lexical_top1": {
+        "correct": 3,
+        "total": 15
+      },
+      "no_boundaries": {
+        "correct": 9,
+        "total": 15
+      },
+      "no_countercases": {
+        "correct": 12,
+        "total": 15
+      },
+      "no_validity_gate": {
+        "correct": 12,
+        "total": 15
+      },
+      "synopsis_v06": {
+        "correct": 3,
+        "total": 15
+      }
+    },
+    "rows": [
+      {
+        "domain": "payment-timeout",
+        "scenario": "positive",
+        "expected": "retry",
+        "predictions": {
+          "lexical_top1": "reconcile",
+          "synopsis_v06": "reconcile",
+          "no_boundaries": null,
+          "no_validity_gate": "retry",
+          "no_countercases": null,
+          "decision_rag": "retry"
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": false,
+          "no_validity_gate": true,
+          "no_countercases": false,
+          "decision_rag": true
+        },
+        "context_chars": 2883,
+        "probes": 0
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "negative",
+        "expected": "reconcile",
+        "predictions": {
+          "lexical_top1": "reconcile",
+          "synopsis_v06": "reconcile",
+          "no_boundaries": null,
+          "no_validity_gate": "reconcile",
+          "no_countercases": "reconcile",
+          "decision_rag": "reconcile"
+        },
+        "correct": {
+          "lexical_top1": true,
+          "synopsis_v06": true,
+          "no_boundaries": false,
+          "no_validity_gate": true,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 2887,
+        "probes": 0
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "unknown",
+        "expected": null,
+        "predictions": {
+          "lexical_top1": "reconcile",
+          "synopsis_v06": "reconcile",
+          "no_boundaries": null,
+          "no_validity_gate": null,
+          "no_countercases": null,
+          "decision_rag": null
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": true,
+          "no_validity_gate": true,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 3132,
+        "probes": 1
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "invalid-type",
+        "expected": null,
+        "predictions": {
+          "lexical_top1": "reconcile",
+          "synopsis_v06": "reconcile",
+          "no_boundaries": null,
+          "no_validity_gate": null,
+          "no_countercases": null,
+          "decision_rag": null
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": true,
+          "no_validity_gate": true,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 2890,
+        "probes": 0
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "changed-contract",
+        "expected": null,
+        "predictions": {
+          "lexical_top1": "reconcile",
+          "synopsis_v06": "reconcile",
+          "no_boundaries": null,
+          "no_validity_gate": "retry",
+          "no_countercases": null,
+          "decision_rag": null
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": true,
+          "no_validity_gate": false,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 2900,
+        "probes": 0
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "observation-loop",
+        "expected": "reconcile",
+        "predictions": {
+          "decision_rag": "reconcile"
+        },
+        "correct": {
+          "decision_rag": true
+        }
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "positive",
+        "expected": "cache",
+        "predictions": {
+          "lexical_top1": "cache",
+          "synopsis_v06": "cache",
+          "no_boundaries": null,
+          "no_validity_gate": "cache",
+          "no_countercases": "cache",
+          "decision_rag": "cache"
+        },
+        "correct": {
+          "lexical_top1": true,
+          "synopsis_v06": true,
+          "no_boundaries": false,
+          "no_validity_gate": true,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 2884,
+        "probes": 0
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "negative",
+        "expected": "read-primary",
+        "predictions": {
+          "lexical_top1": "cache",
+          "synopsis_v06": "cache",
+          "no_boundaries": null,
+          "no_validity_gate": "read-primary",
+          "no_countercases": null,
+          "decision_rag": "read-primary"
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": false,
+          "no_validity_gate": true,
+          "no_countercases": false,
+          "decision_rag": true
+        },
+        "context_chars": 2891,
+        "probes": 0
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "unknown",
+        "expected": null,
+        "predictions": {
+          "lexical_top1": "cache",
+          "synopsis_v06": "cache",
+          "no_boundaries": null,
+          "no_validity_gate": null,
+          "no_countercases": null,
+          "decision_rag": null
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": true,
+          "no_validity_gate": true,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 3157,
+        "probes": 1
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "invalid-type",
+        "expected": null,
+        "predictions": {
+          "lexical_top1": "cache",
+          "synopsis_v06": "cache",
+          "no_boundaries": null,
+          "no_validity_gate": null,
+          "no_countercases": null,
+          "decision_rag": null
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": true,
+          "no_validity_gate": true,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 2891,
+        "probes": 0
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "changed-contract",
+        "expected": null,
+        "predictions": {
+          "lexical_top1": "cache",
+          "synopsis_v06": "cache",
+          "no_boundaries": null,
+          "no_validity_gate": "cache",
+          "no_countercases": null,
+          "decision_rag": null
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": true,
+          "no_validity_gate": false,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 2901,
+        "probes": 0
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "observation-loop",
+        "expected": "read-primary",
+        "predictions": {
+          "decision_rag": "read-primary"
+        },
+        "correct": {
+          "decision_rag": true
+        }
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "positive",
+        "expected": "rename",
+        "predictions": {
+          "lexical_top1": "expand-contract",
+          "synopsis_v06": "expand-contract",
+          "no_boundaries": null,
+          "no_validity_gate": "rename",
+          "no_countercases": null,
+          "decision_rag": "rename"
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": false,
+          "no_validity_gate": true,
+          "no_countercases": false,
+          "decision_rag": true
+        },
+        "context_chars": 2871,
+        "probes": 0
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "negative",
+        "expected": "expand-contract",
+        "predictions": {
+          "lexical_top1": "expand-contract",
+          "synopsis_v06": "expand-contract",
+          "no_boundaries": null,
+          "no_validity_gate": "expand-contract",
+          "no_countercases": "expand-contract",
+          "decision_rag": "expand-contract"
+        },
+        "correct": {
+          "lexical_top1": true,
+          "synopsis_v06": true,
+          "no_boundaries": false,
+          "no_validity_gate": true,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 2880,
+        "probes": 0
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "unknown",
+        "expected": null,
+        "predictions": {
+          "lexical_top1": "expand-contract",
+          "synopsis_v06": "expand-contract",
+          "no_boundaries": null,
+          "no_validity_gate": null,
+          "no_countercases": null,
+          "decision_rag": null
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": true,
+          "no_validity_gate": true,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 3156,
+        "probes": 1
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "invalid-type",
+        "expected": null,
+        "predictions": {
+          "lexical_top1": "expand-contract",
+          "synopsis_v06": "expand-contract",
+          "no_boundaries": null,
+          "no_validity_gate": null,
+          "no_countercases": null,
+          "decision_rag": null
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": true,
+          "no_validity_gate": true,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 2877,
+        "probes": 0
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "changed-contract",
+        "expected": null,
+        "predictions": {
+          "lexical_top1": "expand-contract",
+          "synopsis_v06": "expand-contract",
+          "no_boundaries": null,
+          "no_validity_gate": "rename",
+          "no_countercases": null,
+          "decision_rag": null
+        },
+        "correct": {
+          "lexical_top1": false,
+          "synopsis_v06": false,
+          "no_boundaries": true,
+          "no_validity_gate": false,
+          "no_countercases": true,
+          "decision_rag": true
+        },
+        "context_chars": 2887,
+        "probes": 0
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "observation-loop",
+        "expected": "expand-contract",
+        "predictions": {
+          "decision_rag": "expand-contract"
+        },
+        "correct": {
+          "decision_rag": true
+        }
+      }
+    ]
+  },
+  "isolated_execution": [
+    {
+      "context": true,
+      "selected": "retry",
+      "expected": "retry",
+      "passed": true,
+      "executions": [
+        {
+          "name": "retry",
+          "check": {
+            "case": "Boundaries.test_positive",
+            "kind": "python_unittest",
+            "path": "tests/test_boundaries.py"
+          },
+          "status": "observed_support",
+          "runner": "python_unittest",
+          "tests": 1,
+          "snapshot_sha256": "b1c90d1b3c43458130bcb07d3533790400ded5cbbbe8879e133ad818ca553869",
+          "assurance": "Only named test outcome in isolated snapshot; no causal claim.",
+          "witness": {
+            "path": "tests/test_boundaries.py",
+            "sha256": "caf993f23351469df56c50c6586d060557450f9bc81a1a0945f71484fcfbd304"
+          }
+        }
+      ]
+    },
+    {
+      "context": false,
+      "selected": "reconcile",
+      "expected": "reconcile",
+      "passed": true,
+      "executions": [
+        {
+          "name": "reconcile",
+          "check": {
+            "case": "Boundaries.test_negative",
+            "kind": "python_unittest",
+            "path": "tests/test_boundaries.py"
+          },
+          "status": "observed_support",
+          "runner": "python_unittest",
+          "tests": 1,
+          "snapshot_sha256": "ad4d0e724328a2e8d5da3a96132fd97997b413552145617b134cce65c5e1735e",
+          "assurance": "Only named test outcome in isolated snapshot; no causal claim.",
+          "witness": {
+            "path": "tests/test_boundaries.py",
+            "sha256": "caf993f23351469df56c50c6586d060557450f9bc81a1a0945f71484fcfbd304"
+          }
+        }
+      ]
+    },
+    {
+      "name": "negative_control",
+      "passed": true,
+      "observation": {
+        "status": "contradicted",
+        "runner": "python_unittest",
+        "tests": 1,
+        "snapshot_sha256": "ad4d0e724328a2e8d5da3a96132fd97997b413552145617b134cce65c5e1735e",
+        "assurance": "Only named test outcome in isolated snapshot; no causal claim.",
+        "witness": {
+          "path": "tests/test_boundaries.py",
+          "sha256": "caf993f23351469df56c50c6586d060557450f9bc81a1a0945f71484fcfbd304"
+        }
+      }
+    }
+  ],
+  "live": {
+    "provider": "codex",
+    "model": "native default; exact model identity not instrumented",
+    "seconds": 291.35,
+    "rows": [
+      {
+        "domain": "payment-timeout",
+        "scenario": "positive",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": "retry",
+        "correct": false,
+        "failures": [],
+        "seconds": 5.641
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "positive",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": "retry",
+        "correct": false,
+        "failures": [],
+        "seconds": 7.44
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "positive",
+        "arm": "decision_rag",
+        "choice": "retry",
+        "expected": "retry",
+        "correct": true,
+        "failures": [],
+        "seconds": 7.987
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "negative",
+        "arm": "lexical_top1",
+        "choice": "reconcile",
+        "expected": "reconcile",
+        "correct": true,
+        "failures": [],
+        "seconds": 5.833
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "negative",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": "reconcile",
+        "correct": false,
+        "failures": [],
+        "seconds": 7.388
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "negative",
+        "arm": "decision_rag",
+        "choice": "reconcile",
+        "expected": "reconcile",
+        "correct": true,
+        "failures": [],
+        "seconds": 5.537
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "unknown",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 5.732
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "unknown",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 4.68
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "unknown",
+        "arm": "decision_rag",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 4.431
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "invalid-type",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 5.332
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "invalid-type",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 6.685
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "invalid-type",
+        "arm": "decision_rag",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 6.584
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "changed-contract",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 10.697
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "changed-contract",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 8.642
+      },
+      {
+        "domain": "payment-timeout",
+        "scenario": "changed-contract",
+        "arm": "decision_rag",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 8.99
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "positive",
+        "arm": "lexical_top1",
+        "choice": "cache",
+        "expected": "cache",
+        "correct": true,
+        "failures": [],
+        "seconds": 12.098
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "positive",
+        "arm": "synopsis_v06",
+        "choice": "cache",
+        "expected": "cache",
+        "correct": true,
+        "failures": [],
+        "seconds": 5.234
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "positive",
+        "arm": "decision_rag",
+        "choice": "cache",
+        "expected": "cache",
+        "correct": true,
+        "failures": [],
+        "seconds": 5.433
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "negative",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": "read-primary",
+        "correct": false,
+        "failures": [],
+        "seconds": 7.439
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "negative",
+        "arm": "synopsis_v06",
+        "choice": "read-primary",
+        "expected": "read-primary",
+        "correct": true,
+        "failures": [],
+        "seconds": 5.431
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "negative",
+        "arm": "decision_rag",
+        "choice": "read-primary",
+        "expected": "read-primary",
+        "correct": true,
+        "failures": [],
+        "seconds": 8.892
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "unknown",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 5.531
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "unknown",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 4.375
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "unknown",
+        "arm": "decision_rag",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 6.283
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "invalid-type",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 8.091
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "invalid-type",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 11.505
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "invalid-type",
+        "arm": "decision_rag",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 4.682
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "changed-contract",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 6.236
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "changed-contract",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 5.682
+      },
+      {
+        "domain": "balance-cache",
+        "scenario": "changed-contract",
+        "arm": "decision_rag",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 4.832
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "positive",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": "rename",
+        "correct": false,
+        "failures": [],
+        "seconds": 5.684
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "positive",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": "rename",
+        "correct": false,
+        "failures": [],
+        "seconds": 5.532
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "positive",
+        "arm": "decision_rag",
+        "choice": "rename",
+        "expected": "rename",
+        "correct": true,
+        "failures": [],
+        "seconds": 4.532
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "negative",
+        "arm": "lexical_top1",
+        "choice": "expand-contract",
+        "expected": "expand-contract",
+        "correct": true,
+        "failures": [],
+        "seconds": 5.285
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "negative",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": "expand-contract",
+        "correct": false,
+        "failures": [],
+        "seconds": 8.244
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "negative",
+        "arm": "decision_rag",
+        "choice": "expand-contract",
+        "expected": "expand-contract",
+        "correct": true,
+        "failures": [],
+        "seconds": 5.034
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "unknown",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 5.432
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "unknown",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 5.785
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "unknown",
+        "arm": "decision_rag",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 4.029
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "invalid-type",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 4.68
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "invalid-type",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 5.485
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "invalid-type",
+        "arm": "decision_rag",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 5.181
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "changed-contract",
+        "arm": "lexical_top1",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 6.286
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "changed-contract",
+        "arm": "synopsis_v06",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 8.698
+      },
+      {
+        "domain": "schema-rename",
+        "scenario": "changed-contract",
+        "arm": "decision_rag",
+        "choice": null,
+        "expected": null,
+        "correct": true,
+        "failures": [],
+        "seconds": 7.895
+      }
+    ],
+    "scores": {
+      "lexical_top1": {
+        "correct": 12,
+        "total": 15
+      },
+      "synopsis_v06": {
+        "correct": 11,
+        "total": 15
+      },
+      "decision_rag": {
+        "correct": 15,
+        "total": 15
+      }
+    }
+  },
+  "limitation": "Synthetic oracle decision fixtures. Retrieval controls and mechanism ablations are not external product benchmarks. No claim of novelty, causal productivity, broad generalization or hallucination elimination. Live latency includes inference; token billing is not instrumented.",
+  "passed": true
+}

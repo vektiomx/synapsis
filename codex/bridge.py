@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Codex lifecycle adapter for the installed Neuromapa hooks."""
+"""Codex lifecycle adapter for the installed Synopsis hooks."""
 import hashlib
+import contextlib
+import io
 import json
 import os
 from pathlib import Path
@@ -11,6 +13,7 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import comun
+import integration_runtime as runtime
 
 ROOT = comun.raiz_motor()
 DATA = comun.carpeta_datos()
@@ -19,7 +22,7 @@ EVENTS = ('SessionStart', 'UserPromptSubmit', 'PreToolUse', 'PostToolUse',
           'SubagentStop', 'Stop', 'SessionEnd', 'Interrupt')
 
 def normalize(data):
-    """Expand file patches so Neuromapa sees every affected file."""
+    """Expand file patches so Synopsis sees every affected file."""
     row = dict(data)
     name = str(row.get('tool_name', ''))
     args = row.get('tool_input')
@@ -117,7 +120,8 @@ def close_duplicate_sessions(row, recorder):
                                      'e': 'fin', 'k': 'fin', 'h': '', 'o': 'app'}, 0.5)
 
 def invoke(script, row):
-    proc = subprocess.run([sys.executable, '-I', '-S', str(ROOT / script)],
+    from desktop_runtime import python_flags
+    proc = subprocess.run([sys.executable,*python_flags(), str(ROOT / script)],
                           input=json.dumps(row), text=True, capture_output=True,
                           env=os.environ.copy(), timeout=9)
     if proc.returncode:
@@ -136,50 +140,25 @@ def handle(data):
     os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
     sys.dont_write_bytecode = True
     # Original hooks swallow errors; debug exposes them so the bridge can report them.
-    os.environ['NEUROMAPA_DEPURAR'] = '1'
+    os.environ['SYNOPSIS_DEPURAR'] = '1'
     contexts, warnings, errors = [], [], []
     decision = None
     rows = normalize(data)
     for row in rows:
-        try:
-            record(row)
-        except Exception as exc:
-            errors.append(f'recorder: {type(exc).__name__}: {exc}')
-        scripts = []
-        if event == 'SessionStart':
-            scripts = ['hook_inicio.py']
-            if row.get('source') == 'compact':
-                scripts.append('hook_guardar.py')
-        elif event == 'UserPromptSubmit':
-            scripts = ['hook_servir.py']
-        elif event == 'Stop':
-            scripts = ['hook_guardar.py']
-        elif event == 'PreToolUse' and row.get('tool_name') in ('Agent', 'Task', 'Workflow'):
-            scripts = ['hook_freno.py']
-        elif event == 'PostToolUse' and row.get('tool_name') in ('Write', 'Edit', 'MultiEdit', 'NotebookEdit'):
-            scripts = ['hook_choques.py']
-            if row.get('tool_name') == 'Write':
-                scripts.append('hook_parecidas.py')
-        for script in scripts:
-            try:
-                output = invoke(script, row)
-                info = output.get('hookSpecificOutput') or {}
-                if output.get('systemMessage'):
-                    warnings.append(output['systemMessage'])
-                if info.get('additionalContext'):
-                    contexts.append(info['additionalContext'])
-                if info.get('permissionDecision') == 'ask':
-                    # Codex does not support Claude's "ask" decision. Deny and report why.
-                    decision = {'hookEventName': event, 'permissionDecision': 'deny',
-                                'permissionDecisionReason': info.get('permissionDecisionReason', 'Neuromapa agent limit')}
-            except Exception as exc:
-                errors.append(f'{script}: {type(exc).__name__}: {exc}')
+        result = runtime.dispatch(dict(row,synopsis_client='codex'), record_event=record, invoke_hook=invoke)
+        contexts.extend(result['contexts'])
+        warnings.extend(result['warnings'])
+        errors.extend(result['errors'])
+        if result['decision']:
+            decision = dict(result['decision'])
+            if decision.get('permissionDecision') == 'ask':
+                decision['permissionDecision'] = 'deny'
     if contexts and event not in ('SessionStart', 'UserPromptSubmit', 'PreToolUse', 'PostToolUse'):
         warnings.extend(contexts)
         contexts = []
     result = {}
     if warnings or errors:
-        result['systemMessage'] = '\n'.join(warnings + ['Neuromapa bridge error: ' + e for e in errors])
+        result['systemMessage'] = '\n'.join(warnings + ['Synopsis bridge error: ' + e for e in errors])
     if decision:
         result['hookSpecificOutput'] = decision
     elif contexts:
@@ -190,17 +169,32 @@ def handle(data):
         stream.write(json.dumps({'t': time.time(), 'event': event,
                                 'session': str(data.get('session_id', ''))[:8],
                                 'records': len(rows), 'ok': not errors, 'errors': errors}) + '\n')
+    runtime.heartbeat('codex', event, not errors, data=DATA)
     return result
 
 def main():
+    if '--probe' in sys.argv:
+        print(json.dumps(runtime.probe('codex')))
+        return
+    data = {}
     try:
         data = json.load(sys.stdin)
         if not isinstance(data, dict):
             raise ValueError('Hook input must be an object')
-        result = handle(data)
+        # Engine diagnostics must never become a second payload on hook stdout.
+        with contextlib.redirect_stdout(io.StringIO()):
+            result = handle(data)
     except Exception as exc:
-        result = {'systemMessage': f'Neuromapa bridge error: {type(exc).__name__}: {exc}'}
-    print(json.dumps(result, ensure_ascii=True))
+        result = {'systemMessage': f'Synopsis bridge error: {type(exc).__name__}: {exc}'}
+    if isinstance(data, dict) and data.get('hook_event_name') == 'UserPromptSubmit':
+        # Codex also accepts plain developer context for this event. Avoid the JSON
+        # decoder here; other lifecycle events still require their structured output.
+        info = result.get('hookSpecificOutput') or {}
+        parts = [part for part in (info.get('additionalContext'), result.get('systemMessage')) if part]
+        if parts:
+            print('Synopsis:\n' + '\n\n'.join(parts))
+    else:
+        print(json.dumps(result, ensure_ascii=True))
 
 if __name__ == '__main__':
     main()

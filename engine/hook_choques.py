@@ -86,7 +86,7 @@ def aviso(datos, ahora=None):
         return None
     partes = [choques.quien({"s": e["actor"][0], "a": e["actor"][1], "tipo": e["tipo"], "c": e["c"]}) + " hace "
               + minutos(max(0, ahora - e["t"])) for e in sorted(ultimos.values(), key=lambda e: -e["t"])]
-    return ("Neuromapa: " + choques.nombre_archivo(ruta) + " también lo editó " + " y ".join(partes)
+    return ("Synopsis: " + choques.nombre_archivo(ruta) + " también lo editó " + " y ".join(partes)
             + ". Si trabajan a la vez, releé el archivo antes de seguir y fijate que los cambios no se pisen.")
 
 
@@ -134,7 +134,7 @@ def aviso_rutas(datos):
                         "mismo renglón para que el médico no la marque.")
     if enlaces:
         consejos.append("El enlace corregilo o sacalo: el médico lo marca aunque el renglón lo explique.")
-    return f'Neuromapa: en {choques.nombre_archivo(ruta)} acabás de escribir {" y ".join(partes)}. ' + " ".join(consejos)
+    return f'Synopsis: en {choques.nombre_archivo(ruta)} acabás de escribir {" y ".join(partes)}. ' + " ".join(consejos)
 
 
 def lista(cosas):
@@ -235,7 +235,7 @@ def aviso_dato_viejo(datos):
         return None
     import choques
     lugares = "; ".join(f"{r}:{linea} («{f}»)" for r, linea, f in hallados[:TOPE_HALLADOS])
-    return (f"Neuromapa: en {choques.nombre_archivo(ruta)} acabás de cambiar un dato que otras notas todavía dicen igual "
+    return (f"Synopsis: en {choques.nombre_archivo(ruta)} acabás de cambiar un dato que otras notas todavía dicen igual "
             f"que antes: {lugares}. Si es el mismo dato, actualizalo ahí también; si esas cuentan otra cosa (o lo de antes "
             "sigue siendo cierto allá), no hace falta tocarlas.")
 
@@ -290,7 +290,7 @@ def aviso_nota(datos):
             return None
         hook_evento.escribir_evento(hook_evento.recuerdo(sesion, cwd, ruta, [nota]))
         import choques
-        return (f"Neuromapa: cuando se edita {choques.nombre_archivo(ruta)} se suele leer también {nota} (lo aprendió "
+        return (f"Synopsis: cuando se edita {choques.nombre_archivo(ruta)} se suele leer también {nota} (lo aprendió "
                 "del uso) y en esta charla todavía no la leíste. Si el cambio toca lo que cuenta esa nota, leela antes "
                 "de seguir: puede tener una decisión o una trampa de este archivo.")
     return None

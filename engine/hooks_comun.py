@@ -23,11 +23,11 @@ def del_sistema(texto):
 
 
 def depurando():
-    return os.environ.get("NEUROMAPA_DEPURAR", "").strip() not in ("", "0")
+    return os.environ.get("SYNOPSIS_DEPURAR", "").strip() not in ("", "0")
 
 
 def de_prueba():
-    return os.environ.get("NEUROMAPA_PRUEBA", "").strip() not in ("", "0")
+    return os.environ.get("SYNOPSIS_PRUEBA", "").strip() not in ("", "0")
 
 
 def contexto_automatico():
@@ -128,7 +128,7 @@ def linea_salud(ahora=None, carpeta=None):
         partes.append(f'{donde_fallo}: {tipo}{en} ({veces} {"vez" if veces == 1 else "veces"}, la última el {cuando})')
     resto = f" y {len(fallas) - MOSTRAR_FALLAS} más" if len(fallas) > MOSTRAR_FALLAS else ""
     return (f'AVISO   Fallas de los hooks y del armado (últimos {DIAS_FALLAS} días): {"; ".join(partes)}{resto}. '
-            "Se tragan para no cortar a Claude; para ver el error entero, correr con NEUROMAPA_DEPURAR=1.")
+            "Se tragan para no cortar a Claude; para ver el error entero, correr con SYNOPSIS_DEPURAR=1.")
 
 
 def instalado_dos_veces(casa=None):
@@ -140,7 +140,7 @@ def instalado_dos_veces(casa=None):
                     for h in g.get("hooks", ()) if isinstance(h, dict)]
         a_mano = any("hook_cerebro.py" in c and "CLAUDE_PLUGIN_ROOT" not in c for c in comandos)
         plugin = bool(os.environ.get("CLAUDE_PLUGIN_ROOT")) or any(
-            str(nombre).startswith("neuromapa@") and prendido for nombre, prendido in (ajustes.get("enabledPlugins") or {}).items())
+            str(nombre).startswith("synopsis@") and prendido for nombre, prendido in (ajustes.get("enabledPlugins") or {}).items())
     except (OSError, ValueError, AttributeError, TypeError):
         return False
     return a_mano and plugin
@@ -149,7 +149,7 @@ def instalado_dos_veces(casa=None):
 def linea_doble():
     if not instalado_dos_veces():
         return ""
-    return ("AVISO   Neuromapa está instalado dos veces: como plugin y con sus hooks a mano en settings.json. Todo se "
+    return ("AVISO   Synopsis está instalado dos veces: como plugin y con sus hooks a mano en settings.json. Todo se "
             "anota y se sirve dos veces (dos pistas en cada pedido). Dejá uno: desinstalá el plugin o sacá de "
             "settings.json los hooks de hook_cerebro.py, hook_servir.py y los demás.")
 

@@ -9,7 +9,7 @@ VIGENCIA = 60
 
 
 def firmar(clave, *partes):
-    return hmac.new(clave.encode("utf-8"), "|".join(("neuromapa",) + partes).encode("utf-8"), hashlib.sha256).hexdigest()
+    return hmac.new(clave.encode("utf-8"), "|".join(("synopsis",) + partes).encode("utf-8"), hashlib.sha256).hexdigest()
 
 
 def numero():

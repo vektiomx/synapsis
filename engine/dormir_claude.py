@@ -68,7 +68,7 @@ def version_de(ruta, base):
 
 
 def buscar_claude():
-    elegido = os.environ.get("NEUROMAPA_CLAUDE") or shutil.which("claude")
+    elegido = os.environ.get("SYNOPSIS_CLAUDE") or shutil.which("claude")
     if elegido:
         return elegido
     if os.environ.get("APPDATA"):
@@ -116,8 +116,8 @@ def llamar(claude, pedido, esquema, modelo, tope, herramientas="", carpetas=(), 
     for carpeta in carpetas:
         orden += ["--add-dir", carpeta]
     entorno = {k: v for k, v in os.environ.items() if k != "CLAUDECODE"}
-    entorno["NEUROMAPA_PRUEBA"] = "1"
-    with tempfile.TemporaryDirectory(prefix="neuromapa-dormir-") as vacia:
+    entorno["SYNOPSIS_PRUEBA"] = "1"
+    with tempfile.TemporaryDirectory(prefix="synopsis-dormir-") as vacia:
         try:
             proceso = subprocess.run(orden, input=pedido, cwd=vacia, env=entorno, capture_output=True, text=True,
                                      encoding="utf-8", errors="replace", timeout=ESPERA_LLAMADA,
@@ -296,7 +296,7 @@ def candidatos(cerebro):
         renglones = leer_renglones(nodo["ruta"])
         if not renglones:
             continue
-        notas[nodo["id"]] = {"nodo": nodo, "renglones": renglones, "memoria": nodo["grupo"] in memorias,
+        notas[nodo["id"]] = {"nodo": nodo, "renglones": renglones, "memoria": bool(cerebro.fuente_de[nodo["id"]].get("memoria")),
                              "proyecto": next((alias for raiz, alias in proyectos if dentro(nodo["ruta"], raiz)), ""),
                              "nombres": [nombres_de(r) for r in renglones]}
     en_notas = {}

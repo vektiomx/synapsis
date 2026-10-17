@@ -233,7 +233,7 @@ def linea_salud(datos=None, codigo=CODIGO):
     frases = []
     if escriben:
         del_codigo = any(nombre == "carpeta del código" for nombre, _, _ in escriben)
-        efecto = "lo que Neuromapa le pasa a Claude" + (" o el código que corren los hooks" if del_codigo else "")
+        efecto = "lo que Synopsis le pasa a Claude" + (" o el código que corren los hooks" if del_codigo else "")
         frases.append(f"Otras cuentas de esta PC pueden escribir en {nombrar(escriben)}: podrían cambiar {efecto}.")
     if leen:
         frases.append(f"Otras cuentas de esta PC pueden leer {nombrar(leen)}: ahí están la página con el texto de todas "

@@ -1,0 +1,754 @@
+{
+  "numeric_mode_policy-1701-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "20c65675-1d66-43f5-8312-158e2d220c7e",
+          "memory": "La política numeric_mode_policy-1701-history está activa y corresponde al símbolo policy de policy.py, con la interfaz original policy(context) de un solo argumento. Su código histórico es `def policy(context): return 534 if context[\"flag\"] else 416`; las observaciones confirman 534 para flag=true y 416 para flag=false, sin argumentos nombrados. Debe preservarse exactamente esta política numérica histórica, sin inventar números nuevos, y limitarse a esa interfaz.",
+          "hash": "8f85dc9c97d3bad5ad89d9637fb5ae44",
+          "metadata": {
+            "source_id": "numeric_mode_policy-1701-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.29245229879845397,
+          "created_at": "2026-10-17T07:56:21.672860+00:00",
+          "updated_at": "2026-10-17T07:56:21.672860+00:00",
+          "user_id": "numeric_mode_policy-1701-applicable_history",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.5590857091748259,
+            "bm25_score": 0.02581888842208202,
+            "entity_boost": 0.0,
+            "raw_score": 0.5849045975969079,
+            "max_possible_score": 2.0,
+            "final_score": 0.29245229879845397,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "numeric_mode_policy-1701-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "20c65675-1d66-43f5-8312-158e2d220c7e",
+            "memory": "La política numeric_mode_policy-1701-history está activa y corresponde al símbolo policy de policy.py, con la interfaz original policy(context) de un solo argumento. Su código histórico es `def policy(context): return 534 if context[\"flag\"] else 416`; las observaciones confirman 534 para flag=true y 416 para flag=false, sin argumentos nombrados. Debe preservarse exactamente esta política numérica histórica, sin inventar números nuevos, y limitarse a esa interfaz.",
+            "event": "ADD"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 10.357491162998485,
+      "retrieval_seconds": 0.0080327820032835,
+      "acquisition_llm_calls": 1,
+      "request_characters": 35955,
+      "wall_seconds": 12.390336566008045
+    }
+  },
+  "stable_sequence_processing-1702-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "d0a1c645-0d37-440b-9e51-53fca9e61920",
+          "memory": "La función activa policy de policy.py, identificada por source_id «stable_sequence_processing-1702-history», elimina duplicados según la igualdad de Python, incluidos elementos JSON no hashables, y conserva el orden de la primera aparición. Su alcance se limita a la interfaz original policy(context), con un único argumento.",
+          "hash": "17132bfdb3e8ad2e3b6522869cfbc2c9",
+          "metadata": {
+            "source_id": "stable_sequence_processing-1702-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.29402812409855245,
+          "created_at": "2026-10-17T07:56:31.376533+00:00",
+          "updated_at": "2026-10-17T07:56:31.376533+00:00",
+          "user_id": "stable_sequence_processing-1702-applicable_history",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.5526704250787349,
+            "bm25_score": 0.035385823118369984,
+            "entity_boost": 0.0,
+            "raw_score": 0.5880562481971049,
+            "max_possible_score": 2.0,
+            "final_score": 0.29402812409855245,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "573c6131-510a-4263-bf59-8d1d2fbdd523",
+          "memory": "La implementación de policy(context) inicializa result=[], recorre context[\"items\"], agrega cada item únicamente si item not in result y devuelve result. Las observaciones esperadas son [3, 1, 3, 2] → [3, 1, 2] y [[2], [1], [2]] → [[2], [1]].",
+          "hash": "8ccb06f95e96828939924b487e0b39e9",
+          "metadata": {
+            "source_id": "stable_sequence_processing-1702-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.16424617682749945,
+          "created_at": "2026-10-17T07:56:31.376582+00:00",
+          "updated_at": "2026-10-17T07:56:31.376582+00:00",
+          "user_id": "stable_sequence_processing-1702-applicable_history",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.31420582150687193,
+            "bm25_score": 0.014286532148126974,
+            "entity_boost": 0.0,
+            "raw_score": 0.3284923536549989,
+            "max_possible_score": 2.0,
+            "final_score": 0.16424617682749945,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "stable_sequence_processing-1702-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "d0a1c645-0d37-440b-9e51-53fca9e61920",
+            "memory": "La función activa policy de policy.py, identificada por source_id «stable_sequence_processing-1702-history», elimina duplicados según la igualdad de Python, incluidos elementos JSON no hashables, y conserva el orden de la primera aparición. Su alcance se limita a la interfaz original policy(context), con un único argumento.",
+            "event": "ADD"
+          },
+          {
+            "id": "573c6131-510a-4263-bf59-8d1d2fbdd523",
+            "memory": "La implementación de policy(context) inicializa result=[], recorre context[\"items\"], agrega cada item únicamente si item not in result y devuelve result. Las observaciones esperadas son [3, 1, 3, 2] → [3, 1, 2] y [[2], [1], [2]] → [[2], [1]].",
+            "event": "ADD"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 7.513305795000633,
+      "retrieval_seconds": 0.00794542500807438,
+      "acquisition_llm_calls": 1,
+      "request_characters": 36082,
+      "wall_seconds": 8.721554168005241
+    }
+  },
+  "text_identity_boundaries-1703-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "cc1340db-33d1-4656-889f-151cc71eecf6",
+          "memory": "La política activa identificada como text_identity_boundaries-1703-history corresponde al símbolo policy de policy.py y se limita a la interfaz original policy(context) de un argumento. Su implementación es `def policy(context):\n return context[\"text\"].strip(\" \")\n`: elimina únicamente espacios ASCII de ambos extremos, preservando mayúsculas, minúsculas y cualquier otro carácter, incluidos tabuladores y espacios de no separación.",
+          "hash": "f32e0fc9582ea7beb6dbfaa886acc215",
+          "metadata": {
+            "source_id": "text_identity_boundaries-1703-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.24862871494687594,
+          "created_at": "2026-10-17T07:56:41.215479+00:00",
+          "updated_at": "2026-10-17T07:56:41.215479+00:00",
+          "user_id": "text_identity_boundaries-1703-applicable_history",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.46219948329044325,
+            "bm25_score": 0.035057946603308646,
+            "entity_boost": 0.0,
+            "raw_score": 0.4972574298937519,
+            "max_possible_score": 2.0,
+            "final_score": 0.24862871494687594,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "1ad3288d-1e98-454a-a42a-44f78c98622c",
+          "memory": "Las observaciones de text_identity_boundaries-1703-history especifican dos llamadas a policy(context), ambas sin argumentos por nombre: con {\"text\":\" AbC \"}, el valor esperado es \"AbC\"; con {\"text\":\"\\tÉx\\t\"}, el valor esperado es \"\\tÉx\\t\", conservando los tabuladores y el carácter É.",
+          "hash": "1aba6947c1316642f78311e340730b94",
+          "metadata": {
+            "source_id": "text_identity_boundaries-1703-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.19662038571885931,
+          "created_at": "2026-10-17T07:56:41.215510+00:00",
+          "updated_at": "2026-10-17T07:56:41.215510+00:00",
+          "user_id": "text_identity_boundaries-1703-applicable_history",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.3789817665450559,
+            "bm25_score": 0.014259004892662765,
+            "entity_boost": 0.0,
+            "raw_score": 0.39324077143771863,
+            "max_possible_score": 2.0,
+            "final_score": 0.19662038571885931,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "text_identity_boundaries-1703-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "cc1340db-33d1-4656-889f-151cc71eecf6",
+            "memory": "La política activa identificada como text_identity_boundaries-1703-history corresponde al símbolo policy de policy.py y se limita a la interfaz original policy(context) de un argumento. Su implementación es `def policy(context):\n return context[\"text\"].strip(\" \")\n`: elimina únicamente espacios ASCII de ambos extremos, preservando mayúsculas, minúsculas y cualquier otro carácter, incluidos tabuladores y espacios de no separación.",
+            "event": "ADD"
+          },
+          {
+            "id": "1ad3288d-1e98-454a-a42a-44f78c98622c",
+            "memory": "Las observaciones de text_identity_boundaries-1703-history especifican dos llamadas a policy(context), ambas sin argumentos por nombre: con {\"text\":\" AbC \"}, el valor esperado es \"AbC\"; con {\"text\":\"\\tÉx\\t\"}, el valor esperado es \"\\tÉx\\t\", conservando los tabuladores y el carácter É.",
+            "event": "ADD"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 8.997741975996178,
+      "retrieval_seconds": 0.008337495994055644,
+      "acquisition_llm_calls": 1,
+      "request_characters": 36007,
+      "wall_seconds": 9.932314999998198
+    }
+  },
+  "sparse_payload_merge-1704-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "7f5c7b2f-2ebd-4ee4-9332-4534d61bfdcd",
+          "memory": "La política activa sparse_payload_merge-1704-history corresponde al símbolo policy del archivo policy.py y se limita a la interfaz original policy(context), de un solo argumento. Copia context[\"base\"] y sobrescribe únicamente las claves cuyos valores en context[\"patch\"] no sean None; preserva false, cero, cadenas vacías y colecciones vacías.",
+          "hash": "201f6da80857d3053d97745f0e99d318",
+          "metadata": {
+            "source_id": "sparse_payload_merge-1704-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.2779953486243877,
+          "created_at": "2026-10-17T07:56:51.815934+00:00",
+          "updated_at": "2026-10-17T07:56:51.815934+00:00",
+          "user_id": "sparse_payload_merge-1704-applicable_history",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.5103549473375161,
+            "bm25_score": 0.04563574991125927,
+            "entity_boost": 0.0,
+            "raw_score": 0.5559906972487754,
+            "max_possible_score": 2.0,
+            "final_score": 0.2779953486243877,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "85d518ee-7eb3-4431-85b5-031a01d61c84",
+          "memory": "Una observación de sparse_payload_merge-1704-history establece que policy, invocada sin kwargs y con el contexto {\"base\":{\"a\":3,\"b\":4},\"patch\":{\"a\":null,\"b\":0,\"c\":false}}, debe devolver {\"a\":3,\"b\":0,\"c\":false}: null conserva el valor base y los valores cero y false sí se aplican.",
+          "hash": "388170265a19dcecb1d891b2e3ddbf38",
+          "metadata": {
+            "source_id": "sparse_payload_merge-1704-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.19538351353489652,
+          "created_at": "2026-10-17T07:56:51.815958+00:00",
+          "updated_at": "2026-10-17T07:56:51.815958+00:00",
+          "user_id": "sparse_payload_merge-1704-applicable_history",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.3775044161504777,
+            "bm25_score": 0.013262610919315349,
+            "entity_boost": 0.0,
+            "raw_score": 0.39076702706979305,
+            "max_possible_score": 2.0,
+            "final_score": 0.19538351353489652,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "2518ee18-f345-4fb2-b59e-257d015689bf",
+          "memory": "Otra observación de sparse_payload_merge-1704-history establece que policy, invocada sin kwargs y con el contexto {\"base\":{},\"patch\":{\"empty\":\"\",\"none\":null}}, debe devolver {\"empty\":\"\"}. La cadena vacía se incorpora al resultado y la clave nueva con valor null se omite.",
+          "hash": "7957d8428f89ec8b477788de10e285ee",
+          "metadata": {
+            "source_id": "sparse_payload_merge-1704-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.17676916241253154,
+          "created_at": "2026-10-17T07:56:51.815969+00:00",
+          "updated_at": "2026-10-17T07:56:51.815969+00:00",
+          "user_id": "sparse_payload_merge-1704-applicable_history",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.3402389729848728,
+            "bm25_score": 0.01329935184019026,
+            "entity_boost": 0.0,
+            "raw_score": 0.3535383248250631,
+            "max_possible_score": 2.0,
+            "final_score": 0.17676916241253154,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "sparse_payload_merge-1704-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "7f5c7b2f-2ebd-4ee4-9332-4534d61bfdcd",
+            "memory": "La política activa sparse_payload_merge-1704-history corresponde al símbolo policy del archivo policy.py y se limita a la interfaz original policy(context), de un solo argumento. Copia context[\"base\"] y sobrescribe únicamente las claves cuyos valores en context[\"patch\"] no sean None; preserva false, cero, cadenas vacías y colecciones vacías.",
+            "event": "ADD"
+          },
+          {
+            "id": "85d518ee-7eb3-4431-85b5-031a01d61c84",
+            "memory": "Una observación de sparse_payload_merge-1704-history establece que policy, invocada sin kwargs y con el contexto {\"base\":{\"a\":3,\"b\":4},\"patch\":{\"a\":null,\"b\":0,\"c\":false}}, debe devolver {\"a\":3,\"b\":0,\"c\":false}: null conserva el valor base y los valores cero y false sí se aplican.",
+            "event": "ADD"
+          },
+          {
+            "id": "2518ee18-f345-4fb2-b59e-257d015689bf",
+            "memory": "Otra observación de sparse_payload_merge-1704-history establece que policy, invocada sin kwargs y con el contexto {\"base\":{},\"patch\":{\"empty\":\"\",\"none\":null}}, debe devolver {\"empty\":\"\"}. La cadena vacía se incorpora al resultado y la clave nueva con valor null se omite.",
+            "event": "ADD"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 9.346797877005883,
+      "retrieval_seconds": 0.010341614004573785,
+      "acquisition_llm_calls": 1,
+      "request_characters": 36230,
+      "wall_seconds": 10.580514023997239
+    }
+  },
+  "numeric_mode_policy-2901-applicable_history": {
+    "memory": {
+      "results": [
+        {
+          "id": "192509e7-3696-441c-bc2e-b6285ced810a",
+          "memory": "La política histórica numeric_mode_policy-2901-history está activa y corresponde al símbolo policy de policy.py. Su interfaz original es policy(context), con un único argumento: devuelve exactamente 137 cuando context[\"flag\"] es true y 791 cuando es false, como confirman ambas observaciones sin argumentos nombrados. Debe preservarse esta política numérica exacta, sin inventar números nuevos; el alcance se limita a la interfaz original de un argumento.",
+          "hash": "4e1be6e59a6215972b9424c7cd1c650e",
+          "metadata": {
+            "source_id": "numeric_mode_policy-2901-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.2946621326828601,
+          "created_at": "2026-10-17T07:59:30.063197+00:00",
+          "updated_at": "2026-10-17T07:59:30.063197+00:00",
+          "user_id": "numeric_mode_policy-2901-applicable_history",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.5639655701981933,
+            "bm25_score": 0.02535869516752703,
+            "entity_boost": 0.0,
+            "raw_score": 0.5893242653657202,
+            "max_possible_score": 2.0,
+            "final_score": 0.2946621326828601,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "numeric_mode_policy-2901-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "192509e7-3696-441c-bc2e-b6285ced810a",
+            "memory": "La política histórica numeric_mode_policy-2901-history está activa y corresponde al símbolo policy de policy.py. Su interfaz original es policy(context), con un único argumento: devuelve exactamente 137 cuando context[\"flag\"] es true y 791 cuando es false, como confirman ambas observaciones sin argumentos nombrados. Debe preservarse esta política numérica exacta, sin inventar números nuevos; el alcance se limita a la interfaz original de un argumento.",
+            "event": "ADD"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 8.261405173994717,
+      "retrieval_seconds": 0.009824986991588958,
+      "acquisition_llm_calls": 1,
+      "request_characters": 35955,
+      "wall_seconds": 10.846101650997298
+    }
+  },
+  "stable_sequence_processing-2902-irrelevant_distractors": {
+    "memory": {
+      "results": [
+        {
+          "id": "01bd2d9f-f2c7-4a25-9489-9fcd3e1724d5",
+          "memory": "La función policy de policy.py, con lifecycle «active» y source_id «stable_sequence_processing-2902-history», elimina duplicados de context[\"items\"] mediante igualdad de Python, incluidos elementos JSON no hashables. Conserva la primera aparición y el orden de encuentro. Su alcance se limita a la interfaz original policy(context), de un solo argumento. La implementación acumula result=[] y añade cada item únicamente si item not in result.",
+          "hash": "bc87d1b5130af6d89bdc4e1209134340",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.280789726791626,
+          "created_at": "2026-10-17T07:59:40.136162+00:00",
+          "updated_at": "2026-10-17T07:59:40.136162+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.5479088015513985,
+            "bm25_score": 0.013670652031853487,
+            "entity_boost": 0.0,
+            "raw_score": 0.561579453583252,
+            "max_possible_score": 2.0,
+            "final_score": 0.280789726791626,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "37b2f5f7-98b9-48fc-82c8-d9b335e5e7e2",
+          "memory": "El componente unrelated_2.py define policy(context) y devuelve siempre 102. Tiene lifecycle «active», observations vacío y source_id «stable_sequence_processing-2902-irrelevant_distractors-distractor-2». Su alcance es exclusivamente otro archivo («Other file only.»); la política «Unrelated component: never use for policy.py» prohíbe utilizarlo para policy.py.",
+          "hash": "2e40161b596685cf36191309dc6c6a2b",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-2",
+            "path": "unrelated_2.py",
+            "symbol": "policy"
+          },
+          "score": 0.27827390813349745,
+          "created_at": "2026-10-17T07:59:58.553699+00:00",
+          "updated_at": "2026-10-17T07:59:58.553699+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.532248145478024,
+            "bm25_score": 0.02429967078897088,
+            "entity_boost": 0.0,
+            "raw_score": 0.5565478162669949,
+            "max_possible_score": 2.0,
+            "final_score": 0.27827390813349745,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "d4a8ab7f-9bf3-487b-bc93-d0da46221a49",
+          "memory": "El componente unrelated_3.py define policy(context) y devuelve siempre 103. Tiene lifecycle «active», observations vacío y source_id «stable_sequence_processing-2902-irrelevant_distractors-distractor-3». Su alcance es exclusivamente otro archivo («Other file only.»); la política «Unrelated component: never use for policy.py» prohíbe utilizarlo para policy.py.",
+          "hash": "07a1b1bac655ede1c8034e174850ca58",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-3",
+            "path": "unrelated_3.py",
+            "symbol": "policy"
+          },
+          "score": 0.2740227124198432,
+          "created_at": "2026-10-17T08:00:05.040465+00:00",
+          "updated_at": "2026-10-17T08:00:05.040465+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.5237457540507156,
+            "bm25_score": 0.02429967078897088,
+            "entity_boost": 0.0,
+            "raw_score": 0.5480454248396864,
+            "max_possible_score": 2.0,
+            "final_score": 0.2740227124198432,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "b930b2d4-e880-4913-a262-7f1e7e7de1b8",
+          "memory": "El componente unrelated_1.py define policy(context) y devuelve siempre 101. Tiene lifecycle «active», observations vacío y source_id «stable_sequence_processing-2902-irrelevant_distractors-distractor-1». Su alcance es exclusivamente otro archivo («Other file only.»); la política «Unrelated component: never use for policy.py» prohíbe utilizarlo para policy.py.",
+          "hash": "fe0759c3d7b46fcc282838b66e7343ce",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-1",
+            "path": "unrelated_1.py",
+            "symbol": "policy"
+          },
+          "score": 0.27199466140086337,
+          "created_at": "2026-10-17T07:59:53.282817+00:00",
+          "updated_at": "2026-10-17T07:59:53.282817+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.5196896520127559,
+            "bm25_score": 0.02429967078897088,
+            "entity_boost": 0.0,
+            "raw_score": 0.5439893228017267,
+            "max_possible_score": 2.0,
+            "final_score": 0.27199466140086337,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "caa8400d-f2f5-4b16-a87f-c50f9c7acbd9",
+          "memory": "El componente unrelated_0.py define policy(context) y devuelve siempre 100. Tiene lifecycle «active», observations vacío y source_id «stable_sequence_processing-2902-irrelevant_distractors-distractor-0». Su alcance es exclusivamente otro archivo («Other file only.»); la política «Unrelated component: never use for policy.py» prohíbe utilizarlo para policy.py.",
+          "hash": "ae97c3e28b9f9dc2cf9819fd680c24f7",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-0",
+            "path": "unrelated_0.py",
+            "symbol": "policy"
+          },
+          "score": 0.2697471004810349,
+          "created_at": "2026-10-17T07:59:47.059873+00:00",
+          "updated_at": "2026-10-17T07:59:47.059873+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.5151945301730989,
+            "bm25_score": 0.02429967078897088,
+            "entity_boost": 0.0,
+            "raw_score": 0.5394942009620698,
+            "max_possible_score": 2.0,
+            "final_score": 0.2697471004810349,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "171216e9-01eb-46b1-9b2c-b8911b55f8bd",
+          "memory": "Las observaciones de policy en policy.py especifican dos llamadas con un único argumento de contexto y kwargs vacíos: {\"items\":[3,1,3,2]} debe devolver [3,1,2], y {\"items\":[[2],[1],[2]]} debe devolver [[2],[1]]. Estos casos documentan la eliminación estable de duplicados tanto para números como para listas no hashables.",
+          "hash": "14f409b3a6fcb016d7270c82eaf4c7a6",
+          "metadata": {
+            "source_id": "stable_sequence_processing-2902-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.19866023079274833,
+          "created_at": "2026-10-17T07:59:40.136187+00:00",
+          "updated_at": "2026-10-17T07:59:40.136187+00:00",
+          "user_id": "stable_sequence_processing-2902-irrelevant_distractors",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.3837321657026796,
+            "bm25_score": 0.013588295882817075,
+            "entity_boost": 0.0,
+            "raw_score": 0.39732046158549666,
+            "max_possible_score": 2.0,
+            "final_score": 0.19866023079274833,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "stable_sequence_processing-2902-history",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-0",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-1",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-2",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-3"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "01bd2d9f-f2c7-4a25-9489-9fcd3e1724d5",
+            "memory": "La función policy de policy.py, con lifecycle «active» y source_id «stable_sequence_processing-2902-history», elimina duplicados de context[\"items\"] mediante igualdad de Python, incluidos elementos JSON no hashables. Conserva la primera aparición y el orden de encuentro. Su alcance se limita a la interfaz original policy(context), de un solo argumento. La implementación acumula result=[] y añade cada item únicamente si item not in result.",
+            "event": "ADD"
+          },
+          {
+            "id": "171216e9-01eb-46b1-9b2c-b8911b55f8bd",
+            "memory": "Las observaciones de policy en policy.py especifican dos llamadas con un único argumento de contexto y kwargs vacíos: {\"items\":[3,1,3,2]} debe devolver [3,1,2], y {\"items\":[[2],[1],[2]]} debe devolver [[2],[1]]. Estos casos documentan la eliminación estable de duplicados tanto para números como para listas no hashables.",
+            "event": "ADD"
+          }
+        ]
+      },
+      {
+        "results": [
+          {
+            "id": "caa8400d-f2f5-4b16-a87f-c50f9c7acbd9",
+            "memory": "El componente unrelated_0.py define policy(context) y devuelve siempre 100. Tiene lifecycle «active», observations vacío y source_id «stable_sequence_processing-2902-irrelevant_distractors-distractor-0». Su alcance es exclusivamente otro archivo («Other file only.»); la política «Unrelated component: never use for policy.py» prohíbe utilizarlo para policy.py.",
+            "event": "ADD"
+          }
+        ]
+      },
+      {
+        "results": [
+          {
+            "id": "b930b2d4-e880-4913-a262-7f1e7e7de1b8",
+            "memory": "El componente unrelated_1.py define policy(context) y devuelve siempre 101. Tiene lifecycle «active», observations vacío y source_id «stable_sequence_processing-2902-irrelevant_distractors-distractor-1». Su alcance es exclusivamente otro archivo («Other file only.»); la política «Unrelated component: never use for policy.py» prohíbe utilizarlo para policy.py.",
+            "event": "ADD"
+          }
+        ]
+      },
+      {
+        "results": [
+          {
+            "id": "37b2f5f7-98b9-48fc-82c8-d9b335e5e7e2",
+            "memory": "El componente unrelated_2.py define policy(context) y devuelve siempre 102. Tiene lifecycle «active», observations vacío y source_id «stable_sequence_processing-2902-irrelevant_distractors-distractor-2». Su alcance es exclusivamente otro archivo («Other file only.»); la política «Unrelated component: never use for policy.py» prohíbe utilizarlo para policy.py.",
+            "event": "ADD"
+          }
+        ]
+      },
+      {
+        "results": [
+          {
+            "id": "d4a8ab7f-9bf3-487b-bc93-d0da46221a49",
+            "memory": "El componente unrelated_3.py define policy(context) y devuelve siempre 103. Tiene lifecycle «active», observations vacío y source_id «stable_sequence_processing-2902-irrelevant_distractors-distractor-3». Su alcance es exclusivamente otro archivo («Other file only.»); la política «Unrelated component: never use for policy.py» prohíbe utilizarlo para policy.py.",
+            "event": "ADD"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 34.00977715699992,
+      "retrieval_seconds": 0.01519744299002923,
+      "acquisition_llm_calls": 5,
+      "request_characters": 188026,
+      "wall_seconds": 34.96831085300073
+    }
+  },
+  "text_identity_boundaries-2903-withdrawn_policy": {
+    "memory": {
+      "results": [
+        {
+          "id": "28474235-52a2-4c39-9218-66b482ecbff5",
+          "memory": "La política text_identity_boundaries-2903-history está retirada (lifecycle: withdrawn) y corresponde al símbolo policy en policy.py. Su alcance se limita a la interfaz original policy(context), de un solo argumento. El código fuente es: def policy(context): return context[\"text\"].strip(\" \").",
+          "hash": "ae9df05dd4194c1dc7da1f9a19231d3a",
+          "metadata": {
+            "source_id": "text_identity_boundaries-2903-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.2902635539821058,
+          "created_at": "2026-10-17T08:00:15.456928+00:00",
+          "updated_at": "2026-10-17T08:00:15.456928+00:00",
+          "user_id": "text_identity_boundaries-2903-withdrawn_policy",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.49182246274750613,
+            "bm25_score": 0.08870464521670549,
+            "entity_boost": 0.0,
+            "raw_score": 0.5805271079642116,
+            "max_possible_score": 2.0,
+            "final_score": 0.2902635539821058,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "text_identity_boundaries-2903-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "28474235-52a2-4c39-9218-66b482ecbff5",
+            "memory": "La política text_identity_boundaries-2903-history está retirada (lifecycle: withdrawn) y corresponde al símbolo policy en policy.py. Su alcance se limita a la interfaz original policy(context), de un solo argumento. El código fuente es: def policy(context): return context[\"text\"].strip(\" \").",
+            "event": "ADD"
+          },
+          {
+            "id": "bc07aa1d-4bf1-40d5-8e7c-a124e5820d94",
+            "memory": "La política text_identity_boundaries-2903-history elimina únicamente espacios ASCII en ambos extremos del texto y conserva mayúsculas, minúsculas y todos los demás caracteres, incluidos tabuladores y espacios de no separación. Las observaciones, sin argumentos por nombre, establecen que {\"text\":\" AbC \"} devuelve \"AbC\" y {\"text\":\"\\tÉx\\t\"} devuelve \"\\tÉx\\t\".",
+            "event": "ADD"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 9.402913907004404,
+      "retrieval_seconds": 0.009934682995663024,
+      "acquisition_llm_calls": 1,
+      "request_characters": 36010,
+      "wall_seconds": 10.494391896005254
+    }
+  },
+  "sparse_payload_merge-2904-changed_interface": {
+    "memory": {
+      "results": [
+        {
+          "id": "4f25a7c7-c99c-40d6-8ec5-d85364fbe1a0",
+          "memory": "La política activa identificada como sparse_payload_merge-2904-history corresponde al símbolo policy de policy.py y se limita a la interfaz original policy(context), con un solo argumento. Copia context[\"base\"] y sobrescribe únicamente las claves cuyos valores en context[\"patch\"] no sean None; conserva false, cero, cadenas vacías y colecciones vacías.",
+          "hash": "c73badd70fe3a8e7795416c11ca6fd68",
+          "metadata": {
+            "source_id": "sparse_payload_merge-2904-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.286769576478069,
+          "created_at": "2026-10-17T08:00:26.232626+00:00",
+          "updated_at": "2026-10-17T08:00:26.232626+00:00",
+          "user_id": "sparse_payload_merge-2904-changed_interface",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.5280412476497354,
+            "bm25_score": 0.04549790530640261,
+            "entity_boost": 0.0,
+            "raw_score": 0.573539152956138,
+            "max_possible_score": 2.0,
+            "final_score": 0.286769576478069,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "cbe32d40-dc99-432e-9db0-a04c0e7ae2a5",
+          "memory": "Para policy(context), la observación con base={\"a\":3,\"b\":4} y patch={\"a\":null,\"b\":0,\"c\":false}, sin argumentos nombrados, espera {\"a\":3,\"b\":0,\"c\":false}: null mantiene el valor base y tanto cero como false se incorporan.",
+          "hash": "5787927a3369c8728c4d4a56187ff4b6",
+          "metadata": {
+            "source_id": "sparse_payload_merge-2904-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.12082067109540531,
+          "created_at": "2026-10-17T08:00:26.232659+00:00",
+          "updated_at": "2026-10-17T08:00:26.232659+00:00",
+          "user_id": "sparse_payload_merge-2904-changed_interface",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.22832947916783874,
+            "bm25_score": 0.01331186302297188,
+            "entity_boost": 0.0,
+            "raw_score": 0.24164134219081063,
+            "max_possible_score": 2.0,
+            "final_score": 0.12082067109540531,
+            "threshold": 0.1
+          }
+        },
+        {
+          "id": "e34df8a8-43ea-4bcd-8cbc-a60cbe9ed2ab",
+          "memory": "Para policy(context), la observación con base={} y patch={\"empty\":\"\",\"none\":null}, sin argumentos nombrados, espera {\"empty\":\"\"}: la cadena vacía se incorpora y la clave none con valor null se omite.",
+          "hash": "4e7848d72e51db9eb0680a0f09098f49",
+          "metadata": {
+            "source_id": "sparse_payload_merge-2904-history",
+            "path": "policy.py",
+            "symbol": "policy"
+          },
+          "score": 0.11574826162794437,
+          "created_at": "2026-10-17T08:00:26.232673+00:00",
+          "updated_at": "2026-10-17T08:00:26.232673+00:00",
+          "user_id": "sparse_payload_merge-2904-changed_interface",
+          "attributed_to": "user",
+          "score_details": {
+            "semantic_score": 0.21813978745391907,
+            "bm25_score": 0.013356735801969655,
+            "entity_boost": 0.0,
+            "raw_score": 0.23149652325588874,
+            "max_possible_score": 2.0,
+            "final_score": 0.11574826162794437,
+            "threshold": 0.1
+          }
+        }
+      ]
+    },
+    "source_ids": [
+      "sparse_payload_merge-2904-history"
+    ],
+    "captures": [
+      {
+        "results": [
+          {
+            "id": "4f25a7c7-c99c-40d6-8ec5-d85364fbe1a0",
+            "memory": "La política activa identificada como sparse_payload_merge-2904-history corresponde al símbolo policy de policy.py y se limita a la interfaz original policy(context), con un solo argumento. Copia context[\"base\"] y sobrescribe únicamente las claves cuyos valores en context[\"patch\"] no sean None; conserva false, cero, cadenas vacías y colecciones vacías.",
+            "event": "ADD"
+          },
+          {
+            "id": "cbe32d40-dc99-432e-9db0-a04c0e7ae2a5",
+            "memory": "Para policy(context), la observación con base={\"a\":3,\"b\":4} y patch={\"a\":null,\"b\":0,\"c\":false}, sin argumentos nombrados, espera {\"a\":3,\"b\":0,\"c\":false}: null mantiene el valor base y tanto cero como false se incorporan.",
+            "event": "ADD"
+          },
+          {
+            "id": "e34df8a8-43ea-4bcd-8cbc-a60cbe9ed2ab",
+            "memory": "Para policy(context), la observación con base={} y patch={\"empty\":\"\",\"none\":null}, sin argumentos nombrados, espera {\"empty\":\"\"}: la cadena vacía se incorpora y la clave none con valor null se omite.",
+            "event": "ADD"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 9.717346438003005,
+      "retrieval_seconds": 0.015971083004842512,
+      "acquisition_llm_calls": 1,
+      "request_characters": 36230,
+      "wall_seconds": 10.844062964999466
+    }
+  }
+}

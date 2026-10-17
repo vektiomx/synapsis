@@ -17,6 +17,7 @@ import configuracion
 import registro
 from archivos import es_sensible, escribir_atomico
 from textos import cantidad, decimal, detalle
+from frontmatter import desentrecomillar, separar_frontmatter
 
 CARPETA = Path(__file__).resolve().parent
 MARCADOR = "/*__CEREBRO__*/"
@@ -171,11 +172,11 @@ def fuente_de_ruta(ruta):
             carpetas = clave[len(base) + 1:].split("\\")[:-1]
             if not recursivo:
                 if not carpetas:
-                    return fuente
+                    return dict(fuente, memoria=fuente.get("memoria_por_raiz", {}).get(raiz, fuente.get("memoria", False)))
                 continue
             if any(carpeta_podada(c) for c in carpetas) or saltea_pesada(carpetas):
                 continue
-            return fuente
+            return dict(fuente, memoria=fuente.get("memoria_por_raiz", {}).get(raiz, fuente.get("memoria", False)))
     return None
 
 
@@ -271,52 +272,6 @@ def leer_texto(ruta):
         except UnicodeDecodeError:
             continue
     return None, len(crudo)
-
-
-def desentrecomillar(valor):
-    v = valor.strip()
-    if len(v) >= 2 and v[0] == v[-1] == '"':
-        try:
-            return json.loads(v)
-        except ValueError:
-            return v[1:-1].replace('\\"', '"').replace("\\\\", "\\")
-    if len(v) >= 2 and v[0] == v[-1] == "'":
-        return v[1:-1].replace("''", "'")
-    return v
-
-
-def separar_frontmatter(texto):
-    lineas = texto.split("\n")
-    if not lineas or lineas[0].strip() != "---":
-        return {}, texto
-    fin = None
-    for i in range(1, len(lineas)):
-        if lineas[i].strip() in ("---", "..."):
-            fin = i
-            break
-    if fin is None:
-        return {}, texto
-    datos = {}
-    padre = None
-    for linea in lineas[1:fin]:
-        if not linea.strip() or linea.lstrip().startswith("#"):
-            continue
-        m = re.match(r"^(\s*)([\w\-]+)\s*:\s*(.*)$", linea)
-        if not m:
-            continue
-        sangria, clave, valor = m.groups()
-        if not sangria:
-            if valor.strip() == "":
-                datos[clave] = {}
-                padre = clave
-            else:
-                datos[clave] = desentrecomillar(valor)
-                padre = None
-        elif padre is not None:
-            datos[padre][clave] = desentrecomillar(valor)
-    if not datos:
-        return {}, texto
-    return datos, "\n".join(lineas[fin + 1:])
 
 
 def valores_frontmatter(frontmatter):
@@ -607,7 +562,7 @@ class Cerebro:
                     reclamados.add(clave)
                     relativa = os.path.relpath(str(ruta), raiz).replace("\\", "/")
                     identificador = fuente["id"] + ":" + (alias + "/" if alias else "") + relativa
-                    self.crear_nodo(fuente, ruta, identificador)
+                    self.crear_nodo(dict(fuente, memoria=fuente.get("memoria_por_raiz", {}).get(raiz, fuente.get("memoria", False))), ruta, identificador)
 
     def crear_nodo(self, fuente, ruta, identificador):
         try:
@@ -793,7 +748,8 @@ class Cerebro:
         for fuente in FUENTES:
             if not fuente.get("memoria"):
                 continue
-            del_grupo = [n for n in self.nodos if n["grupo"] == fuente["id"]]
+            del_grupo = [n for n in self.nodos if n["grupo"] == fuente["id"]
+                         and self.fuente_de[n["id"]].get("memoria")]
             indices = [n["id"] for n in del_grupo if n["tipo"] == "indice"]
             listados = set()
             for i in indices:
@@ -815,9 +771,27 @@ class Cerebro:
         self.sin_indice = quedan
 
     def completar_titulos(self):
+        from project_identity import note_owner
+        owners = {}
+        for node in self.nodos:
+            if node['tipo'] == 'indice' and Path(node['ruta']).name == 'MEMORY.md':
+                try:
+                    owners[node['id']] = note_owner(node['ruta'])
+                except (ValueError, OSError):
+                    owners[node['id']] = None
         for nodo in self.nodos:
             titulo = self.titulo_indice.get(nodo["id"]) or primer_encabezado(nodo["_cuerpo"])
             nodo["titulo"] = titulo or Path(nodo["ruta"]).stem
+            if nodo['tipo'] == 'indice' and Path(nodo['ruta']).name == 'MEMORY.md':
+                from project_identity import note_owner
+                try:
+                    project = owners.get(nodo['id'])
+                    label = Path(project).name if project else ''
+                    if project and sum(bool(p) and Path(p).name == label for p in owners.values()) > 1:
+                        label += ' (' + project + ')'
+                    nodo['titulo'] = (label + ' · Memoria') if project else ('Memoria sin vincular · ' + Path(nodo['ruta']).parent.parent.name)
+                except (ValueError, OSError):
+                    nodo['titulo'] = 'Memoria · identidad pendiente'
             if not nodo["descripcion"]:
                 if nodo["tipo"] == "indice":
                     cantidad = len(self.listados_por_indice.get(nodo["id"], ()))
@@ -879,11 +853,11 @@ class Cerebro:
             if re.match(r"^[A-Za-z]:[\\/]", limpio):
                 objetivo = os.path.normpath(limpio)
             else:
-                objetivo = os.path.normpath(os.path.join(str(carpeta), limpio.lstrip("\\/") if limpio[:1] in "\\/" else limpio))
+                objetivo = os.path.normpath(os.path.join(str(carpeta), limpio))
             identificador = self.por_ruta.get(normalizar(objetivo))
             if identificador:
                 self.agregar(origen, identificador, "enlace", fragmento(texto, m.start(), m.end()))
-            else:
+            elif not os.path.isfile(objetivo):
                 self.roto(origen, destino, "enlace")
 
     def recorrer_ruta(self, texto, inicio_nombre, nombre):
@@ -1411,7 +1385,7 @@ def armar_parser(epilogo):
     argparse_en_castellano()
     parser = argparse.ArgumentParser(description="Arma el mapa de las notas .md (cerebro.html).", epilog=epilogo,
                                      allow_abbrev=False)
-    parser.add_argument("--version", action="version", version=f"Neuromapa {version()}")
+    parser.add_argument("--version", action="version", version=f"Synopsis {version()}")
     parser.add_argument("--json", dest="ruta_json", help="vuelca además el JSON puro en esta ruta")
     parser.add_argument("--plantilla", default=str(CARPETA / "plantilla.html"), help="la plantilla de la página")
     parser.add_argument("--salida", default=str(DATOS / "cerebro.html"),
@@ -1453,7 +1427,7 @@ def armar_parser(epilogo):
                       help="errores de las herramientas de archivos que se repiten (últimos 7 días), con la regla que "
                            "los evitaría y si están bajando")
     modo.add_argument("--aprendido", nargs="?", const="7", metavar="DÍAS_O_ARCHIVO",
-                      help="lo que Neuromapa aprendió de tu uso (qué archivos se abren juntos y qué pistas sirvieron), "
+                      help="lo que Synopsis aprendió de tu uso (qué archivos se abren juntos y qué pistas sirvieron), "
                            "con lo de los últimos 7 días o los que digas; con un archivo (nombre o ruta), con qué se "
                            "usa ese")
     modo.add_argument("--olvidar", nargs="+", metavar=("ARCHIVO", "OTRO"),
@@ -1667,7 +1641,7 @@ def imprimir_salud(cerebro, medico, todo, segundos):
                         ("hooks_comun", "leer las fallas de los hooks"),
                         ("dormir", "leer las propuestas de la última pasada"),
                         ("historial", "guardar el historial de la memoria"),
-                        ("hooks_comun", "ver si Neuromapa está instalado dos veces", "linea_doble")):
+                        ("hooks_comun", "ver si Synopsis está instalado dos veces", "linea_doble")):
         try:
             linea = getattr(importlib.import_module(nombre), funcion[0] if funcion else "linea_salud")()
         except Exception as error:

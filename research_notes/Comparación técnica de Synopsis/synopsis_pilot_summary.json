@@ -1,0 +1,49 @@
+{
+  "source_sha256": {
+    "engine/decision_rag.py": "fd9f322e1c5c9f89ee6b3b0b7466c097dba4aafc7c2ab283e9914878f5f32f74",
+    "engine/auto_review.py": "31d740b690f6d5fe2938fad5ce5dd0bc2e7e5a54d03b4ecbc381e377172afe4f",
+    "engine/experience_engine.py": "3239792cf73297aa15251976ca7ab2cf0c1a69ca3d67f7d365806c47971b20c4",
+    "engine/model_provider.py": "3f3f54b368465cb5035ad5b8a76df632eb5a73761649401a0fc931b29f18abd8"
+  },
+  "calls": 24,
+  "scores": {
+    "file-memory-all-relevant": {
+      "correct": 6,
+      "total": 6
+    },
+    "no-memory": {
+      "correct": 5,
+      "total": 6
+    },
+    "synopsis": {
+      "correct": 5,
+      "total": 6
+    }
+  },
+  "capture_summary": {
+    "episodes": 6,
+    "experiences": 6,
+    "decision_cases": 6
+  },
+  "capture_seconds": 81.83921377400111,
+  "inference_seconds": 119.29559166895342,
+  "retrieval_seconds": 0.03097198203613516,
+  "retrieval_with_groups": 4,
+  "retrieval_total": 12,
+  "retrieval_selected": 2,
+  "captures_failed": 0,
+  "codex_version": "codex-cli 0.162.0-alpha.17.2",
+  "model_identity": "native default, not instrumented; no model pin",
+  "external_frameworks_in_this_report": false,
+  "oracle_ambiguity": {
+    "domain": "unicode-identity",
+    "scenario": "negative",
+    "reason": "Oracle assumes not canonical_equivalence_allowed entails preserve-bytes, while contract explicitly requires signed byte-sensitive identifiers; models abstained for missing signed/byte-sensitive evidence. Disputed case retained in raw score, not evidence of comparative superiority.",
+    "sensitivity_excluding_disputed_case": {
+      "file-memory-all-relevant": "5/5",
+      "no-memory": "5/5",
+      "synopsis": "5/5"
+    },
+    "independent_adjudication": "A separate reviewer, shown only the raw contract, current config, and closed choices, upheld preserve-bytes: false disallows canonical equivalence, NFC can merge such identities, and signing is an illustrative additional obligation rather than necessary precondition. Gold retained. Sensitivity does not replace primary score."
+  }
+}

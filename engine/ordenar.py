@@ -954,7 +954,7 @@ def main_renombrar(nota, nuevo, confirmar=""):
         lineas.append("  Ninguna otra nota la nombra.")
     lineas += [f"  Ejemplo de mención del nombre: «{ejemplo}»" for ejemplo in plan["ejemplos"]]
     if plan["datos"]:
-        lineas.append("  Datos de Neuromapa que la nombran por su ruta: "
+        lineas.append("  Datos de Synopsis que la nombran por su ruta: "
                       + ", ".join(f'{d["ruta"].name} ({d["cuantas"]})' for d in plan["datos"]) + ".")
     if plan["afuera"]:
         lineas.append(f'  No toco {cantidad(len(plan["afuera"]), "referencia", "referencias")} fuera de la memoria '
@@ -989,7 +989,7 @@ def main_renombrar(nota, nuevo, confirmar=""):
     for linea in [lineas[0].replace(" pasa a llamarse ", " ahora se llama ")] + lineas[1:]:
         print(linea.replace("  Cambio ", "  Cambié ").replace("  No toco ", "  No toqué "))
     print(f"  Copia de cómo estaba todo antes: {carpeta}")
-    print(f"  Lo que Neuromapa aprendió del uso de la nota quedó con el nombre viejo y se olvida solo; para borrarlo ya: "
+    print(f"  Lo que Synopsis aprendió del uso de la nota quedó con el nombre viejo y se olvida solo; para borrarlo ya: "
           f'{configuracion.comando()} --olvidar "{plan["ruta"].name}"')
     print(f"Conviene correr {configuracion.comando()} --salud para ver que no quedó nada suelto.")
     return 0

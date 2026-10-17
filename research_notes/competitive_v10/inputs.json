@@ -1,0 +1,530 @@
+[
+  {
+    "id": "numeric_mode_policy-1701-applicable_history",
+    "split": "development",
+    "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-1701-applicable_history",
+    "artifacts": [
+      {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "flag": true
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": 534
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "flag": false
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": 416
+            }
+          }
+        ],
+        "policy": "Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n return 534 if context[\"flag\"] else 416\n",
+        "source_id": "numeric_mode_policy-1701-history"
+      }
+    ],
+    "source_id": "numeric_mode_policy-1701-history",
+    "witness": "fcb29123efe24a2eb5d3b8a2eea8df2f59ca38615ee892b622d8dda9fa30e2f6",
+    "capture_seconds": 0.039817648997996
+  },
+  {
+    "id": "stable_sequence_processing-1702-applicable_history",
+    "split": "development",
+    "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-1702-applicable_history",
+    "artifacts": [
+      {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "items": [
+                    3,
+                    1,
+                    3,
+                    2
+                  ]
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": [
+                3,
+                1,
+                2
+              ]
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "items": [
+                    [
+                      2
+                    ],
+                    [
+                      1
+                    ],
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": [
+                [
+                  2
+                ],
+                [
+                  1
+                ]
+              ]
+            }
+          }
+        ],
+        "policy": "Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n result=[]\n for item in context[\"items\"]:\n  if item not in result: result.append(item)\n return result\n",
+        "source_id": "stable_sequence_processing-1702-history"
+      }
+    ],
+    "source_id": "stable_sequence_processing-1702-history",
+    "witness": "4ee8f3c02b8a629573c7c7165b20ffb813f69f487c1e88f4b31895a8e63ab09d",
+    "capture_seconds": 0.0377945709915366
+  },
+  {
+    "id": "text_identity_boundaries-1703-applicable_history",
+    "split": "development",
+    "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-1703-applicable_history",
+    "artifacts": [
+      {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "text": " AbC "
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": "AbC"
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "text": "\tÉx\t"
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": "\tÉx\t"
+            }
+          }
+        ],
+        "policy": "Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n return context[\"text\"].strip(\" \")\n",
+        "source_id": "text_identity_boundaries-1703-history"
+      }
+    ],
+    "source_id": "text_identity_boundaries-1703-history",
+    "witness": "7b204f0d3713f29c2aa4ec31f2f991e2e2f98cb35a7d3fbbfd33941f2212aff7",
+    "capture_seconds": 0.07049585199274588
+  },
+  {
+    "id": "sparse_payload_merge-1704-applicable_history",
+    "split": "development",
+    "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-1704-applicable_history",
+    "artifacts": [
+      {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "base": {
+                    "a": 3,
+                    "b": 4
+                  },
+                  "patch": {
+                    "a": null,
+                    "b": 0,
+                    "c": false
+                  }
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": {
+                "a": 3,
+                "b": 0,
+                "c": false
+              }
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "base": {},
+                  "patch": {
+                    "empty": "",
+                    "none": null
+                  }
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": {
+                "empty": ""
+              }
+            }
+          }
+        ],
+        "policy": "Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n result=context[\"base\"].copy()\n for key,value in context[\"patch\"].items():\n  if value is not None: result[key]=value\n return result\n",
+        "source_id": "sparse_payload_merge-1704-history"
+      }
+    ],
+    "source_id": "sparse_payload_merge-1704-history",
+    "witness": "23dddf74cd33d52144960eaa73bfa2d8888d0ede1d5be3faad50b29cea5f6da0",
+    "capture_seconds": 0.07340655400184914
+  },
+  {
+    "id": "numeric_mode_policy-2901-applicable_history",
+    "split": "reserved",
+    "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-2901-applicable_history",
+    "artifacts": [
+      {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "flag": true
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": 137
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "flag": false
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": 791
+            }
+          }
+        ],
+        "policy": "Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n return 137 if context[\"flag\"] else 791\n",
+        "source_id": "numeric_mode_policy-2901-history"
+      }
+    ],
+    "source_id": "numeric_mode_policy-2901-history",
+    "witness": "cc4ac47cee81ef628bd1568ca8c3374b3344374649af80e5086d8517eb4c8237",
+    "capture_seconds": 0.03792377401259728
+  },
+  {
+    "id": "stable_sequence_processing-2902-irrelevant_distractors",
+    "split": "reserved",
+    "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-2902-irrelevant_distractors",
+    "artifacts": [
+      {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "items": [
+                    3,
+                    1,
+                    3,
+                    2
+                  ]
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": [
+                3,
+                1,
+                2
+              ]
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "items": [
+                    [
+                      2
+                    ],
+                    [
+                      1
+                    ],
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": [
+                [
+                  2
+                ],
+                [
+                  1
+                ]
+              ]
+            }
+          }
+        ],
+        "policy": "Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n result=[]\n for item in context[\"items\"]:\n  if item not in result: result.append(item)\n return result\n",
+        "source_id": "stable_sequence_processing-2902-history"
+      },
+      {
+        "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-0",
+        "callable": {
+          "path": "unrelated_0.py",
+          "symbol": "policy"
+        },
+        "policy": "Unrelated component: never use for policy.py",
+        "source": "def policy(context):\n return 100\n",
+        "observations": [],
+        "lifecycle": "active",
+        "scope": "Other file only."
+      },
+      {
+        "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-1",
+        "callable": {
+          "path": "unrelated_1.py",
+          "symbol": "policy"
+        },
+        "policy": "Unrelated component: never use for policy.py",
+        "source": "def policy(context):\n return 101\n",
+        "observations": [],
+        "lifecycle": "active",
+        "scope": "Other file only."
+      },
+      {
+        "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-2",
+        "callable": {
+          "path": "unrelated_2.py",
+          "symbol": "policy"
+        },
+        "policy": "Unrelated component: never use for policy.py",
+        "source": "def policy(context):\n return 102\n",
+        "observations": [],
+        "lifecycle": "active",
+        "scope": "Other file only."
+      },
+      {
+        "source_id": "stable_sequence_processing-2902-irrelevant_distractors-distractor-3",
+        "callable": {
+          "path": "unrelated_3.py",
+          "symbol": "policy"
+        },
+        "policy": "Unrelated component: never use for policy.py",
+        "source": "def policy(context):\n return 103\n",
+        "observations": [],
+        "lifecycle": "active",
+        "scope": "Other file only."
+      }
+    ],
+    "source_id": "stable_sequence_processing-2902-history",
+    "witness": "ca2c6a5a3ed8a9e6f256a882d82a7ccecde8dca6bc72b273627f63b0270f9854",
+    "capture_seconds": 0.035652168007800356
+  },
+  {
+    "id": "text_identity_boundaries-2903-withdrawn_policy",
+    "split": "reserved",
+    "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-2903-withdrawn_policy",
+    "artifacts": [
+      {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "withdrawn",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "text": " AbC "
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": "AbC"
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "text": "\tÉx\t"
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": "\tÉx\t"
+            }
+          }
+        ],
+        "policy": "Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n return context[\"text\"].strip(\" \")\n",
+        "source_id": "text_identity_boundaries-2903-history"
+      }
+    ],
+    "source_id": "text_identity_boundaries-2903-history",
+    "witness": "a551fc084112b0d9bd5002faef334c2bb31a0d8f9b70cec79469a79ffcd63f1f",
+    "capture_seconds": 0.03775257000233978
+  },
+  {
+    "id": "sparse_payload_merge-2904-changed_interface",
+    "split": "reserved",
+    "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-2904-changed_interface",
+    "artifacts": [
+      {
+        "callable": {
+          "path": "policy.py",
+          "symbol": "policy"
+        },
+        "lifecycle": "active",
+        "observations": [
+          {
+            "call": {
+              "args": [
+                {
+                  "base": {
+                    "a": 3,
+                    "b": 4
+                  },
+                  "patch": {
+                    "a": null,
+                    "b": 0,
+                    "c": false
+                  }
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": {
+                "a": 3,
+                "b": 0,
+                "c": false
+              }
+            }
+          },
+          {
+            "call": {
+              "args": [
+                {
+                  "base": {},
+                  "patch": {
+                    "empty": "",
+                    "none": null
+                  }
+                }
+              ],
+              "kwargs": {}
+            },
+            "expected": {
+              "value": {
+                "empty": ""
+              }
+            }
+          }
+        ],
+        "policy": "Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.",
+        "scope": "The original one-argument policy(context) interface only.",
+        "source": "def policy(context):\n result=context[\"base\"].copy()\n for key,value in context[\"patch\"].items():\n  if value is not None: result[key]=value\n return result\n",
+        "source_id": "sparse_payload_merge-2904-history"
+      }
+    ],
+    "source_id": "sparse_payload_merge-2904-history",
+    "witness": "72b4e5ea2337f0b1a09810fc0af4f5a2e241b4b9aa97192ddef3765bc9b09d40",
+    "capture_seconds": 0.037876269008847885
+  }
+]

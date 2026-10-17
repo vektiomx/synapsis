@@ -1,7 +1,83 @@
 # Cambios
 
-Las versiones siguen el número de `.claude-plugin/plugin.json` (`claude plugin list` lo muestra, y Claude lo ve con `neuromapa --version`). Cada versión que
+Las versiones siguen el número de `.claude-plugin/plugin.json` (`claude plugin list` lo muestra, y Claude lo ve con `synopsis --version`). Cada versión que
 sale sube ese número; si no, la actualización puede no traer nada (ver [CONTRIBUTING.md](CONTRIBUTING.md)).
+
+## 0.11.0 — adaptación de escritorio en desarrollo
+
+- Instalación desde fuentes para macOS/Windows con accesos dedicados y comando
+  Windows sin symlinks; conserva el PATH del usuario y configuraciones ajenas.
+- Apertura del mapa en Windows sin /bin/sh; hooks PowerShell con JSON UTF-8,
+  argumentos absolutos y soporte de rutas con espacios/apóstrofes.
+- LaunchAgent de usuario en macOS y arranque HKCU Run en Windows; retiro del
+  arranque sin borrar memorias. Entrypoint persistente independiente del interactivo.
+- La entrada de escritorio prepara la clave privada aun sin abrir un navegador.
+- Diagnóstico de capacidades por plataforma y matriz CI nativa preparada.
+- Pendientes runtime embebido, paquetes firmados y validación nativa de escritorio;
+  los experimentos aislados siguen requiriendo Linux/bwrap.
+
+## 0.10.0 — rama de desarrollo
+
+- Testigos JSON de comportamiento: captura de assertEqual literales confirmados
+  mediante observación aislada, con firma, procedencia y alcance versionado.
+- Reproducción de casos conservados aunque se borre el test original; retiro con
+  secuencia esperada y suspensión por cambio de firma, guardas o contrato explícito.
+- Banco original/candidato con tests actuales y testigos históricos, sin aplicar
+  prototipos al checkout ni aceptar controles omitidos como una mejora comprobada.
+- Pistas automáticas por prompt y antes de editar; inspección CLI/MCP y panel del mapa.
+- Comparación real fijada con Mem0 inferred/raw, Graphiti y perfil de memoria
+  ShadowFrog; empates de precisión y costes de captura publicados con sus límites.
+
+## 0.9.0 — rama de desarrollo
+
+- Contexto unificado con diversificación de notas y grupos de decisiones indivisibles.
+- Intervalos de vigencia, retiro/activación versionados y trazabilidad sin borrar historia.
+- Descubrimiento de unittest por AST y propuestas acotadas de funciones Python.
+- Comparación original/candidato con controles fijados, aislamiento y detección de drift.
+- Investigación persistente, antecedentes para nuevas propuestas y pistas en cada prompt.
+- Panel Memoria viva con evidencia, estados, línea de cambios y resultados experimentales.
+
+## 0.8.0 — rama de desarrollo
+
+- Recuperación de experiencias por BM25, anclajes y embeddings multilingües locales;
+  preparación automática del runtime privado durante instalación, con modo sin red.
+- Guardas dinámicas deduplicadas y soporte independiente ligado a hashes.
+- Actualización automática con revisión esperada y conservación de límites.
+- Priorización de observaciones por particiones de alternativas.
+- Laboratorio de sensibilidad de tests existentes con intervenciones JSON aisladas.
+- Evaluaciones reproducibles de capturas congeladas, semántica y programación sintética.
+
+## 0.4.1 — rama de desarrollo
+
+- El recordatorio por archivos consulta cierres saved/no_change de su proyecto y
+  sesión: no vuelve a pedir guardar cambios ya revisados.
+- Los cambios posteriores siguen contando, con un texto que distingue revisión
+  de escritura. Las ediciones de otro proyecto no inflan el contador de la charla.
+- Consulta del cierre en SQLite de solo lectura; no crea memorias ni da por
+  resueltos turnos abiertos o conflictos.
+
+## 0.4.0 — rama de desarrollo
+
+- Vinculación de proyectos al primer uso desde los cinco conectores y CLI/MCP.
+- Registro de workspace con identidad local persistente, descubrimiento de raíces,
+  reubicación recuperable y aislamiento de copias y worktrees.
+- Adopción de memoria anterior mediante metadatos cwd del cliente; los casos
+  ambiguos se eligen desde el mapa autenticado, sin comandos de reparación.
+- Índices de memoria con el nombre de su proyecto y agrupación por propietario.
+- Corrección de enlaces válidos fuera del grafo y diagnóstico de identidad explícito.
+
+## 0.3.0 — rama de desarrollo
+
+- Modo controlado synopsis.run.v2: respuesta factual extractiva construida por el
+  controlador, citas revalidadas y abstención; el borrador libre no se publica.
+- Admisión durable de memoria por párrafos literales completos; metadatos del modelo
+  no añaden afirmaciones. Los ciclos estrictos no admiten operaciones sin evidencia.
+- Cuarentena para recuerdos sin admisión comprobada, sin borrar archivos anteriores.
+- Herramientas acotadas de archivos, JSON y cálculo; CLI verify y MCP
+  responder_con_evidencia. Protección de rutas, fuentes cambiadas y contenido sensible.
+- Shell, colaboración y búsqueda desactivados en el conector de inferencia Codex.
+- Evaluación adversarial de proceso y continuidad con modelo real. La fidelidad a
+  una fuente no demuestra verdad externa ni garantiza comprensión de toda pregunta.
 
 ## 0.1.4 — en prueba
 
@@ -49,7 +125,7 @@ Arreglos:
 - En Mac y Linux, el médico no encontraba el archivo de una cita con carpeta (`app/models/cosa.py:564`) cuando ese
   nombre de archivo existe en más de una carpeta: la daba «sin un archivo de código con ese nombre», y dar la carpeta
   dejaba peor que no darla. Ahora la carpeta elige el archivo justo, como en Windows. Lo reportó jroberto1386 en el
-  [issue #1](https://github.com/lumiel777/neuromapa/issues/1), con la causa y cómo reproducirlo.
+  [issue #1](https://github.com/vektiomx/synapsis/issues/1), con la causa y cómo reproducirlo.
 
 ## 0.1.2 — en prueba
 
@@ -74,7 +150,7 @@ Primera versión, para los primeros probadores.
   agentes en este momento, la lista, el panel de salud y la copia «Sin notas» para mostrarlo sin enseñar nada. Con
   500 notas o más, la lista dibuja solo las filas que se ven, así abre y reordena al instante. Abajo, el río del tiempo:
   los últimos 10 minutos, una línea por chat, con lo que hizo, tus mensajes, sus agentes y la espera de tu OK.
-- El médico (`/neuromapa:salud`): rutas y enlaces que ya no existen, anclas `archivo:línea` corridas, commits que no
+- El médico (`/synopsis:salud`): rutas y enlaces que ya no existen, anclas `archivo:línea` corridas, commits que no
   existen, problemas anotados que un commit posterior parece haber resuelto, cifras viejas cargadas en `hechos.json`,
   memorias sin índice, repetidas o que copian el `CLAUDE.md`, y un `MEMORY.md` que pasa lo que Claude lee al arrancar
   (200 líneas o 25 KB, lo que llegue antes). Un «para revisar» ya comprobado se calla con `--descartar-aviso` y vuelve
@@ -86,7 +162,7 @@ Primera versión, para los primeros probadores.
   momento en lo que escribiste vos y lo que respondió Claude (nunca en lo que devolvieron las herramientas), sin
   guardar copia, y tapa lo que parece una clave. Si un pedido nombra algo dicho antes («lo que te dije», «como
   quedamos») y la memoria no tiene nada seguro, la pista sugiere buscar ahí y en el historial.
-- El buscador (`/neuromapa:sobre`): qué se sabe de un tema, qué leer primero, las decisiones anotadas que lo tocan y
+- El buscador (`/synopsis:sobre`): qué se sabe de un tema, qué leer primero, las decisiones anotadas que lo tocan y
   el código que esas notas citan para comprobarlo (con la línea y la función, aunque la nota no ponga la línea, si
   escribe al lado con qué buscarla), en español y en inglés, con los datos viejos marcados. En las notas largas sin
   títulos busca por pasajes, así un dato del medio no se pierde entre el resto. Una nota con un dato viejo comprobado
@@ -134,3 +210,37 @@ Primera versión, para los primeros probadores.
   cuenta de la PC puede escribir en la carpeta de datos o en la del programa. El hook no le manda la clave al mapa: el
   mapa primero demuestra que la sabe y el pedido va firmado. El navegador entra con un número de un solo uso y queda
   con una galleta propia: la clave no queda en el historial ni en la galleta.
+
+
+## 0.5.0 — Revisión automática independiente
+
+- Cola privada por proyecto y revisor al cierre nativo, independiente de las llamadas
+  de memoria del modelo principal; respeta turnos ya cerrados con recibo.
+- Evidencia literal, actualizaciones conservadoras, historial y recibos; conflictos
+  abiertos en vez de reemplazos inciertos. No admite afirmaciones del asistente.
+- Proveedor del mismo cliente o generación local de Ollama; pendientes explícitos
+  cuando no hay acceso. Diagnóstico y comando synopsis reviews.
+- Entradas temporales limitadas, rechazo de secretos reconocibles, expiración y
+  recuperación de operaciones tras interrupción. Flujo documentado en continuity.md.
+
+
+## 0.6.0 — Experiencias situadas
+
+- Situación, acción, motivo, resultado reportado, condiciones, evidencia, límites y contraejemplos.
+- Versiones, observaciones JSON/texto, detección de fuentes cambiadas y feedback por revisión.
+- Reejecución opcional de unittest Python bajo aislamiento Linux; no ejecución por MCP.
+- Captura automática acotada, recuperación por tarea/ruta, CLI experience, MCP experiencias y panel.
+- Recuperación periódica junto al mapa; reintentos recuperables sin perder entrada antes de vencer.
+- Revisión independiente de cierres previos y contexto ordenado por relevancia.
+
+## 0.7.0 — RAG de decisiones con límites observables
+
+- Recuperación de alternativas por problema, incluidos casos de resultado opuesto.
+- Requisitos actuales separados de soporte ligado al contenido; abstención por
+  conflicto, dato ausente, evidencia cambiada, presupuesto o exceso de alternativas.
+- Selección de observaciones discriminantes y reproducción explícita de pruebas
+  existentes con presupuesto de ejecución y comprobación de deriva de la copia.
+- Recibos de decisión y utilidad reportada ligada a contexto/revisión; una revisión
+  señalada como dañina queda suspendida hasta conciliación.
+- Integración en hooks, revisor automático, MCP, CLI, modo controlado y panel.
+- Evaluador sintético con controles transparentes, ablaciones y modo de proveedor real.

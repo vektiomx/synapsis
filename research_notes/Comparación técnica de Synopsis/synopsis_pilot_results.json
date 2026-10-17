@@ -1,0 +1,2047 @@
+{
+  "protocol": "synopsis.independent-holdout-pilot.v1",
+  "source_sha256": {
+    "engine/decision_rag.py": "fd9f322e1c5c9f89ee6b3b0b7466c097dba4aafc7c2ab283e9914878f5f32f74",
+    "engine/auto_review.py": "31d740b690f6d5fe2938fad5ce5dd0bc2e7e5a54d03b4ecbc381e377172afe4f",
+    "engine/experience_engine.py": "3239792cf73297aa15251976ca7ab2cf0c1a69ca3d67f7d365806c47971b20c4",
+    "engine/model_provider.py": "3f3f54b368465cb5035ad5b8a76df632eb5a73761649401a0fc931b29f18abd8"
+  },
+  "domains": [
+    {
+      "key": "artifact-storage",
+      "field": "immutable_source",
+      "positive": "hardlink",
+      "negative": "copy",
+      "query": "How should we archive build artifacts?",
+      "contract": "Archive must preserve the bytes at archive time. A hard link shares writes with the original inode. It is acceptable when the source remains immutable; otherwise make an independent copy.",
+      "history": [
+        "We archived an immutable build artifact using a hard link. It retained the expected bytes and saved disk space. This successful attempt was limited to immutable sources.",
+        "We archived a mutable artifact using a hard link. A later writer changed the archived bytes too. We replaced it with an independent copy; later source writes no longer changed the archived artifact."
+      ]
+    },
+    {
+      "key": "event-workers",
+      "field": "operations_commute",
+      "positive": "parallel",
+      "negative": "ordered",
+      "query": "How should we schedule this event stream?",
+      "contract": "Concurrent workers may reorder events. Reordering preserves the result only when the operations commute. A stream of commuting independent set additions can use parallel workers; a stream containing multiply and add on one accumulator must preserve input order.",
+      "history": [
+        "Parallel workers processed independent set additions. The operations commute, and every tested execution order produced the same resulting set.",
+        "Parallel workers processed multiply then add on a shared accumulator. Reversed scheduling produced a different result. We moved this noncommuting stream to an ordered worker and recovered the expected result."
+      ]
+    },
+    {
+      "key": "unicode-identity",
+      "field": "canonical_equivalence_allowed",
+      "positive": "normalize-nfc",
+      "negative": "preserve-bytes",
+      "query": "How should we compare Unicode resource identifiers?",
+      "contract": "NFC normalization merges canonically equivalent Unicode strings. This is correct for identifiers whose identity contract allows canonical equivalence. Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature.",
+      "history": [
+        "We normalized canonically equivalent display identifiers to NFC before comparing them. They correctly resolved to the same resource under the identity contract that allows canonical equivalence.",
+        "We normalized a signed byte-sensitive identifier to NFC. Signature validation failed because the bytes changed. Preserving original bytes fixed validation; canonical equivalence was not permitted for this endpoint."
+      ]
+    }
+  ],
+  "captures": [
+    {
+      "domain": "artifact-storage",
+      "episode": 0,
+      "calls": 1,
+      "seconds": 14.084338351996848,
+      "status": {
+        "turn": "ce5d47b3ec9849c0a6ef7085c4f2488d",
+        "state": "complete",
+        "attempts": 1,
+        "error": null,
+        "result": {
+          "receipt": {
+            "turn": "ce5d47b3ec9849c0a6ef7085c4f2488d",
+            "status": "no_change",
+            "verified_writes": 0
+          },
+          "experiences": [
+            {
+              "name": "archivo-hard-link-fuente-inmutable",
+              "revision": 1,
+              "sha256": "2b188185517158221c0fad6cbf08eb554080542e24f6fae5d1312fcd80e97e2b",
+              "replayed": false,
+              "assurance": "inferred_narrative"
+            }
+          ]
+        }
+      },
+      "experiences": [
+        {
+          "name": "archivo-hard-link-fuente-inmutable",
+          "revision": 1,
+          "experience": {
+            "action": "Se utilizó un enlace duro para archivar el artefacto.",
+            "checks": [
+              {
+                "expected": true,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/immutable_source"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Archive must preserve the bytes at archive time. A hard link shares writes with the original inode. It is acceptable when the source remains immutable; otherwise make an independent copy."
+              }
+            ],
+            "counterexamples": [
+              "No se probó una fuente mutable; el contrato indica que un enlace duro comparte las escrituras del inodo original."
+            ],
+            "decision": {
+              "choice": "enlace-duro-con-fuente-inmutable",
+              "key": "preservar-bytes-del-artefacto-archivado",
+              "requires": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "b86fc64164961ca2b0f1716a51f357ce42da84262c80d8d9694e5dc7cc5521fb"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "5262d20822ebc60db1151a34ad1f9c733ff2d0c43cd87f906dbdf227881e69b4"
+              }
+            ],
+            "limitations": "Resultado informado por el usuario, sin verificación independiente de la ejecución. La configuración declara inmutabilidad, pero no garantiza que se mantenga.",
+            "outcome": "Según el usuario, se conservaron los bytes esperados y se ahorró espacio.",
+            "rationale": "Ahorrar espacio conservando los bytes esperados mientras la fuente permanezca inmutable.",
+            "situation": "El usuario informó del archivado de un artefacto de compilación inmutable.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ],
+              "keywords": [
+                "archivo",
+                "artefacto",
+                "enlace duro",
+                "hard link",
+                "inmutable",
+                "immutable",
+                "ahorro de espacio"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          },
+          "sha256": "2b188185517158221c0fad6cbf08eb554080542e24f6fae5d1312fcd80e97e2b",
+          "source": "agent:auto-review:ce5d47b3ec9849c0a6ef7085c4f2488d",
+          "created": "2026-10-17T05:32:01.371013+00:00"
+        }
+      ]
+    },
+    {
+      "domain": "artifact-storage",
+      "episode": 1,
+      "calls": 1,
+      "seconds": 14.871488396005589,
+      "status": {
+        "turn": "03a6ea69383e44f6a288bc2d245a6c86",
+        "state": "complete",
+        "attempts": 1,
+        "error": null,
+        "result": {
+          "receipt": {
+            "turn": "03a6ea69383e44f6a288bc2d245a6c86",
+            "status": "no_change",
+            "verified_writes": 0
+          },
+          "experiences": [
+            {
+              "name": "archivo-copia-independiente-fuente-mutable",
+              "revision": 1,
+              "sha256": "d28909c2ace33812a3d88172de471612c7505746e62a46f18822794157ff777d",
+              "replayed": false,
+              "assurance": "inferred_narrative"
+            }
+          ]
+        }
+      },
+      "experiences": [
+        {
+          "name": "archivo-copia-independiente-fuente-mutable",
+          "revision": 1,
+          "experience": {
+            "action": "Según el usuario, se sustituyó el enlace duro por una copia independiente.",
+            "checks": [
+              {
+                "expected": false,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/immutable_source"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Archive must preserve the bytes at archive time. A hard link shares writes with the original inode. It is acceptable when the source remains immutable; otherwise make an independent copy."
+              }
+            ],
+            "counterexamples": [
+              "El contrato admite enlaces duros cuando la fuente permanece inmutable; ese caso no se probó en este intento."
+            ],
+            "decision": {
+              "choice": "copia-independiente-con-fuente-mutable",
+              "key": "preservar-bytes-del-artefacto-archivado",
+              "requires": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "9d6a37fe72c03677838d19b5843030ffa5992f95de84d1ace9dd9881279f8f40"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "5262d20822ebc60db1151a34ad1f9c733ff2d0c43cd87f906dbdf227881e69b4"
+              }
+            ],
+            "limitations": "Ejecución y resultado informados por el usuario, sin verificación independiente. La configuración declara mutabilidad; no se observaron la implementación ni pruebas ejecutadas.",
+            "outcome": "El usuario informó que las escrituras posteriores dejaron de modificar el artefacto archivado.",
+            "rationale": "Preservar los bytes existentes al archivar; el contrato indica que el enlace duro comparte las escrituras del inodo original.",
+            "situation": "El usuario informó que las escrituras posteriores en una fuente mutable también modificaron el artefacto archivado mediante un enlace duro.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ],
+              "keywords": [
+                "archivo",
+                "artefacto",
+                "fuente mutable",
+                "enlace duro",
+                "hard link",
+                "copia independiente",
+                "preservación de bytes"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          },
+          "sha256": "d28909c2ace33812a3d88172de471612c7505746e62a46f18822794157ff777d",
+          "source": "agent:auto-review:03a6ea69383e44f6a288bc2d245a6c86",
+          "created": "2026-10-17T05:32:16.250501+00:00"
+        },
+        {
+          "name": "archivo-hard-link-fuente-inmutable",
+          "revision": 1,
+          "experience": {
+            "action": "Se utilizó un enlace duro para archivar el artefacto.",
+            "checks": [
+              {
+                "expected": true,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/immutable_source"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Archive must preserve the bytes at archive time. A hard link shares writes with the original inode. It is acceptable when the source remains immutable; otherwise make an independent copy."
+              }
+            ],
+            "counterexamples": [
+              "No se probó una fuente mutable; el contrato indica que un enlace duro comparte las escrituras del inodo original."
+            ],
+            "decision": {
+              "choice": "enlace-duro-con-fuente-inmutable",
+              "key": "preservar-bytes-del-artefacto-archivado",
+              "requires": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "b86fc64164961ca2b0f1716a51f357ce42da84262c80d8d9694e5dc7cc5521fb"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "5262d20822ebc60db1151a34ad1f9c733ff2d0c43cd87f906dbdf227881e69b4"
+              }
+            ],
+            "limitations": "Resultado informado por el usuario, sin verificación independiente de la ejecución. La configuración declara inmutabilidad, pero no garantiza que se mantenga.",
+            "outcome": "Según el usuario, se conservaron los bytes esperados y se ahorró espacio.",
+            "rationale": "Ahorrar espacio conservando los bytes esperados mientras la fuente permanezca inmutable.",
+            "situation": "El usuario informó del archivado de un artefacto de compilación inmutable.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/immutable_source"
+                }
+              ],
+              "keywords": [
+                "archivo",
+                "artefacto",
+                "enlace duro",
+                "hard link",
+                "inmutable",
+                "immutable",
+                "ahorro de espacio"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          },
+          "sha256": "2b188185517158221c0fad6cbf08eb554080542e24f6fae5d1312fcd80e97e2b",
+          "source": "agent:auto-review:ce5d47b3ec9849c0a6ef7085c4f2488d",
+          "created": "2026-10-17T05:32:01.371013+00:00"
+        }
+      ]
+    },
+    {
+      "domain": "event-workers",
+      "episode": 0,
+      "calls": 1,
+      "seconds": 14.019418163006776,
+      "status": {
+        "turn": "f564098080da4a32803480c69c3ab2c0",
+        "state": "complete",
+        "attempts": 1,
+        "error": null,
+        "result": {
+          "receipt": {
+            "turn": "f564098080da4a32803480c69c3ab2c0",
+            "status": "no_change",
+            "verified_writes": 0
+          },
+          "experiences": [
+            {
+              "name": "workers-paralelos-adiciones-conmutativas",
+              "revision": 1,
+              "sha256": "1bc3a3dab97c9764523936a10bc2469d3da48972e29c45fc6247640f47df360c",
+              "replayed": false,
+              "assurance": "inferred_narrative"
+            }
+          ]
+        }
+      },
+      "experiences": [
+        {
+          "name": "workers-paralelos-adiciones-conmutativas",
+          "revision": 1,
+          "experience": {
+            "action": "Se probaron distintos órdenes de ejecución.",
+            "checks": [
+              {
+                "expected": true,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/operations_commute"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "A stream of commuting independent set additions can use parallel workers; a stream containing multiply and add on one accumulator must preserve input order."
+              }
+            ],
+            "counterexamples": [
+              "El contrato exige preservar el orden cuando se combinan multiplicación y suma sobre un acumulador; ese caso no fue probado en el intento descrito."
+            ],
+            "decision": {
+              "choice": "workers-paralelos-para-adiciones-independientes",
+              "key": "paralelismo-segun-conmutatividad",
+              "requires": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "a7628a5502f89e1e3d0a0ce5c1e3efec2562b1a064823c756df1042c9b3ff1c8"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "ab9a31d003a53f2b4641c1bddd22569e9f10aa7bc6e690cd0781ec369283f1ed"
+              }
+            ],
+            "limitations": "No se aportaron implementación, registros ni pruebas reproducibles. La experiencia se limita a adiciones independientes y conmutativas.",
+            "outcome": "Según el relato aportado, todos los órdenes probados produjeron el mismo conjunto.",
+            "rationale": "Las operaciones conmutativas permiten reordenar eventos conservando el resultado, según el contrato.",
+            "situation": "Se informó de una ejecución con workers paralelos que procesaron adiciones independientes a un conjunto.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ],
+              "keywords": [
+                "workers",
+                "paralelismo",
+                "parallel workers",
+                "conmutatividad",
+                "commutativity",
+                "conjuntos",
+                "set additions",
+                "orden de eventos"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          },
+          "sha256": "1bc3a3dab97c9764523936a10bc2469d3da48972e29c45fc6247640f47df360c",
+          "source": "agent:auto-review:f564098080da4a32803480c69c3ab2c0",
+          "created": "2026-10-17T05:33:10.365091+00:00"
+        }
+      ]
+    },
+    {
+      "domain": "event-workers",
+      "episode": 1,
+      "calls": 1,
+      "seconds": 14.228602566989139,
+      "status": {
+        "turn": "387722018c9a432fbf0a1c933e495fdc",
+        "state": "complete",
+        "attempts": 1,
+        "error": null,
+        "result": {
+          "receipt": {
+            "turn": "387722018c9a432fbf0a1c933e495fdc",
+            "status": "no_change",
+            "verified_writes": 0
+          },
+          "experiences": [
+            {
+              "name": "worker-ordenado-operaciones-no-conmutativas",
+              "revision": 1,
+              "sha256": "3b9ce252f97bcd30013d354e90cc7bdb8914af6e556d29910010dc829461d99a",
+              "replayed": false,
+              "assurance": "inferred_narrative"
+            }
+          ]
+        }
+      },
+      "experiences": [
+        {
+          "name": "worker-ordenado-operaciones-no-conmutativas",
+          "revision": 1,
+          "experience": {
+            "action": "Se trasladó el flujo a un worker que preserva el orden.",
+            "checks": [
+              {
+                "expected": false,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/operations_commute"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "A stream of commuting independent set additions can use parallel workers; a stream containing multiply and add on one accumulator must preserve input order."
+              }
+            ],
+            "counterexamples": [
+              "El contrato permite workers paralelos para adiciones independientes y conmutativas; ese caso no fue probado en el intento relatado."
+            ],
+            "decision": {
+              "choice": "worker-ordenado-para-operaciones-no-conmutativas",
+              "key": "paralelismo-segun-conmutatividad",
+              "requires": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "538404d7efe38a010814707d1f16dae766b3fcbd21d42e2764d854237e12b8ea"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "ab9a31d003a53f2b4641c1bddd22569e9f10aa7bc6e690cd0781ec369283f1ed"
+              }
+            ],
+            "limitations": "No se aportaron implementación, registros ni pruebas reproducibles. El resultado procede del relato del usuario; los archivos respaldan únicamente la configuración y el contrato.",
+            "outcome": "El usuario reportó que se recuperó el resultado esperado.",
+            "rationale": "El contrato exige preservar el orden para multiplicación y suma sobre un mismo acumulador.",
+            "situation": "Según el relato del usuario, workers paralelos procesaron multiplicación y suma sobre un acumulador compartido; invertir la ejecución cambió el resultado.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ],
+              "keywords": [
+                "workers",
+                "paralelismo",
+                "concurrencia",
+                "orden",
+                "no conmutatividad",
+                "acumulador",
+                "multiplicación",
+                "suma"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          },
+          "sha256": "3b9ce252f97bcd30013d354e90cc7bdb8914af6e556d29910010dc829461d99a",
+          "source": "agent:auto-review:387722018c9a432fbf0a1c933e495fdc",
+          "created": "2026-10-17T05:33:24.597469+00:00"
+        },
+        {
+          "name": "workers-paralelos-adiciones-conmutativas",
+          "revision": 1,
+          "experience": {
+            "action": "Se probaron distintos órdenes de ejecución.",
+            "checks": [
+              {
+                "expected": true,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/operations_commute"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "A stream of commuting independent set additions can use parallel workers; a stream containing multiply and add on one accumulator must preserve input order."
+              }
+            ],
+            "counterexamples": [
+              "El contrato exige preservar el orden cuando se combinan multiplicación y suma sobre un acumulador; ese caso no fue probado en el intento descrito."
+            ],
+            "decision": {
+              "choice": "workers-paralelos-para-adiciones-independientes",
+              "key": "paralelismo-segun-conmutatividad",
+              "requires": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "a7628a5502f89e1e3d0a0ce5c1e3efec2562b1a064823c756df1042c9b3ff1c8"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "ab9a31d003a53f2b4641c1bddd22569e9f10aa7bc6e690cd0781ec369283f1ed"
+              }
+            ],
+            "limitations": "No se aportaron implementación, registros ni pruebas reproducibles. La experiencia se limita a adiciones independientes y conmutativas.",
+            "outcome": "Según el relato aportado, todos los órdenes probados produjeron el mismo conjunto.",
+            "rationale": "Las operaciones conmutativas permiten reordenar eventos conservando el resultado, según el contrato.",
+            "situation": "Se informó de una ejecución con workers paralelos que procesaron adiciones independientes a un conjunto.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/operations_commute"
+                }
+              ],
+              "keywords": [
+                "workers",
+                "paralelismo",
+                "parallel workers",
+                "conmutatividad",
+                "commutativity",
+                "conjuntos",
+                "set additions",
+                "orden de eventos"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          },
+          "sha256": "1bc3a3dab97c9764523936a10bc2469d3da48972e29c45fc6247640f47df360c",
+          "source": "agent:auto-review:f564098080da4a32803480c69c3ab2c0",
+          "created": "2026-10-17T05:33:10.365091+00:00"
+        }
+      ]
+    },
+    {
+      "domain": "unicode-identity",
+      "episode": 0,
+      "calls": 1,
+      "seconds": 12.670355629001278,
+      "status": {
+        "turn": "7a92886f11e644e9b5f472e40822e20c",
+        "state": "complete",
+        "attempts": 1,
+        "error": null,
+        "result": {
+          "receipt": {
+            "turn": "7a92886f11e644e9b5f472e40822e20c",
+            "status": "no_change",
+            "verified_writes": 0
+          },
+          "experiences": [
+            {
+              "name": "nfc-identificadores-equivalentes",
+              "revision": 1,
+              "sha256": "93e884c6eec7f6b7f0778c678b2591441174d18bd151f676e48e39137adb1e45",
+              "replayed": false,
+              "assurance": "inferred_narrative"
+            }
+          ]
+        }
+      },
+      "experiences": [
+        {
+          "name": "nfc-identificadores-equivalentes",
+          "revision": 1,
+          "experience": {
+            "action": "Se normalizaron los identificadores a NFC antes de compararlos.",
+            "checks": [
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "This is correct for identifiers whose identity contract allows canonical equivalence."
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+              }
+            ],
+            "counterexamples": [
+              "Hipótesis no probada en este intento: normalizar identificadores firmados sensibles a bytes puede invalidar su firma, según el contrato."
+            ],
+            "decision": {
+              "choice": "normalizar-a-nfc",
+              "key": "comparacion-identificadores-unicode",
+              "requires": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+              }
+            ],
+            "limitations": "El resultado procede del relato del usuario; no se aportaron pruebas ejecutadas ni implementación. No se observó un intento con identificadores firmados sensibles a bytes.",
+            "outcome": "Según el usuario, ambos identificadores resolvieron al mismo recurso.",
+            "rationale": "El contrato permite equivalencia canónica para esos identificadores.",
+            "situation": "El usuario informó una comparación de identificadores Unicode canónicamente equivalentes.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ],
+              "keywords": [
+                "Unicode",
+                "NFC",
+                "normalización",
+                "normalization",
+                "identificadores",
+                "identifiers",
+                "equivalencia canónica",
+                "canonical equivalence"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          },
+          "sha256": "93e884c6eec7f6b7f0778c678b2591441174d18bd151f676e48e39137adb1e45",
+          "source": "agent:auto-review:7a92886f11e644e9b5f472e40822e20c",
+          "created": "2026-10-17T05:34:14.999025+00:00"
+        }
+      ]
+    },
+    {
+      "domain": "unicode-identity",
+      "episode": 1,
+      "calls": 1,
+      "seconds": 11.96501066700148,
+      "status": {
+        "turn": "ea14253075df41ccbf34bb402d789e76",
+        "state": "complete",
+        "attempts": 1,
+        "error": null,
+        "result": {
+          "receipt": {
+            "turn": "ea14253075df41ccbf34bb402d789e76",
+            "status": "no_change",
+            "verified_writes": 0
+          },
+          "experiences": [
+            {
+              "name": "preservar-bytes-identificadores-firmados",
+              "revision": 1,
+              "sha256": "a80607a6e521712ab81c317c30b178c9aeb50b7f4c0961e1270abfdb7deb07e7",
+              "replayed": false,
+              "assurance": "inferred_narrative"
+            }
+          ]
+        }
+      },
+      "experiences": [
+        {
+          "name": "nfc-identificadores-equivalentes",
+          "revision": 1,
+          "experience": {
+            "action": "Se normalizaron los identificadores a NFC antes de compararlos.",
+            "checks": [
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "This is correct for identifiers whose identity contract allows canonical equivalence."
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+              }
+            ],
+            "counterexamples": [
+              "Hipótesis no probada en este intento: normalizar identificadores firmados sensibles a bytes puede invalidar su firma, según el contrato."
+            ],
+            "decision": {
+              "choice": "normalizar-a-nfc",
+              "key": "comparacion-identificadores-unicode",
+              "requires": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+              }
+            ],
+            "limitations": "El resultado procede del relato del usuario; no se aportaron pruebas ejecutadas ni implementación. No se observó un intento con identificadores firmados sensibles a bytes.",
+            "outcome": "Según el usuario, ambos identificadores resolvieron al mismo recurso.",
+            "rationale": "El contrato permite equivalencia canónica para esos identificadores.",
+            "situation": "El usuario informó una comparación de identificadores Unicode canónicamente equivalentes.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": true,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ],
+              "keywords": [
+                "Unicode",
+                "NFC",
+                "normalización",
+                "normalization",
+                "identificadores",
+                "identifiers",
+                "equivalencia canónica",
+                "canonical equivalence"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          },
+          "sha256": "93e884c6eec7f6b7f0778c678b2591441174d18bd151f676e48e39137adb1e45",
+          "source": "agent:auto-review:7a92886f11e644e9b5f472e40822e20c",
+          "created": "2026-10-17T05:34:14.999025+00:00"
+        },
+        {
+          "name": "preservar-bytes-identificadores-firmados",
+          "revision": 1,
+          "experience": {
+            "action": "Se conservaron los bytes originales del identificador.",
+            "checks": [
+              {
+                "expected": false,
+                "kind": "json_equals",
+                "path": "context.json",
+                "pointer": "/canonical_equivalence_allowed"
+              },
+              {
+                "kind": "text_contains",
+                "path": "contract.txt",
+                "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+              }
+            ],
+            "counterexamples": [
+              "Límite observado en el contrato: NFC es correcto para identificadores cuyo contrato permite equivalencia canónica; ese caso no se probó en este intento."
+            ],
+            "decision": {
+              "choice": "preservar-bytes-originales",
+              "key": "comparacion-identificadores-unicode",
+              "requires": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "path": "context.json",
+                "sha256": "2511b96770b0a5d7399ba673777f66653dce921196433fb37466e511ca1488ec"
+              },
+              {
+                "path": "contract.txt",
+                "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+              }
+            ],
+            "limitations": "El resultado procede del relato del usuario; no se observaron implementación ni pruebas ejecutadas. El alcance corresponde a identificadores firmados sensibles a bytes.",
+            "outcome": "El usuario informó que conservar los bytes originales corrigió la validación.",
+            "rationale": "El endpoint no permitía equivalencia canónica y el contrato exige conservar los bytes originales de identificadores firmados sensibles a bytes.",
+            "situation": "Según el usuario, normalizar a NFC un identificador firmado sensible a bytes provocó un fallo de validación.",
+            "when": {
+              "conditions": [
+                {
+                  "expected": false,
+                  "kind": "json_equals",
+                  "path": "context.json",
+                  "pointer": "/canonical_equivalence_allowed"
+                }
+              ],
+              "keywords": [
+                "Unicode",
+                "NFC",
+                "normalización",
+                "normalization",
+                "identificadores",
+                "firma",
+                "signature",
+                "bytes",
+                "equivalencia canónica"
+              ],
+              "paths": [
+                "context.json",
+                "contract.txt"
+              ]
+            }
+          },
+          "sha256": "a80607a6e521712ab81c317c30b178c9aeb50b7f4c0961e1270abfdb7deb07e7",
+          "source": "agent:auto-review:ea14253075df41ccbf34bb402d789e76",
+          "created": "2026-10-17T05:34:26.971066+00:00"
+        }
+      ]
+    }
+  ],
+  "retrieval": [
+    {
+      "domain": "artifact-storage",
+      "scenario": "positive",
+      "expected": "hardlink",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/artifact-storage",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0011393550084903836
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "negative",
+      "expected": "copy",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/artifact-storage",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0019965570099884644
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "unknown",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/artifact-storage",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0031876069988356903
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "changed-contract",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/artifact-storage",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0015535740094492212
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "positive",
+      "expected": "parallel",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/event-workers",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.001039740993292071
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "negative",
+      "expected": "ordered",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/event-workers",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0008022050024010241
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "unknown",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/event-workers",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0009510790114291012
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "changed-contract",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/event-workers",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.0007090569997671992
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "positive",
+      "expected": "normalize-nfc",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/unicode-identity",
+        "groups": [
+          {
+            "key": "comparacion-identificadores-unicode",
+            "state": "selected",
+            "selected": "normalizar-a-nfc",
+            "alternatives": [
+              {
+                "name": "nfc-identificadores-equivalentes",
+                "revision": 1,
+                "experience_sha256": "93e884c6eec7f6b7f0778c678b2591441174d18bd151f676e48e39137adb1e45",
+                "choice": "normalizar-a-nfc",
+                "action": "Se normalizaron los identificadores a NFC antes de compararlos.",
+                "rationale": "El contrato permite equivalencia canónica para esos identificadores.",
+                "reported_outcome": "Según el usuario, ambos identificadores resolvieron al mismo recurso.",
+                "counterexamples": [
+                  "Hipótesis no probada en este intento: normalizar identificadores firmados sensibles a bytes puede invalidar su firma, según el contrato."
+                ],
+                "limitations": "El resultado procede del relato del usuario; no se aportaron pruebas ejecutadas ni implementación. No se observó un intento con identificadores firmados sensibles a bytes.",
+                "state": "eligible",
+                "guards": [
+                  {
+                    "check": {
+                      "expected": true,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    }
+                  },
+                  {
+                    "check": {
+                      "expected": true,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    }
+                  }
+                ],
+                "observations": [
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "This is correct for identifiers whose identity contract allows canonical equivalence."
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  },
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  }
+                ],
+                "support": [
+                  {
+                    "path": "contract.txt",
+                    "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                  }
+                ],
+                "stale_paths": [],
+                "reported_utility": {}
+              },
+              {
+                "name": "preservar-bytes-identificadores-firmados",
+                "revision": 1,
+                "experience_sha256": "a80607a6e521712ab81c317c30b178c9aeb50b7f4c0961e1270abfdb7deb07e7",
+                "choice": "preservar-bytes-originales",
+                "action": "Se conservaron los bytes originales del identificador.",
+                "rationale": "El endpoint no permitía equivalencia canónica y el contrato exige conservar los bytes originales de identificadores firmados sensibles a bytes.",
+                "reported_outcome": "El usuario informó que conservar los bytes originales corrigió la validación.",
+                "counterexamples": [
+                  "Límite observado en el contrato: NFC es correcto para identificadores cuyo contrato permite equivalencia canónica; ese caso no se probó en este intento."
+                ],
+                "limitations": "El resultado procede del relato del usuario; no se observaron implementación ni pruebas ejecutadas. El alcance corresponde a identificadores firmados sensibles a bytes.",
+                "state": "stale",
+                "guards": [
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    }
+                  },
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    }
+                  }
+                ],
+                "observations": [
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  },
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  }
+                ],
+                "support": [
+                  {
+                    "path": "context.json",
+                    "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                  },
+                  {
+                    "path": "contract.txt",
+                    "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                  }
+                ],
+                "stale_paths": [
+                  "context.json"
+                ],
+                "reported_utility": {}
+              }
+            ],
+            "probes": [],
+            "executions": []
+          }
+        ],
+        "abstained": false,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.003898141992976889
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "negative",
+      "expected": "preserve-bytes",
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/unicode-identity",
+        "groups": [
+          {
+            "key": "comparacion-identificadores-unicode",
+            "state": "selected",
+            "selected": "preservar-bytes-originales",
+            "alternatives": [
+              {
+                "name": "nfc-identificadores-equivalentes",
+                "revision": 1,
+                "experience_sha256": "93e884c6eec7f6b7f0778c678b2591441174d18bd151f676e48e39137adb1e45",
+                "choice": "normalizar-a-nfc",
+                "action": "Se normalizaron los identificadores a NFC antes de compararlos.",
+                "rationale": "El contrato permite equivalencia canónica para esos identificadores.",
+                "reported_outcome": "Según el usuario, ambos identificadores resolvieron al mismo recurso.",
+                "counterexamples": [
+                  "Hipótesis no probada en este intento: normalizar identificadores firmados sensibles a bytes puede invalidar su firma, según el contrato."
+                ],
+                "limitations": "El resultado procede del relato del usuario; no se aportaron pruebas ejecutadas ni implementación. No se observó un intento con identificadores firmados sensibles a bytes.",
+                "state": "inapplicable",
+                "guards": [
+                  {
+                    "check": {
+                      "expected": true,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "2511b96770b0a5d7399ba673777f66653dce921196433fb37466e511ca1488ec"
+                    }
+                  },
+                  {
+                    "check": {
+                      "expected": true,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "2511b96770b0a5d7399ba673777f66653dce921196433fb37466e511ca1488ec"
+                    }
+                  }
+                ],
+                "observations": [
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "This is correct for identifiers whose identity contract allows canonical equivalence."
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  },
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  }
+                ],
+                "support": [
+                  {
+                    "path": "contract.txt",
+                    "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                  }
+                ],
+                "stale_paths": [],
+                "reported_utility": {}
+              },
+              {
+                "name": "preservar-bytes-identificadores-firmados",
+                "revision": 1,
+                "experience_sha256": "a80607a6e521712ab81c317c30b178c9aeb50b7f4c0961e1270abfdb7deb07e7",
+                "choice": "preservar-bytes-originales",
+                "action": "Se conservaron los bytes originales del identificador.",
+                "rationale": "El endpoint no permitía equivalencia canónica y el contrato exige conservar los bytes originales de identificadores firmados sensibles a bytes.",
+                "reported_outcome": "El usuario informó que conservar los bytes originales corrigió la validación.",
+                "counterexamples": [
+                  "Límite observado en el contrato: NFC es correcto para identificadores cuyo contrato permite equivalencia canónica; ese caso no se probó en este intento."
+                ],
+                "limitations": "El resultado procede del relato del usuario; no se observaron implementación ni pruebas ejecutadas. El alcance corresponde a identificadores firmados sensibles a bytes.",
+                "state": "eligible",
+                "guards": [
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "2511b96770b0a5d7399ba673777f66653dce921196433fb37466e511ca1488ec"
+                    }
+                  },
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "2511b96770b0a5d7399ba673777f66653dce921196433fb37466e511ca1488ec"
+                    }
+                  }
+                ],
+                "observations": [
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "2511b96770b0a5d7399ba673777f66653dce921196433fb37466e511ca1488ec"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  },
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  }
+                ],
+                "support": [
+                  {
+                    "path": "context.json",
+                    "sha256": "2511b96770b0a5d7399ba673777f66653dce921196433fb37466e511ca1488ec"
+                  },
+                  {
+                    "path": "contract.txt",
+                    "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                  }
+                ],
+                "stale_paths": [],
+                "reported_utility": {}
+              }
+            ],
+            "probes": [],
+            "executions": []
+          }
+        ],
+        "abstained": false,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.002464787001372315
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "unknown",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/unicode-identity",
+        "groups": [
+          {
+            "key": "comparacion-identificadores-unicode",
+            "state": "needs_evidence",
+            "selected": null,
+            "alternatives": [
+              {
+                "name": "nfc-identificadores-equivalentes",
+                "revision": 1,
+                "experience_sha256": "93e884c6eec7f6b7f0778c678b2591441174d18bd151f676e48e39137adb1e45",
+                "choice": "normalizar-a-nfc",
+                "action": "Se normalizaron los identificadores a NFC antes de compararlos.",
+                "rationale": "El contrato permite equivalencia canónica para esos identificadores.",
+                "reported_outcome": "Según el usuario, ambos identificadores resolvieron al mismo recurso.",
+                "counterexamples": [
+                  "Hipótesis no probada en este intento: normalizar identificadores firmados sensibles a bytes puede invalidar su firma, según el contrato."
+                ],
+                "limitations": "El resultado procede del relato del usuario; no se aportaron pruebas ejecutadas ni implementación. No se observó un intento con identificadores firmados sensibles a bytes.",
+                "state": "unknown",
+                "guards": [
+                  {
+                    "check": {
+                      "expected": true,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "unavailable",
+                    "reason": "condition_not_observable"
+                  },
+                  {
+                    "check": {
+                      "expected": true,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "unavailable",
+                    "reason": "condition_not_observable"
+                  }
+                ],
+                "observations": [
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "This is correct for identifiers whose identity contract allows canonical equivalence."
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  },
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  }
+                ],
+                "support": [
+                  {
+                    "path": "contract.txt",
+                    "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                  }
+                ],
+                "stale_paths": [],
+                "reported_utility": {}
+              },
+              {
+                "name": "preservar-bytes-identificadores-firmados",
+                "revision": 1,
+                "experience_sha256": "a80607a6e521712ab81c317c30b178c9aeb50b7f4c0961e1270abfdb7deb07e7",
+                "choice": "preservar-bytes-originales",
+                "action": "Se conservaron los bytes originales del identificador.",
+                "rationale": "El endpoint no permitía equivalencia canónica y el contrato exige conservar los bytes originales de identificadores firmados sensibles a bytes.",
+                "reported_outcome": "El usuario informó que conservar los bytes originales corrigió la validación.",
+                "counterexamples": [
+                  "Límite observado en el contrato: NFC es correcto para identificadores cuyo contrato permite equivalencia canónica; ese caso no se probó en este intento."
+                ],
+                "limitations": "El resultado procede del relato del usuario; no se observaron implementación ni pruebas ejecutadas. El alcance corresponde a identificadores firmados sensibles a bytes.",
+                "state": "stale",
+                "guards": [
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "unavailable",
+                    "reason": "condition_not_observable"
+                  },
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "unavailable",
+                    "reason": "condition_not_observable"
+                  }
+                ],
+                "observations": [
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  },
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  }
+                ],
+                "support": [
+                  {
+                    "path": "context.json",
+                    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+                  },
+                  {
+                    "path": "contract.txt",
+                    "sha256": "0769370d907b400a58524338420ad816214edc2104c954c1d326fe445cc1753a"
+                  }
+                ],
+                "stale_paths": [
+                  "context.json"
+                ],
+                "reported_utility": {}
+              }
+            ],
+            "probes": [
+              {
+                "kind": "observe",
+                "path": "context.json",
+                "pointer": "/canonical_equivalence_allowed",
+                "separates": [
+                  "normalizar-a-nfc"
+                ],
+                "expected": [
+                  {
+                    "expected": true,
+                    "kind": "json_equals",
+                    "path": "context.json",
+                    "pointer": "/canonical_equivalence_allowed"
+                  }
+                ],
+                "cost_class": "read",
+                "reason": "Resolve declared requirements; no causal or numeric confidence claim."
+              }
+            ],
+            "executions": []
+          }
+        ],
+        "abstained": false,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.008476131013594568
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "changed-contract",
+      "expected": null,
+      "packet": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-comparison/run-unrestricted/unicode-identity",
+        "groups": [
+          {
+            "key": "comparacion-identificadores-unicode",
+            "state": "no_applicable_case",
+            "selected": null,
+            "alternatives": [
+              {
+                "name": "nfc-identificadores-equivalentes",
+                "revision": 1,
+                "experience_sha256": "93e884c6eec7f6b7f0778c678b2591441174d18bd151f676e48e39137adb1e45",
+                "choice": "normalizar-a-nfc",
+                "action": "Se normalizaron los identificadores a NFC antes de compararlos.",
+                "rationale": "El contrato permite equivalencia canónica para esos identificadores.",
+                "reported_outcome": "Según el usuario, ambos identificadores resolvieron al mismo recurso.",
+                "counterexamples": [
+                  "Hipótesis no probada en este intento: normalizar identificadores firmados sensibles a bytes puede invalidar su firma, según el contrato."
+                ],
+                "limitations": "El resultado procede del relato del usuario; no se aportaron pruebas ejecutadas ni implementación. No se observó un intento con identificadores firmados sensibles a bytes.",
+                "state": "stale",
+                "guards": [
+                  {
+                    "check": {
+                      "expected": true,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    }
+                  },
+                  {
+                    "check": {
+                      "expected": true,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "observed_support",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    }
+                  }
+                ],
+                "observations": [
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "This is correct for identifiers whose identity contract allows canonical equivalence."
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "e5c9ad6135f891058a2aedd1f6adeca89dc5cf132aa4782e4ccb7d763d75ec7d"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  },
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "e5c9ad6135f891058a2aedd1f6adeca89dc5cf132aa4782e4ccb7d763d75ec7d"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  }
+                ],
+                "support": [
+                  {
+                    "path": "contract.txt",
+                    "sha256": "e5c9ad6135f891058a2aedd1f6adeca89dc5cf132aa4782e4ccb7d763d75ec7d"
+                  }
+                ],
+                "stale_paths": [
+                  "contract.txt"
+                ],
+                "reported_utility": {}
+              },
+              {
+                "name": "preservar-bytes-identificadores-firmados",
+                "revision": 1,
+                "experience_sha256": "a80607a6e521712ab81c317c30b178c9aeb50b7f4c0961e1270abfdb7deb07e7",
+                "choice": "preservar-bytes-originales",
+                "action": "Se conservaron los bytes originales del identificador.",
+                "rationale": "El endpoint no permitía equivalencia canónica y el contrato exige conservar los bytes originales de identificadores firmados sensibles a bytes.",
+                "reported_outcome": "El usuario informó que conservar los bytes originales corrigió la validación.",
+                "counterexamples": [
+                  "Límite observado en el contrato: NFC es correcto para identificadores cuyo contrato permite equivalencia canónica; ese caso no se probó en este intento."
+                ],
+                "limitations": "El resultado procede del relato del usuario; no se observaron implementación ni pruebas ejecutadas. El alcance corresponde a identificadores firmados sensibles a bytes.",
+                "state": "stale",
+                "guards": [
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    }
+                  },
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    }
+                  }
+                ],
+                "observations": [
+                  {
+                    "check": {
+                      "expected": false,
+                      "kind": "json_equals",
+                      "path": "context.json",
+                      "pointer": "/canonical_equivalence_allowed"
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "context.json",
+                      "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  },
+                  {
+                    "check": {
+                      "kind": "text_contains",
+                      "path": "contract.txt",
+                      "text": "Signed byte-sensitive identifiers must retain exact original bytes; normalization can invalidate the signature."
+                    },
+                    "status": "contradicted",
+                    "witness": {
+                      "path": "contract.txt",
+                      "sha256": "e5c9ad6135f891058a2aedd1f6adeca89dc5cf132aa4782e4ccb7d763d75ec7d"
+                    },
+                    "assurance": "Only this declared observation was checked; not the narrative or general correctness."
+                  }
+                ],
+                "support": [
+                  {
+                    "path": "context.json",
+                    "sha256": "7b6277078b6b381f68498e939d2336fa0328d41f769c83d5ac6df9c7923d028d"
+                  },
+                  {
+                    "path": "contract.txt",
+                    "sha256": "e5c9ad6135f891058a2aedd1f6adeca89dc5cf132aa4782e4ccb7d763d75ec7d"
+                  }
+                ],
+                "stale_paths": [
+                  "context.json",
+                  "contract.txt"
+                ],
+                "reported_utility": {}
+              }
+            ],
+            "probes": [],
+            "executions": []
+          }
+        ],
+        "abstained": false,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only."
+      },
+      "seconds": 0.004753746994538233
+    }
+  ],
+  "live": [
+    {
+      "domain": "artifact-storage",
+      "scenario": "positive",
+      "arm": "no-memory",
+      "expected": "hardlink",
+      "response": {
+        "choice": "hardlink",
+        "reason": "El contrato permite enlaces duros cuando la fuente permanece inmutable, y context.json declara immutable_source=true."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 373,
+      "seconds": 10.194942343994626
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "positive",
+      "arm": "file-memory-all-relevant",
+      "expected": "hardlink",
+      "response": {
+        "choice": "hardlink",
+        "reason": "El contrato permite enlaces duros cuando la fuente permanece inmutable, condición declarada en context.json."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 812,
+      "seconds": 6.835034409989021
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "positive",
+      "arm": "synopsis",
+      "expected": "hardlink",
+      "response": {
+        "choice": "hardlink",
+        "reason": "La configuración declara que la fuente es inmutable y el contrato vigente permite usar un enlace duro bajo esa condición."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 616,
+      "seconds": 5.379738488001749
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "negative",
+      "arm": "no-memory",
+      "expected": "copy",
+      "response": {
+        "choice": "copy",
+        "reason": "El contrato exige preservar los bytes al archivar. Como la fuente está declarada no inmutable, corresponde una copia independiente."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 374,
+      "seconds": 6.087704788005794
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "negative",
+      "arm": "file-memory-all-relevant",
+      "expected": "copy",
+      "response": {
+        "choice": "copy",
+        "reason": "El contrato exige preservar los bytes al archivar. La fuente está declarada mutable, por lo que corresponde una copia independiente; un enlace duro compartiría las escrituras posteriores."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 813,
+      "seconds": 5.733365669992054
+    },
+    {
+      "domain": "artifact-storage",
+      "scenario": "negative",
+      "arm": "synopsis",
+      "expected": "copy",
+      "response": {
+        "choice": "copy",
+        "reason": "El contrato exige preservar los bytes al archivar. Como la fuente está declarada no inmutable, corresponde una copia independiente."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 617,
+      "seconds": 5.83172693499364
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "positive",
+      "arm": "no-memory",
+      "expected": "parallel",
+      "response": {
+        "choice": "parallel",
+        "reason": "La configuración declara que las operaciones conmutan y el contrato establece que, bajo esa condición, reordenarlas preserva el resultado."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 455,
+      "seconds": 6.934282799003995
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "positive",
+      "arm": "file-memory-all-relevant",
+      "expected": "parallel",
+      "response": {
+        "choice": "parallel",
+        "reason": "La configuración actual declara que las operaciones conmutan y el contrato permite reordenarlas cuando conmutan; el caso histórico no conmutativo no determina este flujo."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 878,
+      "seconds": 6.737226821991499
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "positive",
+      "arm": "synopsis",
+      "expected": "parallel",
+      "response": {
+        "choice": "parallel",
+        "reason": "La configuración declara que las operaciones conmutan y el contrato vigente permite reordenarlas sin cambiar el resultado cuando conmutan."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 695,
+      "seconds": 6.489703276994987
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "negative",
+      "arm": "no-memory",
+      "expected": "ordered",
+      "response": {
+        "choice": "ordered",
+        "reason": "La configuración declara que las operaciones no conmutan; el contrato exige preservar el orden para garantizar el resultado."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 456,
+      "seconds": 5.632341945994995
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "negative",
+      "arm": "file-memory-all-relevant",
+      "expected": "ordered",
+      "response": {
+        "choice": "ordered",
+        "reason": "El contrato actual exige preservar el orden cuando las operaciones no conmutan. context.json declara operations_commute=false, por lo que corresponde un trabajador ordenado; esa configuración no demuestra causalidad."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 879,
+      "seconds": 6.838314480002737
+    },
+    {
+      "domain": "event-workers",
+      "scenario": "negative",
+      "arm": "synopsis",
+      "expected": "ordered",
+      "response": {
+        "choice": "ordered",
+        "reason": "El contrato exige preservar el orden cuando las operaciones no conmutan, y context.json declara operations_commute=false."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 696,
+      "seconds": 5.080003499999293
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "positive",
+      "arm": "no-memory",
+      "expected": "normalize-nfc",
+      "response": {
+        "choice": "normalize-nfc",
+        "reason": "La configuración declara que se permite la equivalencia canónica, y el contrato vigente establece que NFC es correcto para identificadores con esa condición."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 489,
+      "seconds": 5.682305956011987
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "positive",
+      "arm": "file-memory-all-relevant",
+      "expected": "normalize-nfc",
+      "response": {
+        "choice": "normalize-nfc",
+        "reason": "La configuración actual permite equivalencia canónica y el contrato establece que NFC es correcto para esos identificadores. No hay evidencia actual de que sean identificadores firmados sensibles a bytes."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 969,
+      "seconds": 7.3411173109925585
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "positive",
+      "arm": "synopsis",
+      "expected": "normalize-nfc",
+      "response": {
+        "choice": "normalize-nfc",
+        "reason": "La configuración actual permite equivalencia canónica y el contrato establece que NFC es correcto en ese caso. Esto determina la regla aplicable, sin demostrar causalidad ni resultados de ejecución; los identificadores firmados sensibles a bytes deben conservar sus bytes originales."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 5874,
+      "seconds": 7.486866130988346
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "negative",
+      "arm": "no-memory",
+      "expected": "preserve-bytes",
+      "response": {
+        "choice": null,
+        "reason": "La configuración descarta permitir equivalencia canónica, pero no establece que los identificadores sean sensibles a bytes o estén firmados; el contrato no determina cuál opción aplica."
+      },
+      "correct": false,
+      "error": null,
+      "request_chars": 490,
+      "seconds": 8.391708979004761
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "negative",
+      "arm": "file-memory-all-relevant",
+      "expected": "preserve-bytes",
+      "response": {
+        "choice": "preserve-bytes",
+        "reason": "La configuración actual no permite equivalencia canónica; NFC podría fusionar identificadores distintos según ese contrato. Deben preservarse los bytes originales."
+      },
+      "correct": true,
+      "error": null,
+      "request_chars": 970,
+      "seconds": 6.384721712995088
+    },
+    {
+      "domain": "unicode-identity",
+      "scenario": "negative",
+      "arm": "synopsis",
+      "expected": "preserve-bytes",
+      "response": {
+        "choice": null,
+        "reason": "La configuración descarta la equivalencia canónica, pero no establece que los identificadores sean firmados y sensibles a bytes, condición del contrato para exigir preservar los bytes originales. La selección de memoria no demuestra esa condición."
+      },
+      "correct": false,
+      "error": null,
+      "request_chars": 5882,
+      "seconds": 6.234486119996291
+    }
+  ],
+  "limitations": [
+    "Synthetic held-out domains, not real repository patch tasks or external product benchmark.",
+    "Current code contract available in every inference arm, including no-memory.",
+    "No token billing instrumented; request chars and wall time reported.",
+    "Single default Codex model, one repetition; no statistical superiority claim."
+  ],
+  "calls": 24,
+  "scores": {
+    "file-memory-all-relevant": {
+      "correct": 6,
+      "total": 6
+    },
+    "no-memory": {
+      "correct": 5,
+      "total": 6
+    },
+    "synopsis": {
+      "correct": 5,
+      "total": 6
+    }
+  },
+  "capture_summary": {
+    "episodes": 6,
+    "experiences": 6,
+    "decision_cases": 6
+  }
+}

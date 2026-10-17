@@ -80,6 +80,17 @@ def fuentes_de(datos, base):
         armada["nombre"] = str(fuente.get("nombre") or fuente["id"])
         armada["color"] = str(fuente.get("color") or "#868E96")
         armada["raices"] = [raiz_de(r, f"{campo}.raices", base) for r in fuente.get("raices") or []]
+        # A visual source may combine memory and documentation without changing their semantics.
+        roots = fuente.get("raices") or []
+        memory_roots = [r[0] for r in armada["raices"]
+                        if Path(r[0]).name.lower() == "memory" or (Path(r[0]) / "MEMORY.md").is_file()]
+        armada["memoria_por_raiz"] = {}
+        for raw, resolved in zip(roots, armada["raices"]):
+            explicit = raw.get("memoria") if isinstance(raw, dict) else None
+            if explicit is not None and not isinstance(explicit, bool):
+                raise ConfigInvalida(f"{campo}.raices.memoria debe ser booleano")
+            armada["memoria_por_raiz"][resolved[0]] = (explicit if explicit is not None else
+                bool(fuente.get("memoria") and (not memory_roots or resolved[0] in memory_roots)))
         if fuente.get("memoria"):
             armada["proyecto"] = resolver(fuente["proyecto"], base) if fuente.get("proyecto") else ""
         if "excluir" in fuente:
@@ -291,9 +302,9 @@ def armar(datos, base):
 
 def comando():
     partes = [p.lower() for p in CARPETA.parts]
-    en_plugin = (os.environ.get("CLAUDE_PLUGIN_ROOT") or os.path.basename(sys.argv[0] or "").startswith("neuromapa")
+    en_plugin = (os.environ.get("CLAUDE_PLUGIN_ROOT") or os.path.basename(sys.argv[0] or "").startswith("synopsis")
                  or any(partes[i:i + 2] == ["plugins", "cache"] for i in range(len(partes))))
-    base = "neuromapa" if en_plugin else "python " + str(CARPETA / "cerebro.py").replace("\\", "/")
+    base = "synopsis" if en_plugin else "python " + str(CARPETA / "cerebro.py").replace("\\", "/")
     return f"{base} --demo" if archivo() == DEMO else base
 
 
@@ -337,6 +348,28 @@ def actual():
     return _actual[clave]
 
 
+
+def con_memorias_registradas(config, ruta):
+    if Path(ruta) == DEMO or '--demo' in sys.argv[1:]:
+        return config
+    from project_identity import registered_memories
+    paths = {os.path.normcase(os.path.realpath(path)) for source in config['fuentes'] for path, _, _ in source['raices']}
+    ids = {source['id'] for source in config['fuentes']}
+    for record in registered_memories(ruta):
+        folder = record['memory']
+        if os.path.normcase(os.path.realpath(folder)) in paths:
+            continue
+        source_id = 'project-memory-' + record['key']
+        if source_id in ids:
+            raise ConfigInvalida('Un id de fuente configurado coincide con una memoria registrada.')
+        source = dict(id=source_id, nombre=Path(record['project']).name + ' Memory', memoria=True,
+                      proyecto=record['project'], foco=True, raices=[[folder, False, '']])
+        config['fuentes'].extend(fuentes_de({'fuentes': [source]}, Path(ruta).parent))
+        paths.add(os.path.normcase(os.path.realpath(folder)))
+        ids.add(source_id)
+    return config
+
+
 def cargar(ruta=None):
     if ruta:
         ruta, elegida = Path(os.path.abspath(ruta)), True
@@ -345,11 +378,11 @@ def cargar(ruta=None):
         elegida = ruta == DEMO or donde.config()[1]
     if not ruta.is_file():
         if ruta == PROPIA:
-            return armar(por_defecto(), CARPETA)
+            return con_memorias_registradas(armar(por_defecto(), CARPETA), ruta)
         if elegida:
             raise ConfigInvalida(f"no encontré {ruta}", falta=True)
         permisos.crear(ruta.parent)
-        return armar(por_defecto(), ruta.parent)
+        return con_memorias_registradas(armar(por_defecto(), ruta.parent), ruta)
     try:
         datos = json.loads(ruta.read_text(encoding="utf-8-sig"))
     except json.JSONDecodeError as error:
@@ -360,6 +393,6 @@ def cargar(ruta=None):
     if isinstance(datos, dict) and "fuentes" not in datos:
         datos = dict(por_defecto(), **datos)
     try:
-        return armar(datos, ruta.parent)
+        return con_memorias_registradas(armar(datos, ruta.parent), ruta)
     except ConfigInvalida as error:
         raise ConfigInvalida(f"{ruta}: {error}") from error

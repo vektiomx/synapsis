@@ -1,0 +1,82 @@
+{
+  "protocol": "synopsis.competitive-development.v1",
+  "status": "predefined_before_behavior_capsule_implementation",
+  "date": "2026-10-17",
+  "model": "gpt-6.1-sol",
+  "objective": "Compare scoped developer-memory profiles on correct patches, escaped regressions and complete acquisition/use cost; not universal product superiority.",
+  "principles": [
+    "Same model and repository inputs per task",
+    "Same historical episodes, source provenance and current context",
+    "Same candidate generator, current-test executor and model-call/character budgets",
+    "Historical source fetch available to all profiles for provenance IDs actually retrieved",
+    "No commits or pushes; ShadowFrog memory profile excludes Dream publication workflow",
+    "Preserve all runs, labels, errors and setup limits",
+    "No-memory abstention is scored separately from wrong patches",
+    "Full-history and raw artifact storage are competent positive controls"
+  ],
+  "profiles": [
+    "synopsis-behavior-memory",
+    "mem0-inferred",
+    "mem0-raw",
+    "graphiti",
+    "shadowfrog-file-symbol",
+    "full-history",
+    "no-memory"
+  ],
+  "corpus": {
+    "families": [
+      "numeric_mode_policy",
+      "stable_sequence_processing",
+      "text_identity_boundaries",
+      "sparse_payload_merge"
+    ],
+    "development_seeds": [
+      1701,
+      1702,
+      1703,
+      1704
+    ],
+    "reserved_seeds": [
+      2901,
+      2902,
+      2903,
+      2904
+    ],
+    "scenarios": [
+      "applicable_history",
+      "irrelevant_distractors",
+      "withdrawn_policy",
+      "changed_interface"
+    ],
+    "gold": "Frozen reference compatibility behavior plus explicit task extension, separate current/hidden checks",
+    "nature": "Synthetic repositories; no OSS productivity claim"
+  },
+  "budgets": {
+    "generation_calls_per_task": 2,
+    "source_fetch_rounds": 1,
+    "memory_characters": 8000,
+    "tests_per_candidate": 3,
+    "candidates": 2,
+    "initial_pilot_tasks": 4,
+    "initial_pilot_repetitions": 1,
+    "reserved_repetitions": 2,
+    "sdk_capture_call_cap_per_profile": 40
+  },
+  "metrics": [
+    "hidden_correct_patch_rate",
+    "wrong_patch_rate",
+    "correct_abstention_rate",
+    "regression_escape_rate",
+    "acquisition_llm_calls",
+    "use_llm_calls",
+    "request_characters_not_tokens",
+    "retrieval_p50_p95",
+    "wall_time_and_failures"
+  ],
+  "acceptance": [
+    "Report wins/ties/losses per profile, not a blended invented maturity score",
+    "A claim of better results must name the workload/profile and show held-out accuracy/regression or parity with lower measured total cost",
+    "If raw controls tie or beat Synopsis, report this and investigate whether extra machinery is justified",
+    "Do not attribute end-to-end workflow effects solely to retrieval or claim Dream was run"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "version": "0.11.0-development",
+  "executed_platform": "linux",
+  "unit_tests": {
+    "total": 380,
+    "passed": 378,
+    "skipped": 2,
+    "skipped_reason": "Two native Windows CMD/PowerShell cases"
+  },
+  "engine_smoke": {
+    "passed": 767,
+    "total": 767,
+    "native_powershell_not_run": true
+  },
+  "native_desktop_validation": {
+    "macos": "not_executed",
+    "windows": "not_executed"
+  },
+  "ci": "matrix_defined_not_executed",
+  "private_map_authenticated_http": "passed",
+  "five_client_mcp_and_adapter_probes": "passed",
+  "signed_bundled_runtime": "not_implemented",
+  "sources": {
+    "desktop_map.py": "665cc77943dbbbcc41e358cf820ab40f71407baf8ac5e412fecb6e59fd6274f8",
+    "desktop_runtime.py": "120339df0dc22957a225de48e6512fb640387bebb4b5ff496154feb1f45100ce",
+    "desktop_service.py": "9ed3987082ec3fd80572c32c9eae9b84a76d0cc382373d89f5c68283b10b308e",
+    "windows_install.py": "21b4fe41abdcc9df585e795d21714e7b1f654115eda536361e90e9376465a491",
+    "bin/synopsis": "d12c2019dd0cb7cc0a77d953213f4532a57384d5275075f3b094ff6655abaf64",
+    "bin/synopsis.cmd": "cc8b2539791fa5b817480127c1bd85d0c9508656469ac19a7752c13bacbae6bf",
+    "install-windows.cmd": "fb5bb7baa1f6033974306b822f916a9410340beb8d03e9433332f0fa8d9a6729",
+    "install-macos.command": "0bb0921f84fefb610e36265a5c5037fb237f5f8eb9f4c1aa96b7e5c043efee21",
+    "integration_setup.py": "08c56941c206f31088f0eae72c3e49528622e802fb8700f29dbd487c63d019d4",
+    "integration_health.py": "35c42fc336aeae42abd2bb8b85efd63f3d00f38c2a66c3eb4a6bf128fad35e7a",
+    "integration_runtime.py": "ff2ea7049b3ea91ebcbebf12e9e91b5899e9044f3aa1c8417b1bde2260d44807",
+    "comun.py": "0be9a5b5fdc6c14e17a1f871b00e49d20bf2d04222a99d50a90881363e7aea95",
+    "codex/install_codex.py": "fa6e4e24aa7a3887acdf3694b1e016f46d51281a1205c5c2204b5cae584fbe10",
+    "claude-code/install_claude_code.py": "de5179bad53f9830f8b65be8d04e18c146194c5b4b1635588ff68c7ab7f2c151",
+    "antigravity/install_antigravity.py": "86de80d0ac138d42482bff5887c6f6f3b318cf1e7a94f15e9557dadd8bfea001",
+    "cursor/install_cursor.py": "8c3f79cab68d227242528940b558dd7948ca09860ff7e7ea7ae383acbf4df5eb",
+    ".github/workflows/desktop-platforms.yml": "1907539f64c3f244f337dbcbc9ee5a08f3461fb98c167d4fc25e446497f0aef2",
+    "linux/instalar_servicio_mapa.py": "7e3a70fd6cb0d1a121373b6a3210c0c1ffa5b3e80333b27dff0b3aa4a9829b6e"
+  }
+}

@@ -4,7 +4,7 @@ import os
 from archivos import escribir_atomico
 
 CODIGO = os.path.dirname(os.path.abspath(__file__))
-PLUGIN = "neuromapa"
+PLUGIN = "synopsis"
 APUNTE = "donde.txt"
 PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
 STILL_ACTIVE = 259

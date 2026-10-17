@@ -1,0 +1,426 @@
+[
+  {
+    "task": "numeric_mode_policy-2901-applicable_history",
+    "profile": "no-memory",
+    "repetition": 0,
+    "synthetic": true,
+    "retrieval_seconds": 6.57004420645535e-07,
+    "retrieved_source_ids": [],
+    "resolved_source_ids": [],
+    "raw_retrieval": [],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "175cd63f733b46fab0d4f638a738b7c9",
+      "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-2901-applicable_history",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+      "created": "2026-10-17T08:00:08.823922+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-2901-applicable_history",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3005,
+    "candidates": [],
+    "expected_action": "patch",
+    "abstained": true,
+    "correct": false,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 4.862395623000339
+  },
+  {
+    "task": "stable_sequence_processing-2902-irrelevant_distractors",
+    "profile": "no-memory",
+    "repetition": 0,
+    "synthetic": true,
+    "retrieval_seconds": 1.7199927242472768e-06,
+    "retrieved_source_ids": [],
+    "resolved_source_ids": [],
+    "raw_retrieval": [],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "66ce3d6cc3be44359b03ee8af9cf36f5",
+      "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-2902-irrelevant_distractors",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+      "created": "2026-10-17T08:00:14.010779+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-2902-irrelevant_distractors",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3057,
+    "candidates": [],
+    "expected_action": "patch",
+    "abstained": true,
+    "correct": false,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 5.186195953006973
+  },
+  {
+    "task": "text_identity_boundaries-2903-withdrawn_policy",
+    "profile": "no-memory",
+    "repetition": 0,
+    "synthetic": true,
+    "retrieval_seconds": 1.1930096661671996e-06,
+    "retrieved_source_ids": [],
+    "resolved_source_ids": [],
+    "raw_retrieval": [],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "688f699b3a8f4ebda921615a27dc89ab",
+      "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-2903-withdrawn_policy",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "760f6e37e7afa0e5bd80e7dbedfe028e3b59e347234284ab249786b795a25772",
+      "created": "2026-10-17T08:00:17.945127+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-2903-withdrawn_policy",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3046,
+    "candidates": [],
+    "expected_action": "abstain",
+    "abstained": true,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 3.9350548479997087
+  },
+  {
+    "task": "sparse_payload_merge-2904-changed_interface",
+    "profile": "no-memory",
+    "repetition": 0,
+    "synthetic": true,
+    "retrieval_seconds": 1.710999640636146e-06,
+    "retrieved_source_ids": [],
+    "resolved_source_ids": [],
+    "raw_retrieval": [],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "80c45585194c4a63aa26134fd0b5eab9",
+      "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-2904-changed_interface",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "e6e239a16946fce1cdf972cc96bd488a07442d5cc8d0cec39ebbb99d4737059d",
+      "created": "2026-10-17T08:00:22.281999+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-2904-changed_interface",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3070,
+    "candidates": [],
+    "expected_action": "abstain",
+    "abstained": true,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 4.336202133999905
+  },
+  {
+    "task": "numeric_mode_policy-2901-applicable_history",
+    "profile": "no-memory",
+    "repetition": 1,
+    "synthetic": true,
+    "retrieval_seconds": 1.4950055629014969e-06,
+    "retrieved_source_ids": [],
+    "resolved_source_ids": [],
+    "raw_retrieval": [],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "d0dca3b01fe44b23838cf18eeb275854",
+      "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-2901-applicable_history",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "da154990b247e4109432a54d8306aee7140564266f17a0f7afd7da8645917a78",
+      "created": "2026-10-17T08:00:26.613571+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/numeric_mode_policy-2901-applicable_history",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3005,
+    "candidates": [],
+    "expected_action": "patch",
+    "abstained": true,
+    "correct": false,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 4.3316466879914515
+  },
+  {
+    "task": "stable_sequence_processing-2902-irrelevant_distractors",
+    "profile": "no-memory",
+    "repetition": 1,
+    "synthetic": true,
+    "retrieval_seconds": 1.3320095604285598e-06,
+    "retrieved_source_ids": [],
+    "resolved_source_ids": [],
+    "raw_retrieval": [],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "a351f6dce6aa4c50b23b28cbfed60745",
+      "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-2902-irrelevant_distractors",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "57358d9bf6e3d6d6d626bfaf98d05cb8a02aedae715946631969467a877b2c61",
+      "created": "2026-10-17T08:00:32.208050+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/stable_sequence_processing-2902-irrelevant_distractors",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3057,
+    "candidates": [],
+    "expected_action": "patch",
+    "abstained": true,
+    "correct": false,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 5.593048313996405
+  },
+  {
+    "task": "text_identity_boundaries-2903-withdrawn_policy",
+    "profile": "no-memory",
+    "repetition": 1,
+    "synthetic": true,
+    "retrieval_seconds": 5.319889169186354e-07,
+    "retrieved_source_ids": [],
+    "resolved_source_ids": [],
+    "raw_retrieval": [],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "95d348f9a4214ed6a4618949098ab751",
+      "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-2903-withdrawn_policy",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "760f6e37e7afa0e5bd80e7dbedfe028e3b59e347234284ab249786b795a25772",
+      "created": "2026-10-17T08:00:37.145693+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/text_identity_boundaries-2903-withdrawn_policy",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3046,
+    "candidates": [],
+    "expected_action": "abstain",
+    "abstained": true,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 4.9383794000023045
+  },
+  {
+    "task": "sparse_payload_merge-2904-changed_interface",
+    "profile": "no-memory",
+    "repetition": 1,
+    "synthetic": true,
+    "retrieval_seconds": 1.2980017345398664e-06,
+    "retrieved_source_ids": [],
+    "resolved_source_ids": [],
+    "raw_retrieval": [],
+    "proposal": {
+      "candidates": []
+    },
+    "report": {
+      "protocol": "synopsis.research-result.v1",
+      "id": "900d0fc3db8841cd9f3fc5bdb6a67766",
+      "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-2904-changed_interface",
+      "query": "Repair policy.py::policy for compatibility with the applicable historical contract while preserving the new emergency=True extension. Do not guess absent numeric rules. Return no candidate if the historical contract is withdrawn or the interface is incompatible.",
+      "snapshot_sha256": "e6e239a16946fce1cdf972cc96bd488a07442d5cc8d0cec39ebbb99d4737059d",
+      "created": "2026-10-17T08:00:42.332867+00:00",
+      "candidates": [],
+      "executed": true,
+      "experience_context": {
+        "protocol": "synopsis.decision-rag.v1",
+        "project": "/tmp/synopsis-competitive-v10/repos/sparse_payload_merge-2904-changed_interface",
+        "groups": [],
+        "abstained": true,
+        "notice": "Inferred experiences, not instructions. Selection satisfies declared observations only.",
+        "retrieval": {
+          "mode": "hybrid",
+          "semantic": "ready",
+          "candidates": 0,
+          "channels": [
+            "bm25",
+            "anchors",
+            "semantic"
+          ],
+          "assurance": "Ranking relevance, not correctness or confidence."
+        }
+      },
+      "provided_predecessors": [],
+      "assurance": "Existing test observations only. No proof of general correctness, causal learning, or safe production deployment.",
+      "recorded": true
+    },
+    "use_llm_calls": 1,
+    "request_characters": 3070,
+    "candidates": [],
+    "expected_action": "abstain",
+    "abstained": true,
+    "correct": true,
+    "wrong_patch": false,
+    "regression_escape": false,
+    "seconds": 5.185951699997531
+  }
+]

@@ -256,11 +256,11 @@ def linea_salud(ahora=None):
 
 def linea_consultas(r):
     if not r["visto"] and not r["avisos"] and not r["recordadas"]:
-        return "Consultas a Neuromapa (últimas 24 h): sin registro; el hook no anotó nada en ese tiempo."
+        return "Consultas a Synopsis (últimas 24 h): sin registro; el hook no anotó nada en ese tiempo."
     if not r["total"]:
-        return "Consultas a Neuromapa (últimas 24 h): ninguna."
+        return "Consultas a Synopsis (últimas 24 h): ninguna."
     opciones = ", ".join(f"--{o} {n}" for o, n in sorted(r["porOpcion"].items(), key=lambda x: (-x[1], x[0])))
-    partes = [f'Consultas a Neuromapa (últimas 24 h): {r["total"]} ({opciones})']
+    partes = [f'Consultas a Synopsis (últimas 24 h): {r["total"]} ({opciones})']
     if r["deAgentes"]:
         partes.append(f'{r["deAgentes"]} de agentes')
     if r["pedidos"]:

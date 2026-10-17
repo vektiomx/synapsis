@@ -1,0 +1,1052 @@
+{
+  "numeric_mode_policy-1701-applicable_history": {
+    "memory": {
+      "edges": [
+        {
+          "uuid": "79913eae-1fac-415d-9447-edeb1bac4fa2",
+          "group_id": "task_3788677390272798927",
+          "source_node_uuid": "9ea2d347-4a7a-41b6-8c32-e4b60c199dc4",
+          "target_node_uuid": "3b364a8d-aac3-4dcf-8f84-239348802fe2",
+          "created_at": "2026-10-17T07:56:35.987156Z",
+          "name": "DEFINES",
+          "fact": "policy.py define la función activa policy(context), cuya interfaz original acepta un único argumento context y devuelve 534 si context[\"flag\"] es true y 416 si es false; estos valores exactos deben preservarse según la fuente histórica numeric_mode_policy-1701-history.",
+          "fact_embedding": null,
+          "episodes": [
+            "adfec3f9-9659-48bc-a67c-dd887f849789"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "edge_reranker_scores": [
+        2.0
+      ],
+      "nodes": [
+        {
+          "uuid": "9ea2d347-4a7a-41b6-8c32-e4b60c199dc4",
+          "name": "policy.py",
+          "group_id": "task_3788677390272798927",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:56:28.265722Z",
+          "name_embedding": null,
+          "summary": "policy.py define la función activa policy(context), cuya interfaz original acepta un único argumento context y devuelve 534 si context[\"flag\"] es true y 416 si es false; estos valores exactos deben preservarse según la fuente histórica numeric_mode_policy-1701-history.",
+          "attributes": {}
+        },
+        {
+          "uuid": "3b364a8d-aac3-4dcf-8f84-239348802fe2",
+          "name": "policy(context)",
+          "group_id": "task_3788677390272798927",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:56:28.265820Z",
+          "name_embedding": null,
+          "summary": "policy.py define la función activa policy(context), cuya interfaz original acepta un único argumento context y devuelve 534 si context[\"flag\"] es true y 416 si es false; estos valores exactos deben preservarse según la fuente histórica numeric_mode_policy-1701-history.",
+          "attributes": {}
+        }
+      ],
+      "node_reranker_scores": [
+        2.0,
+        1.0
+      ],
+      "episodes": [
+        {
+          "uuid": "adfec3f9-9659-48bc-a67c-dd887f849789",
+          "name": "numeric_mode_policy-1701-history",
+          "group_id": "task_3788677390272798927",
+          "labels": [],
+          "created_at": "2026-10-17T07:56:21.666282Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"flag\": true}], \"kwargs\": {}}, \"expected\": {\"value\": 534}}, {\"call\": {\"args\": [{\"flag\": false}], \"kwargs\": {}}, \"expected\": {\"value\": 416}}], \"policy\": \"Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return 534 if context[\\\"flag\\\"] else 416\\n\", \"source_id\": \"numeric_mode_policy-1701-history\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "79913eae-1fac-415d-9447-edeb1bac4fa2"
+          ],
+          "episode_metadata": null
+        }
+      ],
+      "episode_reranker_scores": [
+        1.0
+      ],
+      "communities": [],
+      "community_reranker_scores": []
+    },
+    "source_ids": [
+      "numeric_mode_policy-1701-history"
+    ],
+    "captures": [
+      {
+        "episode": "adfec3f9-9659-48bc-a67c-dd887f849789",
+        "nodes": 2,
+        "edges": 1
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 14.384776726990822,
+      "retrieval_seconds": 0.0231847990071401,
+      "acquisition_llm_calls": 2,
+      "request_characters": 14293,
+      "wall_seconds": 17.306833600989194
+    }
+  },
+  "stable_sequence_processing-1702-applicable_history": {
+    "memory": {
+      "edges": [
+        {
+          "uuid": "d787ba86-a69e-4fa5-9866-6b059514738d",
+          "group_id": "task_6127535934205114282",
+          "source_node_uuid": "5e190129-dcc2-4449-afb9-ff6e9a3a086d",
+          "target_node_uuid": "74137b57-2603-4c1d-af58-ce8d30c983bb",
+          "created_at": "2026-10-17T07:56:51.665817Z",
+          "name": "DEFINES",
+          "fact": "policy.py defines the active policy(context) callable, scoped exclusively to its original one-argument interface.",
+          "fact_embedding": null,
+          "episodes": [
+            "f6be2b76-5a8d-4553-89e1-d5ec4cc2bdde"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        },
+        {
+          "uuid": "aa66dfeb-3705-4be9-ac41-b7e3023a98ea",
+          "group_id": "task_6127535934205114282",
+          "source_node_uuid": "74137b57-2603-4c1d-af58-ce8d30c983bb",
+          "target_node_uuid": "14b57580-5f74-4729-af36-c42a03430874",
+          "created_at": "2026-10-17T07:56:51.665942Z",
+          "name": "USES_EQUALITY_SEMANTICS_OF",
+          "fact": "policy(context) uses Python equality to remove duplicates from context[\"items\"], retaining first occurrences and encounter order, including unhashable JSON elements: [3, 1, 3, 2] produces [3, 1, 2], and [[2], [1], [2]] produces [[2], [1]].",
+          "fact_embedding": null,
+          "episodes": [
+            "f6be2b76-5a8d-4553-89e1-d5ec4cc2bdde"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "edge_reranker_scores": [
+        2.0,
+        1.0
+      ],
+      "nodes": [
+        {
+          "uuid": "5e190129-dcc2-4449-afb9-ff6e9a3a086d",
+          "name": "policy.py",
+          "group_id": "task_6127535934205114282",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:56:43.706191Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) callable, scoped exclusively to its original one-argument interface.",
+          "attributes": {}
+        },
+        {
+          "uuid": "74137b57-2603-4c1d-af58-ce8d30c983bb",
+          "name": "policy(context)",
+          "group_id": "task_6127535934205114282",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:56:43.706333Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) callable, scoped exclusively to its original one-argument interface.\npolicy(context) uses Python equality to remove duplicates from context[\"items\"], retaining first occurrences and encounter order, including unhashable JSON elements: [3, 1, 3, 2] produces [3, 1, 2], and [[2], [1], [2]] produces [[2], [1]].",
+          "attributes": {}
+        },
+        {
+          "uuid": "14b57580-5f74-4729-af36-c42a03430874",
+          "name": "Python",
+          "group_id": "task_6127535934205114282",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:56:43.706377Z",
+          "name_embedding": null,
+          "summary": "policy(context) uses Python equality to remove duplicates from context[\"items\"], retaining first occurrences and encounter order, including unhashable JSON elements: [3, 1, 3, 2] produces [3, 1, 2], and [[2], [1], [2]] produces [[2], [1]].",
+          "attributes": {}
+        }
+      ],
+      "node_reranker_scores": [
+        2.0,
+        1.0,
+        0.3333333333333333
+      ],
+      "episodes": [
+        {
+          "uuid": "f6be2b76-5a8d-4553-89e1-d5ec4cc2bdde",
+          "name": "stable_sequence_processing-1702-history",
+          "group_id": "task_6127535934205114282",
+          "labels": [],
+          "created_at": "2026-10-17T07:56:37.093466Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"items\": [3, 1, 3, 2]}], \"kwargs\": {}}, \"expected\": {\"value\": [3, 1, 2]}}, {\"call\": {\"args\": [{\"items\": [[2], [1], [2]]}], \"kwargs\": {}}, \"expected\": {\"value\": [[2], [1]]}}], \"policy\": \"Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=[]\\n for item in context[\\\"items\\\"]:\\n  if item not in result: result.append(item)\\n return result\\n\", \"source_id\": \"stable_sequence_processing-1702-history\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "d787ba86-a69e-4fa5-9866-6b059514738d",
+            "aa66dfeb-3705-4be9-ac41-b7e3023a98ea"
+          ],
+          "episode_metadata": null
+        }
+      ],
+      "episode_reranker_scores": [
+        1.0
+      ],
+      "communities": [],
+      "community_reranker_scores": []
+    },
+    "source_ids": [
+      "stable_sequence_processing-1702-history"
+    ],
+    "captures": [
+      {
+        "episode": "f6be2b76-5a8d-4553-89e1-d5ec4cc2bdde",
+        "nodes": 3,
+        "edges": 2
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 14.710380550997797,
+      "retrieval_seconds": 0.03366792200540658,
+      "acquisition_llm_calls": 2,
+      "request_characters": 14603,
+      "wall_seconds": 15.740746195006068
+    }
+  },
+  "text_identity_boundaries-1703-applicable_history": {
+    "memory": {
+      "edges": [
+        {
+          "uuid": "30991aae-41d0-4aa8-b909-47b327df17c2",
+          "group_id": "task_1052035796810178383",
+          "source_node_uuid": "77eda02c-8878-4099-9b41-3f1d51bdb489",
+          "target_node_uuid": "74a43f57-54ed-49b7-a208-916da27458e0",
+          "created_at": "2026-10-17T07:57:08.239481Z",
+          "name": "DEFINES",
+          "fact": "policy.py defines the active policy(context) callable, restricted to its original one-argument interface. It returns context[\"text\"].strip(\" \"), removing only ASCII spaces from both ends while retaining case and all other characters, including tabs and non-breaking spaces. The observed input \" AbC \" produces \"AbC\", while \"\tÉx\t\" remains unchanged.",
+          "fact_embedding": null,
+          "episodes": [
+            "c32ac554-31bd-45f7-a5ba-4acb862b40e2"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "edge_reranker_scores": [
+        2.0
+      ],
+      "nodes": [
+        {
+          "uuid": "77eda02c-8878-4099-9b41-3f1d51bdb489",
+          "name": "policy.py",
+          "group_id": "task_1052035796810178383",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:56:59.576877Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) callable, restricted to its original one-argument interface. It returns context[\"text\"].strip(\" \"), removing only ASCII spaces from both ends while retaining case and all other characters, including tabs and non-breaking spaces. The observed input \" AbC \" produces \"AbC\", while \"\tÉx\t\" remains unchanged.",
+          "attributes": {}
+        },
+        {
+          "uuid": "74a43f57-54ed-49b7-a208-916da27458e0",
+          "name": "policy(context)",
+          "group_id": "task_1052035796810178383",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:56:59.577055Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) callable, restricted to its original one-argument interface. It returns context[\"text\"].strip(\" \"), removing only ASCII spaces from both ends while retaining case and all other characters, including tabs and non-breaking spaces. The observed input \" AbC \" produces \"AbC\", while \"\tÉx\t\" remains unchanged.",
+          "attributes": {}
+        }
+      ],
+      "node_reranker_scores": [
+        2.0,
+        1.0
+      ],
+      "episodes": [
+        {
+          "uuid": "c32ac554-31bd-45f7-a5ba-4acb862b40e2",
+          "name": "text_identity_boundaries-1703-history",
+          "group_id": "task_1052035796810178383",
+          "labels": [],
+          "created_at": "2026-10-17T07:56:52.939824Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"text\": \" AbC \"}], \"kwargs\": {}}, \"expected\": {\"value\": \"AbC\"}}, {\"call\": {\"args\": [{\"text\": \"\\tÉx\\t\"}], \"kwargs\": {}}, \"expected\": {\"value\": \"\\tÉx\\t\"}}], \"policy\": \"Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return context[\\\"text\\\"].strip(\\\" \\\")\\n\", \"source_id\": \"text_identity_boundaries-1703-history\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "30991aae-41d0-4aa8-b909-47b327df17c2"
+          ],
+          "episode_metadata": null
+        }
+      ],
+      "episode_reranker_scores": [
+        1.0
+      ],
+      "communities": [],
+      "community_reranker_scores": []
+    },
+    "source_ids": [
+      "text_identity_boundaries-1703-history"
+    ],
+    "captures": [
+      {
+        "episode": "c32ac554-31bd-45f7-a5ba-4acb862b40e2",
+        "nodes": 2,
+        "edges": 1
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 15.39601195200521,
+      "retrieval_seconds": 0.02428368500841316,
+      "acquisition_llm_calls": 2,
+      "request_characters": 14397,
+      "wall_seconds": 16.522059393988457
+    }
+  },
+  "sparse_payload_merge-1704-applicable_history": {
+    "memory": {
+      "edges": [
+        {
+          "uuid": "46e1bb17-1c17-4bba-bd56-0f6ea35661ad",
+          "group_id": "task_7964667322953009762",
+          "source_node_uuid": "a3e31c78-0ef8-47c1-9f72-ea54adacd37c",
+          "target_node_uuid": "9230bb94-03f7-4944-9cea-fc490a0b6e95",
+          "created_at": "2026-10-17T07:57:29.061049Z",
+          "name": "DEFINES",
+          "fact": "policy.py defines the active policy(context) callable, scoped to the original one-argument interface. It copies context[\"base\"] and overwrites keys only with non-None values from context[\"patch\"], preserving false, zero, empty strings and empty collections. For base {\"a\":3,\"b\":4} and patch {\"a\":null,\"b\":0,\"c\":false}, it returns {\"a\":3,\"b\":0,\"c\":false}; for base {} and patch {\"empty\":\"\",\"none\":null}, it returns {\"empty\":\"\"}.",
+          "fact_embedding": null,
+          "episodes": [
+            "bdbfa355-a4b4-405b-bdd4-bb3eddf99de6"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "edge_reranker_scores": [
+        2.0
+      ],
+      "nodes": [
+        {
+          "uuid": "a3e31c78-0ef8-47c1-9f72-ea54adacd37c",
+          "name": "policy.py",
+          "group_id": "task_7964667322953009762",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:57:18.236970Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) callable, scoped to the original one-argument interface. It copies context[\"base\"] and overwrites keys only with non-None values from context[\"patch\"], preserving false, zero, empty strings and empty collections. For base {\"a\":3,\"b\":4} and patch {\"a\":null,\"b\":0,\"c\":false}, it returns {\"a\":3,\"b\":0,\"c\":false}; for base {} and patch {\"empty\":\"\",\"none\":null}, it returns {\"empty\":\"\"}.",
+          "attributes": {}
+        },
+        {
+          "uuid": "9230bb94-03f7-4944-9cea-fc490a0b6e95",
+          "name": "policy(context)",
+          "group_id": "task_7964667322953009762",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:57:18.237105Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) callable, scoped to the original one-argument interface. It copies context[\"base\"] and overwrites keys only with non-None values from context[\"patch\"], preserving false, zero, empty strings and empty collections. For base {\"a\":3,\"b\":4} and patch {\"a\":null,\"b\":0,\"c\":false}, it returns {\"a\":3,\"b\":0,\"c\":false}; for base {} and patch {\"empty\":\"\",\"none\":null}, it returns {\"empty\":\"\"}.",
+          "attributes": {}
+        }
+      ],
+      "node_reranker_scores": [
+        2.0,
+        1.0
+      ],
+      "episodes": [
+        {
+          "uuid": "bdbfa355-a4b4-405b-bdd4-bb3eddf99de6",
+          "name": "sparse_payload_merge-1704-history",
+          "group_id": "task_7964667322953009762",
+          "labels": [],
+          "created_at": "2026-10-17T07:57:09.339850Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"base\": {\"a\": 3, \"b\": 4}, \"patch\": {\"a\": null, \"b\": 0, \"c\": false}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"a\": 3, \"b\": 0, \"c\": false}}}, {\"call\": {\"args\": [{\"base\": {}, \"patch\": {\"empty\": \"\", \"none\": null}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"empty\": \"\"}}}], \"policy\": \"Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=context[\\\"base\\\"].copy()\\n for key,value in context[\\\"patch\\\"].items():\\n  if value is not None: result[key]=value\\n return result\\n\", \"source_id\": \"sparse_payload_merge-1704-history\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "46e1bb17-1c17-4bba-bd56-0f6ea35661ad"
+          ],
+          "episode_metadata": null
+        }
+      ],
+      "episode_reranker_scores": [
+        1.0
+      ],
+      "communities": [],
+      "community_reranker_scores": []
+    },
+    "source_ids": [
+      "sparse_payload_merge-1704-history"
+    ],
+    "captures": [
+      {
+        "episode": "bdbfa355-a4b4-405b-bdd4-bb3eddf99de6",
+        "nodes": 2,
+        "edges": 1
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 19.836964512011036,
+      "retrieval_seconds": 0.022420028995838948,
+      "acquisition_llm_calls": 2,
+      "request_characters": 14843,
+      "wall_seconds": 20.839027541005635
+    }
+  },
+  "numeric_mode_policy-2901-applicable_history": {
+    "memory": {
+      "edges": [
+        {
+          "uuid": "54f27001-bd97-4d03-bbad-f84ca68320f3",
+          "group_id": "task_3335766900715840319",
+          "source_node_uuid": "7560661c-c608-4527-ae9e-072f932e0f93",
+          "target_node_uuid": "8039715e-c932-4e5c-b553-03a0326e1720",
+          "created_at": "2026-10-17T07:59:48.139467Z",
+          "name": "DEFINES",
+          "fact": "policy.py defines the active policy(context) function with its original one-argument interface, returning 137 when context[\"flag\"] is true and 791 when it is false, as recorded in historical source numeric_mode_policy-2901-history.",
+          "fact_embedding": null,
+          "episodes": [
+            "a719e71a-b264-42f3-89b5-10b7cd60c41a"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "edge_reranker_scores": [
+        2.0
+      ],
+      "nodes": [
+        {
+          "uuid": "7560661c-c608-4527-ae9e-072f932e0f93",
+          "name": "policy.py",
+          "group_id": "task_3335766900715840319",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:59:31.629591Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) function with its original one-argument interface, returning 137 when context[\"flag\"] is true and 791 when it is false, as recorded in historical source numeric_mode_policy-2901-history.",
+          "attributes": {}
+        },
+        {
+          "uuid": "8039715e-c932-4e5c-b553-03a0326e1720",
+          "name": "policy(context)",
+          "group_id": "task_3335766900715840319",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:59:31.629752Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) function with its original one-argument interface, returning 137 when context[\"flag\"] is true and 791 when it is false, as recorded in historical source numeric_mode_policy-2901-history.",
+          "attributes": {}
+        }
+      ],
+      "node_reranker_scores": [
+        2.0,
+        1.0
+      ],
+      "episodes": [
+        {
+          "uuid": "a719e71a-b264-42f3-89b5-10b7cd60c41a",
+          "name": "numeric_mode_policy-2901-history",
+          "group_id": "task_3335766900715840319",
+          "labels": [],
+          "created_at": "2026-10-17T07:59:22.214568Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"flag\": true}], \"kwargs\": {}}, \"expected\": {\"value\": 137}}, {\"call\": {\"args\": [{\"flag\": false}], \"kwargs\": {}}, \"expected\": {\"value\": 791}}], \"policy\": \"Preserve the exact numeric mode policy recorded in the historical source; do not invent new numbers.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return 137 if context[\\\"flag\\\"] else 791\\n\", \"source_id\": \"numeric_mode_policy-2901-history\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "54f27001-bd97-4d03-bbad-f84ca68320f3"
+          ],
+          "episode_metadata": null
+        }
+      ],
+      "episode_reranker_scores": [
+        1.0
+      ],
+      "communities": [],
+      "community_reranker_scores": []
+    },
+    "source_ids": [
+      "numeric_mode_policy-2901-history"
+    ],
+    "captures": [
+      {
+        "episode": "a719e71a-b264-42f3-89b5-10b7cd60c41a",
+        "nodes": 2,
+        "edges": 1
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 25.99760536699614,
+      "retrieval_seconds": 0.023177226990810595,
+      "acquisition_llm_calls": 2,
+      "request_characters": 14293,
+      "wall_seconds": 28.78392710800108
+    }
+  },
+  "stable_sequence_processing-2902-irrelevant_distractors": {
+    "memory": {
+      "edges": [
+        {
+          "uuid": "dcf77b54-a780-45e1-b46a-1500cc3f9b26",
+          "group_id": "task_8746144333600254743",
+          "source_node_uuid": "053ac441-edff-4c54-a84d-d8f8335b709d",
+          "target_node_uuid": "172baf65-6ffc-45d8-b66c-13a680431085",
+          "created_at": "2026-10-17T08:00:04.955149Z",
+          "name": "DEFINES",
+          "fact": "policy.py defines the active policy(context) callable, whose scope is limited to the original one-argument interface.",
+          "fact_embedding": null,
+          "episodes": [
+            "26dafe70-e138-439d-bc04-edf6ecd39668"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        },
+        {
+          "uuid": "723c2703-199f-48aa-9d5e-09cce69b5569",
+          "group_id": "task_8746144333600254743",
+          "source_node_uuid": "bae4cf82-0507-4216-91d8-2dc69d9f27cb",
+          "target_node_uuid": "053ac441-edff-4c54-a84d-d8f8335b709d",
+          "created_at": "2026-10-17T08:01:37.716426Z",
+          "name": "MUST_NEVER_BE_USED_FOR",
+          "fact": "unrelated_2.py is an unrelated component scoped to another file and must never be used for policy.py.",
+          "fact_embedding": null,
+          "episodes": [
+            "7ec32394-9523-4065-9e78-2c8a9941e5d5"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        },
+        {
+          "uuid": "1cac7486-b089-47fa-a8e7-1474c29b0a1a",
+          "group_id": "task_8746144333600254743",
+          "source_node_uuid": "a8353c83-b293-4458-9bb2-c7493043433b",
+          "target_node_uuid": "053ac441-edff-4c54-a84d-d8f8335b709d",
+          "created_at": "2026-10-17T08:02:10.191183Z",
+          "name": "MUST_NOT_BE_USED_FOR",
+          "fact": "unrelated_3.py is a separate component scoped to another file and must never be used for policy.py.",
+          "fact_embedding": null,
+          "episodes": [
+            "a375afff-0784-431b-bcd8-874cca456c08"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        },
+        {
+          "uuid": "a2a21bf0-ccd0-4e78-9c8f-1fccfb180562",
+          "group_id": "task_8746144333600254743",
+          "source_node_uuid": "172baf65-6ffc-45d8-b66c-13a680431085",
+          "target_node_uuid": "1810df10-feaf-473c-bc48-2b2dbb2b1f35",
+          "created_at": "2026-10-17T08:00:04.955275Z",
+          "name": "USES_EQUALITY_SEMANTICS_OF",
+          "fact": "policy(context) uses Python equality to deduplicate context[\"items\"], retaining first occurrences in encounter order, including unhashable JSON elements; [3, 1, 3, 2] produces [3, 1, 2], and [[2], [1], [2]] produces [[2], [1]].",
+          "fact_embedding": null,
+          "episodes": [
+            "26dafe70-e138-439d-bc04-edf6ecd39668"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        },
+        {
+          "uuid": "1e9d7b41-60a8-45e5-a7a5-7fb1ff8a57e8",
+          "group_id": "task_8746144333600254743",
+          "source_node_uuid": "94215683-d085-47bc-984b-36cbbc82ba56",
+          "target_node_uuid": "053ac441-edff-4c54-a84d-d8f8335b709d",
+          "created_at": "2026-10-17T08:00:48.109149Z",
+          "name": "MUST_NOT_BE_USED_FOR",
+          "fact": "unrelated_1.py is an unrelated component scoped to another file and must never be used for policy.py.",
+          "fact_embedding": null,
+          "episodes": [
+            "f99cf314-3a1a-4447-80ca-ebb9f62f73a3"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        },
+        {
+          "uuid": "ef2d19ca-f445-4aef-8b2d-e6fcdd95752e",
+          "group_id": "task_8746144333600254743",
+          "source_node_uuid": "f41f35df-1ccb-4136-9bec-9c3e7c54e8aa",
+          "target_node_uuid": "053ac441-edff-4c54-a84d-d8f8335b709d",
+          "created_at": "2026-10-17T08:00:23.898792Z",
+          "name": "MUST_NOT_BE_USED_FOR",
+          "fact": "unrelated_0.py is a separate component restricted to its own file and must never be used for policy.py.",
+          "fact_embedding": null,
+          "episodes": [
+            "24431f85-bf02-48e1-8010-9a0160c07ccf"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "edge_reranker_scores": [
+        2.0,
+        1.0,
+        0.5833333333333333,
+        0.5,
+        0.45,
+        0.3666666666666667
+      ],
+      "nodes": [
+        {
+          "uuid": "053ac441-edff-4c54-a84d-d8f8335b709d",
+          "name": "policy.py",
+          "group_id": "task_8746144333600254743",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:59:56.632357Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) callable, whose scope is limited to the original one-argument interface.\nunrelated_0.py is a separate component restricted to its own file and must never be used for policy.py.\nunrelated_1.py is an unrelated component scoped to another file and must never be used for policy.py.\nunrelated_2.py is an unrelated component scoped to another file and must never be used for policy.py.\nunrelated_3.py is a separate component scoped to another file and must never be used for policy.py.",
+          "attributes": {}
+        },
+        {
+          "uuid": "94215683-d085-47bc-984b-36cbbc82ba56",
+          "name": "unrelated_1.py",
+          "group_id": "task_8746144333600254743",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T08:00:36.563408Z",
+          "name_embedding": null,
+          "summary": "unrelated_1.py is an unrelated component scoped to another file and must never be used for policy.py.",
+          "attributes": {}
+        },
+        {
+          "uuid": "172baf65-6ffc-45d8-b66c-13a680431085",
+          "name": "policy(context)",
+          "group_id": "task_8746144333600254743",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:59:56.632447Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the active policy(context) callable, whose scope is limited to the original one-argument interface.\npolicy(context) uses Python equality to deduplicate context[\"items\"], retaining first occurrences in encounter order, including unhashable JSON elements; [3, 1, 3, 2] produces [3, 1, 2], and [[2], [1], [2]] produces [[2], [1]].",
+          "attributes": {}
+        },
+        {
+          "uuid": "a8353c83-b293-4458-9bb2-c7493043433b",
+          "name": "unrelated_3.py",
+          "group_id": "task_8746144333600254743",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T08:01:52.262079Z",
+          "name_embedding": null,
+          "summary": "unrelated_3.py is a separate component scoped to another file and must never be used for policy.py.",
+          "attributes": {}
+        },
+        {
+          "uuid": "bae4cf82-0507-4216-91d8-2dc69d9f27cb",
+          "name": "unrelated_2.py",
+          "group_id": "task_8746144333600254743",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T08:00:59.138476Z",
+          "name_embedding": null,
+          "summary": "unrelated_2.py is an unrelated component scoped to another file and must never be used for policy.py.",
+          "attributes": {}
+        },
+        {
+          "uuid": "f41f35df-1ccb-4136-9bec-9c3e7c54e8aa",
+          "name": "unrelated_0.py",
+          "group_id": "task_8746144333600254743",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T08:00:10.643499Z",
+          "name_embedding": null,
+          "summary": "unrelated_0.py is a separate component restricted to its own file and must never be used for policy.py.",
+          "attributes": {}
+        },
+        {
+          "uuid": "1810df10-feaf-473c-bc48-2b2dbb2b1f35",
+          "name": "Python",
+          "group_id": "task_8746144333600254743",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T07:59:56.632465Z",
+          "name_embedding": null,
+          "summary": "policy(context) uses Python equality to deduplicate context[\"items\"], retaining first occurrences in encounter order, including unhashable JSON elements; [3, 1, 3, 2] produces [3, 1, 2], and [[2], [1], [2]] produces [[2], [1]].",
+          "attributes": {}
+        }
+      ],
+      "node_reranker_scores": [
+        1.1428571428571428,
+        1.0,
+        0.8333333333333333,
+        0.75,
+        0.5,
+        0.25,
+        0.2
+      ],
+      "episodes": [
+        {
+          "uuid": "26dafe70-e138-439d-bc04-edf6ecd39668",
+          "name": "stable_sequence_processing-2902-history",
+          "group_id": "task_8746144333600254743",
+          "labels": [],
+          "created_at": "2026-10-17T07:59:49.188922Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"items\": [3, 1, 3, 2]}], \"kwargs\": {}}, \"expected\": {\"value\": [3, 1, 2]}}, {\"call\": {\"args\": [{\"items\": [[2], [1], [2]]}], \"kwargs\": {}}, \"expected\": {\"value\": [[2], [1]]}}], \"policy\": \"Stable first-occurrence deduplication by Python equality, including unhashable JSON elements; preserve encounter order.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=[]\\n for item in context[\\\"items\\\"]:\\n  if item not in result: result.append(item)\\n return result\\n\", \"source_id\": \"stable_sequence_processing-2902-history\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "dcf77b54-a780-45e1-b46a-1500cc3f9b26",
+            "a2a21bf0-ccd0-4e78-9c8f-1fccfb180562"
+          ],
+          "episode_metadata": null
+        },
+        {
+          "uuid": "7ec32394-9523-4065-9e78-2c8a9941e5d5",
+          "name": "stable_sequence_processing-2902-irrelevant_distractors-distractor-2",
+          "group_id": "task_8746144333600254743",
+          "labels": [],
+          "created_at": "2026-10-17T08:00:53.150507Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"unrelated_2.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 102\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-2\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "723c2703-199f-48aa-9d5e-09cce69b5569"
+          ],
+          "episode_metadata": null
+        },
+        {
+          "uuid": "24431f85-bf02-48e1-8010-9a0160c07ccf",
+          "name": "stable_sequence_processing-2902-irrelevant_distractors-distractor-0",
+          "group_id": "task_8746144333600254743",
+          "labels": [],
+          "created_at": "2026-10-17T08:00:05.104691Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"unrelated_0.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 100\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-0\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "ef2d19ca-f445-4aef-8b2d-e6fcdd95752e"
+          ],
+          "episode_metadata": null
+        },
+        {
+          "uuid": "f99cf314-3a1a-4447-80ca-ebb9f62f73a3",
+          "name": "stable_sequence_processing-2902-irrelevant_distractors-distractor-1",
+          "group_id": "task_8746144333600254743",
+          "labels": [],
+          "created_at": "2026-10-17T08:00:29.067841Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"unrelated_1.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 101\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-1\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "1e9d7b41-60a8-45e5-a7a5-7fb1ff8a57e8"
+          ],
+          "episode_metadata": null
+        },
+        {
+          "uuid": "a375afff-0784-431b-bcd8-874cca456c08",
+          "name": "stable_sequence_processing-2902-irrelevant_distractors-distractor-3",
+          "group_id": "task_8746144333600254743",
+          "labels": [],
+          "created_at": "2026-10-17T08:01:44.367827Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"unrelated_3.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [], \"policy\": \"Unrelated component: never use for policy.py\", \"scope\": \"Other file only.\", \"source\": \"def policy(context):\\n return 103\\n\", \"source_id\": \"stable_sequence_processing-2902-irrelevant_distractors-distractor-3\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "1cac7486-b089-47fa-a8e7-1474c29b0a1a"
+          ],
+          "episode_metadata": null
+        }
+      ],
+      "episode_reranker_scores": [
+        1.0,
+        0.5,
+        0.3333333333333333,
+        0.25,
+        0.2
+      ],
+      "communities": [],
+      "community_reranker_scores": []
+    },
+    "source_ids": [
+      "stable_sequence_processing-2902-history",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-0",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-1",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-2",
+      "stable_sequence_processing-2902-irrelevant_distractors-distractor-3"
+    ],
+    "captures": [
+      {
+        "episode": "26dafe70-e138-439d-bc04-edf6ecd39668",
+        "nodes": 3,
+        "edges": 2
+      },
+      {
+        "episode": "24431f85-bf02-48e1-8010-9a0160c07ccf",
+        "nodes": 2,
+        "edges": 1
+      },
+      {
+        "episode": "f99cf314-3a1a-4447-80ca-ebb9f62f73a3",
+        "nodes": 2,
+        "edges": 1
+      },
+      {
+        "episode": "7ec32394-9523-4065-9e78-2c8a9941e5d5",
+        "nodes": 2,
+        "edges": 1
+      },
+      {
+        "episode": "a375afff-0784-431b-bcd8-874cca456c08",
+        "nodes": 2,
+        "edges": 1
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 146.19819957400614,
+      "retrieval_seconds": 0.041279541997937486,
+      "acquisition_llm_calls": 18,
+      "request_characters": 123270,
+      "wall_seconds": 147.1827243890002
+    }
+  },
+  "text_identity_boundaries-2903-withdrawn_policy": {
+    "memory": {
+      "edges": [
+        {
+          "uuid": "fa36a5d3-6392-4003-9de0-f7541d2bf3dc",
+          "group_id": "task_6147532024052801890",
+          "source_node_uuid": "e2a23cfe-6bb1-446d-8af8-88f002fcc094",
+          "target_node_uuid": "04c2b849-414c-4dbd-89ea-08b2dbac8b80",
+          "created_at": "2026-10-17T08:02:33.859652Z",
+          "name": "DEFINES",
+          "fact": "policy.py defines the withdrawn policy(context) callable, scoped to the original one-argument interface, with implementation `return context[\"text\"].strip(\" \")`. It removes only ASCII spaces from both ends while preserving case and all other characters, including tabs and non-breaking spaces; the supplied observations map \" AbC \" to \"AbC\" and preserve \"\\tÉx\\t\" unchanged.",
+          "fact_embedding": null,
+          "episodes": [
+            "a11a9701-b8a7-4d13-bfe8-8f93418d7561"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "edge_reranker_scores": [
+        2.0
+      ],
+      "nodes": [
+        {
+          "uuid": "e2a23cfe-6bb1-446d-8af8-88f002fcc094",
+          "name": "policy.py",
+          "group_id": "task_6147532024052801890",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T08:02:24.794091Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the withdrawn policy(context) callable, scoped to the original one-argument interface, with implementation `return context[\"text\"].strip(\" \")`. It removes only ASCII spaces from both ends while preserving case and all other characters, including tabs and non-breaking spaces; the supplied observations map \" AbC \" to \"AbC\" and preserve \"\\tÉx\\t\" unchanged.",
+          "attributes": {}
+        },
+        {
+          "uuid": "04c2b849-414c-4dbd-89ea-08b2dbac8b80",
+          "name": "policy(context)",
+          "group_id": "task_6147532024052801890",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T08:02:24.794191Z",
+          "name_embedding": null,
+          "summary": "policy.py defines the withdrawn policy(context) callable, scoped to the original one-argument interface, with implementation `return context[\"text\"].strip(\" \")`. It removes only ASCII spaces from both ends while preserving case and all other characters, including tabs and non-breaking spaces; the supplied observations map \" AbC \" to \"AbC\" and preserve \"\\tÉx\\t\" unchanged.",
+          "attributes": {}
+        }
+      ],
+      "node_reranker_scores": [
+        2.0,
+        1.0
+      ],
+      "episodes": [
+        {
+          "uuid": "a11a9701-b8a7-4d13-bfe8-8f93418d7561",
+          "name": "text_identity_boundaries-2903-history",
+          "group_id": "task_6147532024052801890",
+          "labels": [],
+          "created_at": "2026-10-17T08:02:16.395511Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"withdrawn\", \"observations\": [{\"call\": {\"args\": [{\"text\": \" AbC \"}], \"kwargs\": {}}, \"expected\": {\"value\": \"AbC\"}}, {\"call\": {\"args\": [{\"text\": \"\\tÉx\\t\"}], \"kwargs\": {}}, \"expected\": {\"value\": \"\\tÉx\\t\"}}], \"policy\": \"Strip only ASCII spaces at both edges, preserving case and every other character, including tabs and non-breaking spaces.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n return context[\\\"text\\\"].strip(\\\" \\\")\\n\", \"source_id\": \"text_identity_boundaries-2903-history\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "fa36a5d3-6392-4003-9de0-f7541d2bf3dc"
+          ],
+          "episode_metadata": null
+        }
+      ],
+      "episode_reranker_scores": [
+        1.0
+      ],
+      "communities": [],
+      "community_reranker_scores": []
+    },
+    "source_ids": [
+      "text_identity_boundaries-2903-history"
+    ],
+    "captures": [
+      {
+        "episode": "a11a9701-b8a7-4d13-bfe8-8f93418d7561",
+        "nodes": 2,
+        "edges": 1
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 23.114054983991082,
+      "retrieval_seconds": 0.02323193800111767,
+      "acquisition_llm_calls": 3,
+      "request_characters": 17542,
+      "wall_seconds": 24.103663437999785
+    }
+  },
+  "sparse_payload_merge-2904-changed_interface": {
+    "memory": {
+      "edges": [
+        {
+          "uuid": "b56641c5-e66b-48a1-a9af-57e3209ef8d5",
+          "group_id": "task_7294620104434670814",
+          "source_node_uuid": "62978085-afde-4b18-ac97-fb30f6365846",
+          "target_node_uuid": "01ec4cc5-3183-425a-9f71-e9f830838f99",
+          "created_at": "2026-10-17T08:02:55.559017Z",
+          "name": "IMPLEMENTS",
+          "fact": "policy.py implements the active policy(context) callable with its original one-argument interface: it copies context[\"base\"] and overwrites keys only with non-None values from context[\"patch\"], preserving false, zero, empty strings, and empty collections.",
+          "fact_embedding": null,
+          "episodes": [
+            "aac2ce22-ef25-44d0-af41-ee21a08a6db7"
+          ],
+          "expired_at": null,
+          "valid_at": "2026-10-16T00:00:00Z",
+          "invalid_at": null,
+          "reference_time": "2026-10-16T00:00:00Z",
+          "attributes": {}
+        }
+      ],
+      "edge_reranker_scores": [
+        2.0
+      ],
+      "nodes": [
+        {
+          "uuid": "62978085-afde-4b18-ac97-fb30f6365846",
+          "name": "policy.py",
+          "group_id": "task_7294620104434670814",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T08:02:47.840613Z",
+          "name_embedding": null,
+          "summary": "policy.py implements the active policy(context) callable with its original one-argument interface: it copies context[\"base\"] and overwrites keys only with non-None values from context[\"patch\"], preserving false, zero, empty strings, and empty collections.",
+          "attributes": {}
+        },
+        {
+          "uuid": "01ec4cc5-3183-425a-9f71-e9f830838f99",
+          "name": "policy(context)",
+          "group_id": "task_7294620104434670814",
+          "labels": [
+            "Entity"
+          ],
+          "created_at": "2026-10-17T08:02:47.840756Z",
+          "name_embedding": null,
+          "summary": "policy.py implements the active policy(context) callable with its original one-argument interface: it copies context[\"base\"] and overwrites keys only with non-None values from context[\"patch\"], preserving false, zero, empty strings, and empty collections.",
+          "attributes": {}
+        }
+      ],
+      "node_reranker_scores": [
+        2.0,
+        1.0
+      ],
+      "episodes": [
+        {
+          "uuid": "aac2ce22-ef25-44d0-af41-ee21a08a6db7",
+          "name": "sparse_payload_merge-2904-history",
+          "group_id": "task_7294620104434670814",
+          "labels": [],
+          "created_at": "2026-10-17T08:02:40.490683Z",
+          "source": "json",
+          "source_description": "Historical developer source and literal test observations with lifecycle and callable scope",
+          "content": "{\"callable\": {\"path\": \"policy.py\", \"symbol\": \"policy\"}, \"lifecycle\": \"active\", \"observations\": [{\"call\": {\"args\": [{\"base\": {\"a\": 3, \"b\": 4}, \"patch\": {\"a\": null, \"b\": 0, \"c\": false}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"a\": 3, \"b\": 0, \"c\": false}}}, {\"call\": {\"args\": [{\"base\": {}, \"patch\": {\"empty\": \"\", \"none\": null}}], \"kwargs\": {}}, \"expected\": {\"value\": {\"empty\": \"\"}}}], \"policy\": \"Copy the base and overwrite only non-None patch values, preserving false, zero, empty strings and empty collections.\", \"scope\": \"The original one-argument policy(context) interface only.\", \"source\": \"def policy(context):\\n result=context[\\\"base\\\"].copy()\\n for key,value in context[\\\"patch\\\"].items():\\n  if value is not None: result[key]=value\\n return result\\n\", \"source_id\": \"sparse_payload_merge-2904-history\"}",
+          "valid_at": "2026-10-16T00:00:00Z",
+          "entity_edges": [
+            "b56641c5-e66b-48a1-a9af-57e3209ef8d5"
+          ],
+          "episode_metadata": null
+        }
+      ],
+      "episode_reranker_scores": [
+        1.0
+      ],
+      "communities": [],
+      "community_reranker_scores": []
+    },
+    "source_ids": [
+      "sparse_payload_merge-2904-history"
+    ],
+    "captures": [
+      {
+        "episode": "aac2ce22-ef25-44d0-af41-ee21a08a6db7",
+        "nodes": 2,
+        "edges": 1
+      }
+    ],
+    "metrics": {
+      "acquisition_seconds": 15.143642001014086,
+      "retrieval_seconds": 0.02849738700024318,
+      "acquisition_llm_calls": 2,
+      "request_characters": 14843,
+      "wall_seconds": 16.129602376997354
+    }
+  }
+}

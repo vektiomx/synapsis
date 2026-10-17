@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pruebas propias de synapsis (los puentes/instaladores, no el motor vendorizado).
+"""Pruebas propias de synopsis (los puentes/instaladores, no el motor vendorizado).
 
 Corren sin dependencias externas: python3 -m unittest discover -s tests
 """
@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import tempfile
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -24,34 +25,71 @@ class SkillMemoriaTest(unittest.TestCase):
             destino = comun.instalar_skill_memoria(Path(tmp))
             self.assertTrue(destino.is_file())
             contenido = destino.read_text(encoding="utf-8")
-            self.assertIn("name: memoria-synapsis", contenido)
+            self.assertIn("name: memoria-synopsis", contenido)
             self.assertIn("guardar", contenido.lower())
 
 
 class ComunTest(unittest.TestCase):
     def test_raiz_motor_por_defecto_es_engine(self):
         import comun
-        os.environ.pop("NEUROMAPA_ROOT", None)
+        os.environ.pop("SYNOPSIS_ROOT", None)
         self.assertEqual(comun.raiz_motor(), RAIZ / "engine")
 
     def test_raiz_motor_respeta_override(self):
         import comun
-        os.environ["NEUROMAPA_ROOT"] = "/una/ruta/cualquiera"
+        os.environ["SYNOPSIS_ROOT"] = "/una/ruta/cualquiera"
         try:
             self.assertEqual(comun.raiz_motor(), Path("/una/ruta/cualquiera"))
         finally:
-            os.environ.pop("NEUROMAPA_ROOT", None)
+            os.environ.pop("SYNOPSIS_ROOT", None)
 
     def test_carpeta_datos_respeta_override(self):
         import comun
-        os.environ["NEUROMAPA_DATA"] = "/otra/ruta"
+        os.environ["SYNOPSIS_DATA"] = "/otra/ruta"
         try:
             self.assertEqual(comun.carpeta_datos(), Path("/otra/ruta"))
         finally:
-            os.environ.pop("NEUROMAPA_DATA", None)
+            os.environ.pop("SYNOPSIS_DATA", None)
 
 
 class InstalarCodexTest(unittest.TestCase):
+    def test_desactiva_plugin_crudo_y_conserva_otros_ajustes(self):
+        import install_codex
+        original = ('# Configuración del usuario\nmodel = "test"\n'
+                    '[plugins."synopsis@synopsis"] # plugin anterior\n'
+                    'enabled = true # comentario conservado\n'
+                    'custom_setting = "preservar"\n'
+                    '[plugins."otro@plugin"]\nenabled = true\n')
+        with tempfile.TemporaryDirectory() as tmp:
+            carpeta = Path(tmp)
+            (carpeta / 'config.toml').write_text(original)
+            hp, cp, hooks, config = install_codex.prepare(carpeta)
+            parsed = tomllib.loads(config)
+            self.assertFalse(parsed['plugins']['synopsis@synopsis']['enabled'])
+            self.assertTrue(parsed['plugins']['otro@plugin']['enabled'])
+            self.assertEqual(parsed['plugins']['synopsis@synopsis']['custom_setting'], 'preservar')
+            self.assertIn('enabled = false # comentario conservado', config)
+            self.assertEqual((carpeta / 'config.toml').read_text(), original)
+            stop = json.loads(hooks)['hooks']['Stop']
+            self.assertEqual(len(stop), 1)
+            self.assertIn('bridge.py', stop[0]['hooks'][0]['command'])
+            hp.write_text(hooks)
+            cp.write_text(config)
+            self.assertEqual(install_codex.prepare(carpeta)[3], config)
+
+    def test_plugin_ausente_desactivado_y_sin_enabled(self):
+        import install_codex
+        for config in ('', '[plugins."synopsis@synopsis"]\nenabled = false\n',
+                       "[plugins.'synopsis@synopsis']\n# comentario\n"):
+            with self.subTest(config=config):
+                result = install_codex.desactivar_plugin_duplicado(config)
+                parsed = tomllib.loads(result)
+                if config:
+                    self.assertFalse(parsed['plugins']['synopsis@synopsis']['enabled'])
+                else:
+                    self.assertEqual(result, config)
+                self.assertEqual(install_codex.desactivar_plugin_duplicado(result), result)
+
     def test_prepare_es_idempotente(self):
         """Instalar dos veces no debe duplicar hooks (el bug real que encontramos)."""
         import install_codex
@@ -67,19 +105,19 @@ class InstalarCodexTest(unittest.TestCase):
                 self.assertEqual(len(datos_1["hooks"][evento]), 1, f"duplicado en la 1a pasada: {evento}")
                 self.assertEqual(len(datos_2["hooks"][evento]), 1, f"duplicado en la 2a pasada: {evento}")
 
-    def test_reconoce_marca_vieja_neuromapa_y_la_reemplaza(self):
-        """La marca tiene que reconocer instalaciones viejas (statusMessage "Neuromapa: ...")
-        además de la nueva ("Synapsis: ..."), para no duplicar al migrar el nombre."""
+    def test_reconoce_marca_vieja_synopsis_y_la_reemplaza(self):
+        """La marca tiene que reconocer instalaciones viejas (statusMessage "Synopsis: ...")
+        además de la nueva ("Synopsis: ..."), para no duplicar al migrar el nombre."""
         import install_codex
         with tempfile.TemporaryDirectory() as tmp:
             config_dir = Path(tmp)
             viejo = {"hooks": {"Stop": [{"hooks": [{"type": "command", "command": "algo/viejo/bridge.py",
-                                                     "statusMessage": "Neuromapa: Stop"}]}]}}
+                                                     "statusMessage": "Synopsis: Stop"}]}]}}
             (config_dir / "hooks.json").write_text(json.dumps(viejo), encoding="utf-8")
             _, _, hooks_nuevo, _ = install_codex.prepare(config_dir)
             datos = json.loads(hooks_nuevo)
             self.assertEqual(len(datos["hooks"]["Stop"]), 1)
-            self.assertIn("Synapsis: Stop", datos["hooks"]["Stop"][0]["hooks"][0]["statusMessage"])
+            self.assertIn("Synopsis: Stop", datos["hooks"]["Stop"][0]["hooks"][0]["statusMessage"])
 
 
 class InstalarClaudeCodeTest(unittest.TestCase):
@@ -99,17 +137,17 @@ class InstalarClaudeCodeTest(unittest.TestCase):
             self.assertEqual(total_propios, len(install_claude_code.HOOKS),
                              "se duplicaron hooks propios en la segunda instalación")
 
-    def test_desactiva_plugins_neuromapa_activos(self):
+    def test_desactiva_plugins_synopsis_activos(self):
         import install_claude_code
         with tempfile.TemporaryDirectory() as tmp:
             ruta = Path(tmp) / "settings.json"
-            ruta.write_text(json.dumps({"enabledPlugins": {"neuromapa@neuromapa": True, "otro@plugin": True}}),
+            ruta.write_text(json.dumps({"enabledPlugins": {"synopsis@synopsis": True, "otro@plugin": True}}),
                             encoding="utf-8")
             contenido, desactivados = install_claude_code.preparar(ruta)
             datos = json.loads(contenido)
-            self.assertEqual(datos["enabledPlugins"]["neuromapa@neuromapa"], False)
+            self.assertEqual(datos["enabledPlugins"]["synopsis@synopsis"], False)
             self.assertEqual(datos["enabledPlugins"]["otro@plugin"], True)
-            self.assertIn("neuromapa@neuromapa", desactivados)
+            self.assertIn("synopsis@synopsis", desactivados)
 
     def test_conserva_hooks_de_otros(self):
         """No debe borrar hooks que no son nuestros (ej. los de Orca)."""
@@ -142,7 +180,7 @@ class InstalarAntigravityTest(unittest.TestCase):
             contenido = install_antigravity.preparar(ruta)
             datos = json.loads(contenido)
             self.assertIn("orca-status", datos)
-            self.assertIn("neuromapa", datos)
+            self.assertIn("synopsis", datos)
 
 
 if __name__ == "__main__":

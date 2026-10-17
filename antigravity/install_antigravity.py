@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Instala el bridge de Synapsis para Antigravity. No pide contraseña ni sudo.
+"""Instala el bridge de Synopsis para Antigravity. No pide contraseña ni sudo.
 
 Usa el motor vendorizado en engine/ (no depende de tener Claude Code instalado). Si
-querés usar otra copia, fijá NEUROMAPA_ROOT y NEUROMAPA_DATA antes de instalar.
+querés usar otra copia, fijá SYNOPSIS_ROOT y SYNOPSIS_DATA antes de instalar.
 """
 import argparse
+import shlex
 import datetime
 import json
 import os
@@ -14,14 +15,16 @@ import sys
 BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE.parent))
 import comun
+import integration_setup
 
 ROOT = comun.raiz_motor()
-EVENTOS = ('PreInvocation', 'PreToolUse', 'PostToolUse', 'PostInvocation', 'Stop')
+EVENTOS = ('SessionStart', 'PreInvocation', 'PreToolUse', 'PostToolUse', 'PostInvocation', 'Stop')
 
 
 def bloque(evento):
+    from desktop_runtime import hook_command
     bridge = str(BASE / 'bridge.py')
-    comando = {'type': 'command', 'command': f'/usr/bin/python3 {bridge} {evento}', 'timeout': 10}
+    comando = {'type': 'command', 'command': hook_command(bridge,arguments=[evento]), 'timeout': 30}
     if evento in ('PreToolUse', 'PostToolUse'):
         return [{'matcher': '*', 'hooks': [comando]}]
     return [comando]
@@ -29,7 +32,7 @@ def bloque(evento):
 
 def preparar(ruta_hooks):
     datos = json.loads(ruta_hooks.read_text()) if ruta_hooks.exists() else {}
-    datos['neuromapa'] = {evento: bloque(evento) for evento in EVENTOS}
+    datos['synopsis'] = {evento: bloque(evento) for evento in EVENTOS}
     return json.dumps(datos, indent=2) + '\n'
 
 
@@ -39,38 +42,24 @@ def main():
     parser.add_argument('--config-dir', type=Path, default=Path.home() / '.gemini' / 'config')
     args = parser.parse_args()
     if not (ROOT / 'hook_evento.py').is_file():
-        raise SystemExit(f'No encontré el motor de Synapsis en {ROOT}. Si clonaste synapsis completo (con '
+        raise SystemExit(f'No encontré el motor de Synopsis en {ROOT}. Si clonaste synopsis completo (con '
                          'engine/ adentro) esto no debería pasar; si moviste el motor a otro lado, fijá '
-                         'NEUROMAPA_ROOT a su ruta.')
+                         'SYNOPSIS_ROOT a su ruta.')
     ruta_hooks = args.config_dir / 'hooks.json'
     contenido = preparar(ruta_hooks)
+    files = {ruta_hooks: contenido}
+    mcp_path = args.config_dir / 'mcp_config.json'
+    files[mcp_path] = integration_setup.json_mcp(mcp_path)
+    files.update(integration_setup.skill_files(args.config_dir / 'skills'))
+    backup = integration_setup.install_files(files, args.config_dir / 'synopsis-backups', args.dry_run)
     if args.dry_run:
-        print(f'Configuración válida: {len(EVENTOS)} hooks en "neuromapa" y el skill de memoria. '
-              'No se cambió ningún archivo.')
+        print(f'Plan válido: {len(EVENTOS)} eventos, MCP y memoria compartida. Sin cambios.')
         return
-    args.config_dir.mkdir(parents=True, exist_ok=True)
-    backup = args.config_dir / 'neuromapa-backups' / datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')
-    backup.mkdir(parents=True, mode=0o700)
-    original = ruta_hooks.read_bytes() if ruta_hooks.exists() else None
-    if original is not None:
-        (backup / 'hooks.json').write_bytes(original)
-        (backup / 'hooks.json').chmod(0o600)
-    try:
-        temporal = ruta_hooks.with_name(ruta_hooks.name + '.neuromapa.tmp')
-        temporal.write_text(contenido, encoding='utf-8')
-        temporal.chmod(0o600)
-        os.replace(temporal, ruta_hooks)
-    except Exception:
-        if original is not None:
-            ruta_hooks.write_bytes(original)
-        elif ruta_hooks.exists():
-            ruta_hooks.unlink()
-        raise
-    ruta_skill = comun.instalar_skill_memoria(args.config_dir / 'skills')
-    print('Synapsis instalado para Antigravity. Copia de seguridad en: ' + str(backup))
-    print('Skill de memoria instalado en: ' + str(ruta_skill))
+    print('Synopsis instalado para Antigravity: hooks, MCP y memoria compartida.')
+    if backup:
+        print('Respaldo en: ' + str(backup))
     comun.anotar_ubicacion()
-    print('Reiniciá Antigravity para que cargue los hooks nuevos.')
+    print('Reinicia Antigravity para cargar la integración.')
 
 
 if __name__ == '__main__':

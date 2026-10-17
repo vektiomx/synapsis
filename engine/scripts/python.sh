@@ -28,7 +28,7 @@ version() {
     "$@" -c "import sys; print(sys.version_info >= (3, 10))" 2>/dev/null
 }
 viejo=""
-for nombre in ${NEUROMAPA_PYTHONS:-python3 python py}; do
+for nombre in ${SYNOPSIS_PYTHONS:-python3 python py}; do
     ruta=$(command -v "$nombre" 2>/dev/null) || continue
     if [ "$nombre" = py ]; then
         respuesta=$(version "$ruta" -3)
@@ -51,10 +51,10 @@ else
     falta="no lo encontré (probé python3, python y py)"
 fi
 if [ "$avisar" = 1 ]; then
-    printf '{"systemMessage": "Neuromapa necesita Python 3.10 o más nuevo y %s. Instalalo desde https://www.python.org/downloads/ y abrí Claude Code de nuevo. Mientras tanto, sus hooks no hacen nada."}\n' "$falta"
+    printf '{"systemMessage": "Synopsis necesita Python 3.10 o más nuevo y %s. Instalalo desde https://www.python.org/downloads/ y abrí Claude Code de nuevo. Mientras tanto, sus hooks no hacen nada."}\n' "$falta"
 fi
 if [ "$consola" = 1 ]; then
-    printf 'Neuromapa necesita Python 3.10 o superior y %s: https://www.python.org/downloads/\n' "$falta" >&2
+    printf 'Synopsis necesita Python 3.10 o superior y %s: https://www.python.org/downloads/\n' "$falta" >&2
     exit 1
 fi
 exit 0

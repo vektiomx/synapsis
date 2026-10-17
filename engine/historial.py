@@ -60,7 +60,7 @@ def hay_git():
 
 def git(carpeta, *argumentos, binario=False, entrada=None):
     orden = ["git", f"--git-dir={repo_de(carpeta)}", f"--work-tree={carpeta}", "-c", "core.autocrlf=false",
-             "-c", "core.quotepath=false", "-c", "user.name=Neuromapa", "-c", "user.email=neuromapa@localhost",
+             "-c", "core.quotepath=false", "-c", "user.name=Synopsis", "-c", "user.email=synopsis@localhost",
              "-c", "commit.gpgsign=false", "-c", f"core.hooksPath={repo_de(carpeta) / 'sin-hooks'}", *argumentos]
     entorno = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     espera = ESPERA if _limite[0] is None else min(ESPERA, _limite[0] - time.monotonic())
@@ -416,7 +416,7 @@ def main_al(consulta, cuando, sobre=True, todo=False, maximo=8):
         print(linea_salud() or "No hay carpetas de memoria en la configuración.")
         return 1
     guardar()
-    with tempfile.TemporaryDirectory(prefix="neuromapa-al-") as temporal:
+    with tempfile.TemporaryDirectory(prefix="synopsis-al-") as temporal:
         fotos = {}
         for n, carpeta in enumerate(lista):
             hallada = version_al(carpeta, momento)
