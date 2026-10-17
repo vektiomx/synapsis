@@ -62,6 +62,8 @@ def scripts_for(row):
 
 def dispatch(row, record_event=None, invoke_hook=None):
     output = dict(contexts=[], warnings=[], errors=[], decision=None)
+    if row.get("hook_event_name") in ("Stop", "SubagentStop") and row.get("stop_hook_active") is True:
+        return output
     if os.environ.get("SYNOPSIS_CONTROLLED_RUN") == "1":
         return output
     environment()

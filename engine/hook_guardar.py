@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import time
@@ -82,7 +83,7 @@ def aviso_compactada(datos):
 
 
 def aviso_fin(datos, ahora=None):
-    if datos.get("hook_event_name") != "Stop" or not hooks_comun.contexto_automatico():
+    if datos.get("hook_event_name") != "Stop" or datos.get("stop_hook_active") is True or not hooks_comun.contexto_automatico():
         return None
     sesion = str(datos.get("session_id") or "")[:8]
     if not hooks_comun.nombre_seguro(sesion):
@@ -122,12 +123,16 @@ def main():
     try:
         datos = hooks_comun.entrada()
         evento = datos.get("hook_event_name")
+        if evento in ("Stop", "SubagentStop") and datos.get("stop_hook_active") is True:
+            return
         if evento in ("SessionStart", "Stop"):
             guardar_historial()
         if evento == "SessionStart":
             hooks_comun.contexto("SessionStart", (lambda: aviso_compactada(datos),))
         elif evento == "Stop":
-            hooks_comun.contexto("Stop", (lambda: aviso_fin(datos),))
+            text = aviso_fin(datos)
+            if text:
+                print(json.dumps({"systemMessage": text}))
     except Exception:
         hooks_comun.fallo()
 

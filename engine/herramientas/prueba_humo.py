@@ -4161,7 +4161,14 @@ def revisar_guardar(t):
         r = correr_hook("hook_guardar.py", json.dumps(entrada).encode("utf-8"),
                         CEREBRO_CONFIG=str(t / "config.json"), **dict({"CLAUDE_PLUGIN_DATA": ""}, **entorno))
         try:
-            return json.loads(r.stdout)["hookSpecificOutput"]["additionalContext"] if r.stdout else ""
+            if not r.stdout:
+                return ""
+            output = json.loads(r.stdout)
+            if evento == "Stop":
+                if "hookSpecificOutput" in output or "decision" in output:
+                    raise AssertionError("Stop status must not continue Claude")
+                return output["systemMessage"]
+            return output["hookSpecificOutput"]["additionalContext"]
         except (ValueError, KeyError, TypeError):
             return None
 

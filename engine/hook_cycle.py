@@ -41,6 +41,8 @@ def project_for(cwd, roots=None, active_path=None):
 
 
 def handle(row):
+    if row.get('hook_event_name') in ('Stop', 'SubagentStop') and row.get('stop_hook_active') is True:
+        return None
     from conector_mcp import carpeta_memoria_de
     import hooks_comun
     if not hooks_comun.contexto_automatico():
@@ -111,7 +113,7 @@ def handle(row):
             status = cycle.status(session=None if event == 'SessionStart' else session, limit=3)
         if not status['turns']:
             return None
-        visible = [item for item in status['turns'] if event != 'PostToolUse' or cycle.claim_reminder(item['turn'], event)]
+        visible = [item for item in status['turns'] if event not in ('PostToolUse', 'Stop') or cycle.claim_reminder(item['turn'], event)]
         if not visible:
             return None
         turns = ', '.join(item['turn'] for item in visible)
@@ -126,7 +128,8 @@ def main():
         row = json.load(sys.stdin)
         text = handle(row)
         if text:
-            print(json.dumps({'hookSpecificOutput': {'hookEventName': row['hook_event_name'], 'additionalContext': text}}))
+            from hooks_comun import context_output
+            print(json.dumps(context_output(row.get('hook_event_name'), text)))
     except ProjectIdentityConflict:
         print(json.dumps({'synopsisError': 'memory_identity_conflict', 'systemMessage':
             'Synopsis: no se pudo vincular la memoria del proyecto. Existe una memoria anterior '

@@ -167,6 +167,20 @@ def callado(paso):
             return paso()
 
 
+# Stop feedback requests another generation; PreCompact has no context envelope.
+CONTEXT_EVENTS = frozenset(("SessionStart", "UserPromptSubmit", "UserPromptExpansion",
+                            "PreToolUse", "PostToolUse", "PostToolUseFailure", "PostToolBatch",
+                            "SubagentStart", "PostModelSwitch"))
+
+
+def context_output(event, text):
+    if not text:
+        return {}
+    if event in CONTEXT_EVENTS:
+        return {"hookSpecificOutput": {"hookEventName": event, "additionalContext": text}}
+    return {"systemMessage": text}
+
+
 def contexto(evento, pasos, separador="\n"):
     partes = []
     for paso in pasos:
@@ -176,4 +190,4 @@ def contexto(evento, pasos, separador="\n"):
             fallo()
     texto = separador.join(p for p in partes if p)
     if texto:
-        responder({"hookSpecificOutput": {"hookEventName": evento, "additionalContext": texto}})
+        responder(context_output(evento, texto))

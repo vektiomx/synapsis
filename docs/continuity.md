@@ -4,6 +4,32 @@ Synopsis distingue tres cosas: el contexto recuperado para una tarea, el estado 
 trabajo resumido por un agente y el conocimiento durable en notas versionadas.
 Conservar un recibo de escritura prueba persistencia, no la verdad de una afirmación.
 
+## Cierre de Claude Code sin bucles
+
+En Claude Code, `additionalContext` durante `Stop` o `SubagentStop` solicita otra
+continuación del modelo; no es un mensaje puramente informativo. Synopsis publica
+los avisos de cierre mediante `systemMessage`, sin `decision: block`. Las entradas
+con `stop_hook_active: true` terminan con éxito sin volver a ejecutar el ciclo,
+el guardado de historial ni la revisión automática. Esto cubre el bridge instalado
+y los hooks directos del plugin. El primer Stop normal conserva el registro y la
+cola de revisión; solo se omiten las reentradas.
+
+El aviso directo de ciclos pendientes se entrega como máximo una vez por turno
+para Stop y una vez para PostToolUse. Los turnos de otra sesión no se incluyen en
+el aviso de Stop. Dejar terminar la respuesta no marca saved ni no_change: las
+operaciones y conflictos pendientes permanecen abiertos hasta obtener un recibo
+válido. La recuperación al comenzar una sesión y la revisión en segundo plano
+siguen disponibles; no hace falta aumentar el límite de bloqueos de Claude.
+
+`PreCompact` tampoco admite `hookSpecificOutput.additionalContext`: sus avisos usan
+`systemMessage` y no bloquean la compactación. El formateador compartido selecciona
+el canal según el evento; los eventos sin contexto admitido y los desconocidos
+quedan en mensajes informativos. No se aplica la salida específica de permisos de
+PreToolUse a otro evento. El contexto de tareas continúa disponible en los eventos
+compatibles y tras compactar mediante SessionStart; los pendientes siguen en el diario.
+
+Contrato: [referencia oficial de hooks de Claude Code](https://code.claude.com/docs/en/hooks).
+
 ## Ciclo de una tarea
 
 1. Abrir un turno por proyecto y sesión/tarea.

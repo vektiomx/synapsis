@@ -23,3 +23,7 @@ jobs:
           python-version: '3.12'
       - name: Platform contracts and five-client stdio integration
         run: python -m unittest discover -s tests -p test_desktop_platforms.py -v
+      - name: Non-blocking stop hooks and reentry regression
+        run: python -m unittest discover -s tests -p test_stop_hooks.py -v
+      - name: Event-specific Claude hook output contracts
+        run: python -m unittest discover -s tests -p test_claude_hook_output.py -v
