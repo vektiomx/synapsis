@@ -10,8 +10,8 @@ Claude Code, Codex, Antigravity, OpenCode y Cursor; otros clientes pueden conect
 
 Instaladores desde fuentes: `install-macos.command` e `install-windows.cmd`, con
 Python 3.11 o superior. Arranque del mapa por usuario, comando Windows sin Git Bash
-y diagnóstico de capacidades. Las pruebas nativas y los paquetes con runtime firmado
-siguen pendientes; el laboratorio aislado continúa disponible solo en Linux/bwrap.
+y diagnóstico de capacidades. CI aprobada en Linux, macOS y Windows; los paquetes
+con runtime firmado siguen pendientes. El laboratorio aislado requiere Linux/bwrap.
 [Instalación, alcance y validación](docs/desktop_adaptation.md).
 
 ## Memoria de comportamiento verificable (0.10)

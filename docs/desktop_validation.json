@@ -13,10 +13,32 @@
     "native_powershell_not_run": true
   },
   "native_desktop_validation": {
-    "macos": "not_executed",
-    "windows": "not_executed"
+    "linux": {
+      "status": "passed",
+      "tests": 22,
+      "passed": 20,
+      "skipped": 2
+    },
+    "macos": {
+      "status": "passed",
+      "tests": 22,
+      "passed": 20,
+      "skipped": 2
+    },
+    "windows": {
+      "status": "passed",
+      "tests": 22,
+      "passed": 21,
+      "skipped": 1
+    }
   },
-  "ci": "matrix_defined_not_executed",
+  "ci": {
+    "status": "passed",
+    "url": "https://github.com/vektiomx/synapsis/actions/runs/39048577583",
+    "tested_commit": "bf13164",
+    "python": "3.12",
+    "autostart_registration": "mocked; login/reboot not tested"
+  },
   "private_map_authenticated_http": "passed",
   "five_client_mcp_and_adapter_probes": "passed",
   "signed_bundled_runtime": "not_implemented",

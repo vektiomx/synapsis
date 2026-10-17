@@ -9,8 +9,8 @@ keeps corrections and provenance, and exposes JSON context packets through MCP a
 
 Source installers: `install-macos.command` and `install-windows.cmd`, requiring
 Python 3.11+. Per-user map autostart, Windows commands without Git Bash, and platform
-capability diagnostics. Native desktop validation and signed bundled runtimes are
-pending; isolated experiments still require Linux/bubblewrap.
+capability diagnostics. Linux, macOS and Windows CI passed; signed bundled runtimes
+remain pending. Isolated experiments still require Linux/bubblewrap.
 [Installation, scope and validation](docs/desktop_adaptation.md).
 
 ## Verifiable behavioral memory (0.10)

@@ -47,5 +47,3 @@ def separar_frontmatter(texto):
     if not datos:
         return {}, texto
     return datos, "\n".join(lineas[fin + 1:])
-
-

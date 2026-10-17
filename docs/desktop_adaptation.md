@@ -82,8 +82,14 @@ registro/LaunchAgent. Hay pruebas adicionales que ejecutan PowerShell y CMD real
 solo en Windows. `.github/workflows/desktop-platforms.yml` define una matriz para
 Linux, macOS y Windows; agregar el archivo no significa que ya se haya ejecutado CI.
 
-Falta validar nativamente ambos escritorios, suspensión/reinicio, Intel/Apple Silicon,
-runtime semántico y firmas antes de anunciar distribución plug and play completa.
+La matriz nativa aprobó en Linux, macOS y Windows: 22 casos por sistema,
+20 aprobados en Linux/macOS y 21 en Windows; los omitidos requieren otro sistema
+o permisos de enlaces simbólicos. Incluye mapa privado HTTP autenticado, cinco
+transportes MCP y ejecución real CMD/PowerShell en Windows. El registro de arranque
+se prueba mediante dobles controlados, sin modificar el inicio de sesión del runner.
+[CI y resultados](https://github.com/vektiomx/synapsis/actions/runs/39048577583).
+Falta probar suspensión/reinicio, cobertura Intel/Apple Silicon, runtime semántico
+y firmas antes de anunciar distribución plug and play completa.
 
 Validación de esta iteración en Linux: 380 pruebas, 378 aprobadas y 2 omitidas
 por requerir CMD/PowerShell nativos de Windows; humo 767/767, sin la variante nativa
