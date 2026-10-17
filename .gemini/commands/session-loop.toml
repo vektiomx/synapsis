@@ -1,0 +1,5 @@
+description = "session-loop: procedimiento compartido de Synopsis."
+prompt = """
+Lee .agents/docs/playbooks/playbook_session_loop.md desde la raíz del repositorio y sigue el procedimiento.
+Tarea del usuario: {{args}}
+"""

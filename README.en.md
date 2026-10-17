@@ -282,3 +282,10 @@ current requirements, and identify the observation needed to distinguish choices
 Use `synopsis experience decide` or the existing `experiencias` MCP tool's `decide`
 operation. Hooks include it automatically where the client supports the event.
 [Protocol, flow and limitations](docs/decision_rag.md).
+
+## Development with assistants
+
+The shared development harness starts at [AGENTS.md](AGENTS.md) and
+[.agents/docs/](.agents/docs/README.md). Read the local active task and decisions,
+then discover, plan, implement, validate and record. Versioned templates initialize
+each developer's state without copying other projects' memory or data.

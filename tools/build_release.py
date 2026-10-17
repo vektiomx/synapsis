@@ -9,6 +9,16 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent
 EXCLUDED={'.git','.synopsis','__pycache__','.venv','venv','node_modules','synopsis-backups','.pytest_cache'}
+LOCAL_HARNESS_STATE={'.agents/docs/tasks/current.md','.agents/docs/tasks/backlog.md',
+                     '.agents/docs/progress/decisions.md','.agents/docs/progress/history.md'}
+
+
+def local_harness_state(relative):
+    return relative.as_posix() in LOCAL_HARNESS_STATE or (
+        relative.parent.as_posix()=='.agents/docs/progress' and
+        relative.name.startswith('history_') and relative.suffix=='.md')
+
+
 EXECUTABLES={'bin/synopsis','engine/bin/synopsis','engine/scripts/python.sh','install-macos.command'}
 
 
@@ -19,6 +29,7 @@ def build(output):
     files={}
     for path in sorted(ROOT.rglob('*')):
         relative=path.relative_to(ROOT)
+        if local_harness_state(relative):continue
         if set(relative.parts)&EXCLUDED or not path.is_file() or path.is_symlink() or path.suffix in ('.pyc','.pyo','.sqlite3','.log','.zip'):
             continue
         # Repository-owned examples only, never operational config or credentials.

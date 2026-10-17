@@ -1,0 +1,5 @@
+description = "new-feature: procedimiento compartido de Synopsis."
+prompt = """
+Lee .agents/docs/playbooks/playbook_new_feature.md desde la raíz del repositorio y sigue el procedimiento.
+Tarea del usuario: {{args}}
+"""

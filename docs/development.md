@@ -7,10 +7,18 @@ entrada Windows .cmd, comando Windows sin symlinks y PATH de usuario preservado,
 LaunchAgent/HKCU Run para mapa persistente, hooks Windows con transporte UTF-8,
 CLI de arranque y diagnóstico de capacidades. Memorias/rutas anteriores conservadas.
 
-La validación disponible se ejecutó en Linux. La matriz nativa está preparada en
-.github/workflows/desktop-platforms.yml y no fue ejecutada desde esta sesión.
-Pendientes ejecución real en Mac/Windows, runtime embebido y paquetes firmados.
+La suite Linux y la matriz CI nativa en Linux/macOS/Windows aprobaron antes de
+publicar en master (commit a0671af). Los resultados y límites están en
+[desktop_validation.json](desktop_validation.json). Pendientes pruebas manuales de
+login/reinicio/suspensión, runtime embebido y paquetes firmados.
 Detalles, comandos y alcance en [desktop_adaptation.md](desktop_adaptation.md).
+
+## Arnés de desarrollo
+
+El trabajo con asistentes sigue [AGENTS.md](../AGENTS.md) y el
+[arnés canónico](../.agents/docs/README.md), adaptado de Meximova para Python.
+Los procedimientos son compartidos; tareas, decisiones e historial son locales por
+desarrollador y no se distribuyen en ZIP. La documentación de producto sigue aquí.
 
 ## Entrega anterior · 0.10
 

@@ -374,3 +374,10 @@ parecida no basta para aplicar una solución antigua. Usa `synopsis experience d
 o la operación `decide` de la herramienta MCP `experiencias`; los hooks lo incorporan
 automáticamente cuando el cliente admite el evento. [Funcionamiento, diagrama y
 límites](docs/decision_rag.md).
+
+## Desarrollo con asistentes
+
+El arnés compartido vive en [AGENTS.md](AGENTS.md) y [.agents/docs/](.agents/docs/README.md).
+Al iniciar, lee la tarea activa y las decisiones locales; sigue el ciclo de descubrir,
+planear, implementar, validar y registrar. Las plantillas permiten inicializar el
+estado de cada desarrollador sin copiar memorias ni datos de otros proyectos.
